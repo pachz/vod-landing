@@ -1,0 +1,81 @@
+{
+  "hero": {
+    "title": "Find Your Strength, Shape Your Future.",
+    "subtitle": "Unlimited motivational classes in bite-sized episodes designed for women who want to grow.",
+    "question": "What brings you to vod lady today?",
+    "options": {
+      "confidence": "Build confidence",
+      "habits": "Improve daily habits",
+      "lifestyle": "Cultivate a healthy lifestyle",
+      "career": "Boost career & leadership",
+      "other": "Something else"
+    },
+    "continue": "Continue"
+  },
+  "features": {
+    "title": "Everything you need to stay inspired and motivated",
+    "subtitle": "Practical tools and features designed to keep you growing every day.",
+    "cards": {
+      "courses": {
+        "title": "Full access to all courses",
+        "description": "Explore every chapter and episode, anytime."
+      },
+      "audio": {
+        "title": "Audio-only mode",
+        "description": "Listen on the go, even without watching the screen."
+      },
+      "offline": {
+        "title": "Offline availability",
+        "description": "Save episodes to watch later (coming soon)."
+      },
+      "devices": {
+        "title": "Cross-device support",
+        "description": "Use vod lady on desktop, tablet, or mobile."
+      },
+      "content": {
+        "title": "Fresh content every month",
+        "description": "New motivational lessons and stories added regularly."
+      },
+      "community": {
+        "title": "Community & support",
+        "description": "Connect with like-minded learners and share progress."
+      }
+    },
+    "cta": {
+      "primary": "Explore Courses",
+      "secondary": "Join the Community"
+    }
+  },
+  "explore": {
+    "title": "Discover courses that inspire your next step",
+    "subtitle": "From confidence to career — find your path in short, motivational courses.",
+    "cta": "View All Courses"
+  },
+  "instructors": {
+    "title": "Learn from inspiring voices",
+    "subtitle": "Meet the women and mentors who guide you through every step of your journey."
+  },
+  "faq": {
+    "title": "Frequently Asked Questions"
+  },
+  "footer": {
+    "mission": "Empowering women through motivational video courses and stories.",
+    "navigation": {
+      "courses": "Courses",
+      "about": "About",
+      "blog": "Blog",
+      "contact": "Contact"
+    },
+    "support": {
+      "faq": "FAQ",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy"
+    },
+    "newsletter": {
+      "title": "Get weekly motivation and updates in your inbox.",
+      "placeholder": "Enter your email",
+      "subscribe": "Subscribe"
+    },
+    "copyright": "© 2025 vod lady. All rights reserved."
+  }
+}
