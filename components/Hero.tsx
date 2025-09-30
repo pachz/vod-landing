@@ -97,6 +97,24 @@ export default function Hero() {
                 Unlimited motivational classes in bite-sized episodes designed for women who want to grow.
               </p>
             </div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <Button 
+                size="lg" 
+                className="bg-gold hover:bg-gold-700 text-white"
+              >
+                Explore all
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg"
+                onClick={() => setIsModalOpen(true)}
+                className="border-navy-800 text-navy-800 hover:bg-navy-800 hover:text-white"
+              >
+                Subscribe Now
+              </Button>
+            </div>
           </div>
 
           {/* Right Column - Image Grid */}
