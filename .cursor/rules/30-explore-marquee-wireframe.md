@@ -2,7 +2,7 @@
 # Section 3 — Explore Courses (Animated Background Rows)
 
 ## Layout
-- **Background:** 2–3 horizontal rows of `CourseCard` moving in opposite directions (infinite auto-scroll)
+- **Background:** 1 horizontal row of `CourseCard` moving in opposite directions (infinite auto-scroll)
   - Continuous on desktop & mobile
   - **Desktop hover:** slows hovered row by ~70%
   - **Mobile:** auto-moving; users can swipe to interact

@@ -3,16 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-
-const questionOptions = [
-  'Build confidence',
-  'Improve daily habits', 
-  'Cultivate a healthy lifestyle',
-  'Boost career & leadership',
-  'Something else'
-]
 
 const imageSets = [
   ['/images/1.webp', '/images/2.webp', '/images/3.webp', '/images/4.webp'],
@@ -22,7 +13,6 @@ const imageSets = [
 ]
 
 export default function Hero() {
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [email, setEmail] = useState('')
   const [currentImageSet, setCurrentImageSet] = useState(0)
@@ -61,19 +51,6 @@ export default function Hero() {
     return () => clearTimeout(timer)
   }, [])
 
-  const handleOptionToggle = (option: string) => {
-    setSelectedOptions(prev => 
-      prev.includes(option) 
-        ? prev.filter(item => item !== option)
-        : [...prev, option]
-    )
-  }
-
-  const handleContinue = () => {
-    if (selectedOptions.length > 0) {
-      setIsModalOpen(true)
-    }
-  }
 
   const handleEmailSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -86,7 +63,7 @@ export default function Hero() {
   }
 
   return (
-    <section id="home" className="min-h-screen relative py-16 px-4 overflow-hidden flex items-center">
+    <section id="home" className="min-h-screen relative py-16 px-4 overflow-hidden flex items-center justify-center">
       {/* Premium Background */}
       <div className="absolute inset-0 bg-[#F9FAFB]">
         {/* Subtle navy gradient overlay */}
@@ -106,8 +83,8 @@ export default function Hero() {
 
       <div className="relative max-w-7xl mx-auto w-full">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left Column - Text & Interaction */}
-          <div className={`space-y-8 transition-all duration-1000 ${
+          {/* Left Column - Text Content */}
+          <div className={`flex flex-col justify-center space-y-8 transition-all duration-1000 ${
             isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
           }`}>
             {/* Main Heading */}
@@ -120,43 +97,6 @@ export default function Hero() {
                 Unlimited motivational classes in bite-sized episodes designed for women who want to grow.
               </p>
             </div>
-
-            {/* Question Box */}
-            <Card className="max-w-md shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-lg text-navy-900">
-                  What brings you to vod lady today?
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-3">
-                  {questionOptions.map((option) => (
-                    <label
-                      key={option}
-                      className="flex items-center space-x-3 cursor-pointer group"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={selectedOptions.includes(option)}
-                        onChange={() => handleOptionToggle(option)}
-                        className="w-4 h-4 text-gold border-navy-300 rounded focus:ring-gold focus:ring-2"
-                      />
-                      <span className="text-navy-700 group-hover:text-navy-900 transition-colors">
-                        {option}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-                
-                <Button
-                  onClick={handleContinue}
-                  disabled={selectedOptions.length === 0}
-                  className="w-full mt-6 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Continue
-                </Button>
-              </CardContent>
-            </Card>
           </div>
 
           {/* Right Column - Image Grid */}

@@ -1,129 +1,256 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { t } from '@/lib/i18n'
-import { courses } from '@/lib/data'
+import React, { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { courses, Course } from '@/lib/data'
+import { cn } from '@/lib/utils'
 
-export default function ExploreMarquee() {
-  const duplicatedCourses = [...courses, ...courses, ...courses]
+interface CourseCardProps {
+  course: Course
+  className?: string
+}
+
+const CourseCard: React.FC<CourseCardProps> = ({ course, className }) => {
+  const [isHovered, setIsHovered] = useState(false)
 
   return (
-    <section className="relative py-20 px-4 bg-neutral-bg overflow-hidden">
-      <div className="max-w-7xl mx-auto">
-        {/* Background Marquee Rows */}
-        <div className="absolute inset-0 flex flex-col gap-8">
-          {/* Row 1 - Moving Right */}
-          <motion.div
-            className="flex gap-6"
-            animate={{ x: [0, -100 * courses.length] }}
-            transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
-          >
-            {duplicatedCourses.map((course, index) => (
-              <Card key={`row1-${index}`} className="flex-shrink-0 w-80 cursor-pointer hover:shadow-2xl transition-all duration-300 hover:-translate-y-3 hover:scale-105 group">
-                <div className="relative aspect-square w-full overflow-hidden">
-                  <Image
-                    src={course.image}
-                    alt={course.title}
-                    fill
-                    className="object-cover rounded-t-lg group-hover:scale-110 transition-transform duration-300"
-                    sizes="320px"
-                  />
-                </div>
-                <CardContent className="p-4 group-hover:bg-white/95 transition-colors duration-300">
-                  <h3 className="font-semibold text-navy-800 mb-2 group-hover:text-gold transition-colors duration-300">{course.title}</h3>
-                  <p className="text-sm text-text-secondary mb-2">{course.description}</p>
-                  <div className="flex justify-between items-center text-sm text-gold">
-                    <span>{course.instructor}</span>
-                    <span>{course.duration}</span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </motion.div>
-
-          {/* Row 2 - Moving Left */}
-          <motion.div
-            className="flex gap-6"
-            animate={{ x: [-100 * courses.length, 0] }}
-            transition={{ duration: 35, repeat: Infinity, ease: 'linear' }}
-          >
-            {duplicatedCourses.map((course, index) => (
-              <Card key={`row2-${index}`} className="flex-shrink-0 w-80 cursor-pointer hover:shadow-2xl transition-all duration-300 hover:-translate-y-3 hover:scale-105 group">
-                <div className="relative aspect-square w-full overflow-hidden">
-                  <Image
-                    src={course.image}
-                    alt={course.title}
-                    fill
-                    className="object-cover rounded-t-lg group-hover:scale-110 transition-transform duration-300"
-                    sizes="320px"
-                  />
-                </div>
-                <CardContent className="p-4 group-hover:bg-white/95 transition-colors duration-300">
-                  <h3 className="font-semibold text-navy-800 mb-2 group-hover:text-gold transition-colors duration-300">{course.title}</h3>
-                  <p className="text-sm text-text-secondary mb-2">{course.description}</p>
-                  <div className="flex justify-between items-center text-sm text-gold">
-                    <span>{course.instructor}</span>
-                    <span>{course.duration}</span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </motion.div>
-
-          {/* Row 3 - Moving Right */}
-          <motion.div
-            className="flex gap-6"
-            animate={{ x: [0, -100 * courses.length] }}
-            transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
-          >
-            {duplicatedCourses.map((course, index) => (
-              <Card key={`row3-${index}`} className="flex-shrink-0 w-80 cursor-pointer hover:shadow-2xl transition-all duration-300 hover:-translate-y-3 hover:scale-105 group">
-                <div className="relative aspect-square w-full overflow-hidden">
-                  <Image
-                    src={course.image}
-                    alt={course.title}
-                    fill
-                    className="object-cover rounded-t-lg group-hover:scale-110 transition-transform duration-300"
-                    sizes="320px"
-                  />
-                </div>
-                <CardContent className="p-4 group-hover:bg-white/95 transition-colors duration-300">
-                  <h3 className="font-semibold text-navy-800 mb-2 group-hover:text-gold transition-colors duration-300">{course.title}</h3>
-                  <p className="text-sm text-text-secondary mb-2">{course.description}</p>
-                  <div className="flex justify-between items-center text-sm text-gold">
-                    <span>{course.instructor}</span>
-                    <span>{course.duration}</span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Foreground Overlay */}
-        <div className="relative z-10 flex flex-col items-center justify-center min-h-[60vh] text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 md:p-12 max-w-2xl mx-auto shadow-xl"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-navy-800 mb-6">
-              {t('explore.title')}
-            </h2>
-            <p className="text-lg text-text-secondary mb-8">
-              {t('explore.subtitle')}
-            </p>
-            <Button size="lg" className="bg-gold hover:bg-gold-700 text-white">
-              {t('explore.cta')}
-            </Button>
-          </motion.div>
+    <Card 
+      className={cn(
+        "relative w-80 h-48 overflow-hidden cursor-pointer transition-all duration-300 ease-out group",
+        "hover:scale-105 hover:shadow-xl hover:shadow-black/20",
+        isHovered && "scale-105 shadow-xl shadow-black/20",
+        className
+      )}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="relative h-full">
+        <Image
+          src={course.image}
+          alt={course.title}
+          fill
+          className="object-cover transition-transform duration-300 group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+        
+        <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-xs bg-gold/20 text-gold px-2 py-1 rounded-full border border-gold/30">
+              {course.category}
+            </span>
+            <span className="text-xs text-white/70">{course.duration}</span>
+          </div>
+          <h3 className="font-semibold text-sm leading-tight mb-1 line-clamp-2">
+            {course.title}
+          </h3>
+          <p className="text-xs text-white/80 line-clamp-1">
+            by {course.instructor}
+          </p>
         </div>
       </div>
+    </Card>
+  )
+}
+
+interface MarqueeRowProps {
+  courses: Course[]
+  direction: 'left' | 'right'
+  speed: number
+  isHovered: boolean
+  onHover: (hovered: boolean) => void
+}
+
+const MarqueeRow: React.FC<MarqueeRowProps> = ({ 
+  courses, 
+  direction, 
+  speed, 
+  isHovered, 
+  onHover 
+}) => {
+  const rowRef = useRef<HTMLDivElement>(null)
+  const [isPaused, setIsPaused] = useState(false)
+  const [touchStart, setTouchStart] = useState<number | null>(null)
+  const [touchEnd, setTouchEnd] = useState<number | null>(null)
+
+  useEffect(() => {
+    const row = rowRef.current
+    if (!row) return
+
+    const handleMouseEnter = () => {
+      setIsPaused(true)
+      onHover(true)
+    }
+
+    const handleMouseLeave = () => {
+      setIsPaused(false)
+      onHover(false)
+    }
+
+    const handleTouchStart = (e: TouchEvent) => {
+      setTouchEnd(null)
+      setTouchStart(e.targetTouches[0].clientX)
+      setIsPaused(true)
+    }
+
+    const handleTouchMove = (e: TouchEvent) => {
+      setTouchEnd(e.targetTouches[0].clientX)
+    }
+
+    const handleTouchEnd = () => {
+      if (!touchStart || !touchEnd) return
+      
+      const distance = touchStart - touchEnd
+      const isLeftSwipe = distance > 50
+      const isRightSwipe = distance < -50
+
+      if (isLeftSwipe || isRightSwipe) {
+        // Resume animation after a brief pause
+        setTimeout(() => {
+          setIsPaused(false)
+        }, 1000)
+      } else {
+        setIsPaused(false)
+      }
+    }
+
+    row.addEventListener('mouseenter', handleMouseEnter)
+    row.addEventListener('mouseleave', handleMouseLeave)
+    row.addEventListener('touchstart', handleTouchStart, { passive: true })
+    row.addEventListener('touchmove', handleTouchMove, { passive: true })
+    row.addEventListener('touchend', handleTouchEnd, { passive: true })
+
+    return () => {
+      row.removeEventListener('mouseenter', handleMouseEnter)
+      row.removeEventListener('mouseleave', handleMouseLeave)
+      row.removeEventListener('touchstart', handleTouchStart)
+      row.removeEventListener('touchmove', handleTouchMove)
+      row.removeEventListener('touchend', handleTouchEnd)
+    }
+  }, [onHover, touchStart, touchEnd])
+
+  const currentSpeed = isHovered ? speed * 0.1 : speed // Slow down by 90% on hover
+
+  return (
+    <div 
+      ref={rowRef}
+      className={cn(
+        "flex gap-6 will-change-transform",
+        direction === 'left' ? 'animate-marquee-left' : 'animate-marquee-right'
+      )}
+      style={{
+        animationDuration: `${currentSpeed}s`,
+        animationPlayState: isPaused ? 'paused' : 'running'
+      }}
+    >
+      {/* Duplicate courses for seamless loop */}
+      {[...courses, ...courses].map((course, index) => (
+        <CourseCard 
+          key={`${course.id}-${index}`} 
+          course={course}
+          className="flex-shrink-0"
+        />
+      ))}
+    </div>
+  )
+}
+
+const ExploreMarquee: React.FC = () => {
+  const [hoveredRow, setHoveredRow] = useState<boolean>(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  // Single row of courses
+  const singleRowCourses = courses
+
+  const baseSpeed = isMobile ? 40 : 30 // Much slower base speed
+
+  const categories = [
+    { name: 'Confidence', slug: 'confidence' },
+    { name: 'Career', slug: 'career' },
+    { name: 'Wellness', slug: 'wellness' },
+    { name: 'Finance', slug: 'finance' },
+    { name: 'Creativity', slug: 'creativity' }
+  ]
+
+  return (
+    <section className="relative min-h-screen bg-gradient-to-b from-neutral-bg to-white overflow-hidden">
+      {/* Background Marquee - Single Row */}
+      <div className="absolute inset-0 flex items-center py-20">
+        <MarqueeRow
+          courses={singleRowCourses}
+          direction="left"
+          speed={baseSpeed}
+          isHovered={hoveredRow}
+          onHover={(hovered) => setHoveredRow(hovered)}
+        />
+      </div>
+
+      {/* Center Overlay */}
+      <div className="relative z-10 flex items-center justify-center min-h-screen px-4">
+        <div className="text-center max-w-4xl mx-auto">
+          {/* Main Content */}
+          <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8 md:p-12 shadow-2xl border border-white/20">
+            <h2 className="text-3xl md:text-5xl font-bold text-navy-900 mb-6 leading-tight">
+              Discover courses that inspire your next step
+            </h2>
+            
+            <p className="text-lg md:text-xl text-text-secondary mb-8 max-w-2xl mx-auto leading-relaxed">
+              From confidence to career — find your path in short, motivational courses.
+            </p>
+
+            {/* Category Chips */}
+            <div className="flex flex-wrap justify-center gap-3 mb-8">
+              {categories.map((category) => (
+                <Link
+                  key={category.slug}
+                  href={`/courses?category=${category.slug}`}
+                  className="px-4 py-2 bg-navy-800/10 text-navy-800 rounded-full text-sm font-medium hover:bg-gold hover:text-white transition-colors duration-200"
+                >
+                  {category.name}
+                </Link>
+              ))}
+            </div>
+
+            {/* CTA Button */}
+            <Link href="/courses">
+              <Button 
+                size="lg" 
+                className="text-lg px-8 py-4 h-auto font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+              >
+                View All Courses
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile CTA - Sticky Bottom */}
+      {isMobile && (
+        <div className="fixed bottom-0 left-0 right-0 z-20 p-4 bg-white/95 backdrop-blur-sm border-t border-gray-200">
+          <Link href="/courses" className="block">
+            <Button 
+              size="lg" 
+              className="w-full text-lg py-4 h-auto font-semibold"
+            >
+              View All Courses
+            </Button>
+          </Link>
+        </div>
+      )}
     </section>
   )
 }
+
+export default ExploreMarquee
