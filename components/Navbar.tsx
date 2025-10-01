@@ -45,32 +45,39 @@ export default function Navbar() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-14 sm:h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
             <button
               onClick={() => scrollToSection('#home')}
-              className={`text-2xl font-bold transition-colors duration-200 ${
-                scrolled
-                  ? 'text-navy-900 hover:text-gold'
-                  : 'text-navy-900 hover:text-gold'
-              }`}
+              className="flex items-center space-x-2 sm:space-x-3 transition-opacity duration-200 hover:opacity-80"
             >
-              vod lady
+              <img 
+                src="/images/RehamDivaLogo.png" 
+                alt="Reham Diva" 
+                className="h-6 sm:h-8 w-auto"
+              />
+              <span className={`text-lg sm:text-2xl font-bold transition-colors duration-200 ${
+                scrolled
+                  ? 'text-purple-900'
+                  : 'text-purple-900'
+              }`}>
+                Reham Diva
+              </span>
             </button>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
+            <div className="ml-10 flex items-baseline space-x-6 lg:space-x-8">
               {navigationItems.map((item) => (
                 <button
                   key={item.name}
                   onClick={() => scrollToSection(item.href)}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:text-gold ${
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:text-pink-500 ${
                     scrolled
-                      ? 'text-navy-800 hover:bg-gold-50'
-                      : 'text-navy-800 hover:bg-gold-50'
+                      ? 'text-purple-800 hover:bg-pink-100'
+                      : 'text-purple-800 hover:bg-pink-100'
                   }`}
                 >
                   {item.name}
@@ -83,7 +90,7 @@ export default function Navbar() {
           <div className="hidden md:block">
             <Button
               onClick={() => scrollToSection('#home')}
-              className="bg-gold hover:bg-gold-700 text-white"
+              className="bg-pink-500 hover:bg-pink-700 text-white text-sm sm:text-base"
             >
               Get Started
             </Button>
@@ -95,16 +102,16 @@ export default function Navbar() {
               onClick={() => setIsOpen(!isOpen)}
               className={`inline-flex items-center justify-center p-2 rounded-md transition-colors duration-200 ${
                 scrolled
-                  ? 'text-navy-800 hover:bg-gold-50'
-                  : 'text-navy-800 hover:bg-gold-50'
+                  ? 'text-purple-800 hover:bg-pink-100'
+                  : 'text-purple-800 hover:bg-pink-100'
               }`}
               aria-expanded="false"
             >
               <span className="sr-only">Open main menu</span>
               {isOpen ? (
-                <X className="block h-6 w-6" aria-hidden="true" />
+                <X className="block h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
               ) : (
-                <Menu className="block h-6 w-6" aria-hidden="true" />
+                <Menu className="block h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
               )}
             </button>
           </div>
@@ -119,15 +126,15 @@ export default function Navbar() {
               <button
                 key={item.name}
                 onClick={() => scrollToSection(item.href)}
-                className="block px-3 py-2 rounded-md text-base font-medium text-navy-800 hover:text-gold hover:bg-gold-50 transition-colors duration-200 w-full text-left"
+                className="block px-3 py-2 rounded-md text-sm sm:text-base font-medium text-purple-800 hover:text-pink-500 hover:bg-pink-100 transition-colors duration-200 w-full text-left"
               >
                 {item.name}
               </button>
             ))}
-            <div className="pt-4">
+            <div className="pt-3 sm:pt-4">
               <Button
                 onClick={() => scrollToSection('#home')}
-                className="w-full bg-gold hover:bg-gold-700 text-white"
+                className="w-full bg-pink-500 hover:bg-pink-700 text-white text-sm sm:text-base"
               >
                 Get Started
               </Button>

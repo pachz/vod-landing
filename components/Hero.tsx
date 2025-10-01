@@ -63,11 +63,11 @@ export default function Hero() {
   }
 
   return (
-    <section id="home" className="min-h-screen relative py-16 px-4 overflow-hidden flex items-center justify-center">
+    <section id="home" className="min-h-screen relative py-8 sm:py-16 px-4 overflow-hidden flex items-center justify-center">
       {/* Premium Background */}
       <div className="absolute inset-0 bg-[#F9FAFB]">
-        {/* Subtle navy gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0A1F44]/6 via-transparent to-transparent"></div>
+        {/* Subtle purple gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-800/6 via-transparent to-transparent"></div>
         
         {/* Noise texture layer */}
         <div className="absolute inset-0 opacity-[0.03]">
@@ -79,30 +79,37 @@ export default function Hero() {
             }}
           ></div>
         </div>
+        
+        {/* Decorative pattern in bottom right corner - hidden on mobile */}
+        <img 
+          src="/images/RehamDivaSinglePattern.png"
+          alt="Decorative pattern"
+          className="absolute bottom-0 right-0 w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] lg:w-[600px] lg:h-[600px] opacity-30 sm:opacity-60 pointer-events-none object-contain object-bottom object-right hidden sm:block"
+        />
       </div>
 
       <div className="relative max-w-7xl mx-auto w-full">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left Column - Text Content */}
-          <div className={`flex flex-col justify-center space-y-8 transition-all duration-1000 ${
+          <div className={`flex flex-col justify-center space-y-6 lg:space-y-8 transition-all duration-1000 ${
             isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
           }`}>
             {/* Main Heading */}
-            <div className="space-y-4">
-              <h1 className="text-5xl lg:text-6xl font-bold text-navy-900 leading-tight">
+            <div className="space-y-3 lg:space-y-4">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-purple-900 leading-tight">
                 Find Your Strength,{' '}
-                <span className="text-gold">Shape Your Future.</span>
+                <span className="text-pink-500">Shape Your Future.</span>
               </h1>
-              <p className="text-xl text-navy-700 leading-relaxed">
+              <p className="text-lg sm:text-xl text-purple-700 leading-relaxed">
                 Unlimited motivational classes in bite-sized episodes designed for women who want to grow.
               </p>
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4">
               <Button 
                 size="lg" 
-                className="bg-gold hover:bg-gold-700 text-white"
+                className="bg-pink-500 hover:bg-pink-700 text-white w-full sm:w-auto"
               >
                 Explore all
               </Button>
@@ -110,7 +117,7 @@ export default function Hero() {
                 variant="outline" 
                 size="lg"
                 onClick={() => setIsModalOpen(true)}
-                className="border-navy-800 text-navy-800 hover:bg-navy-800 hover:text-white"
+                className="border-purple-700 text-purple-700 hover:bg-purple-700 hover:text-white w-full sm:w-auto"
               >
                 Subscribe Now
               </Button>
@@ -121,12 +128,12 @@ export default function Hero() {
           <div className={`transition-all duration-1000 delay-300 ${
             isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
           }`}>
-            <div className="grid grid-cols-2 gap-4 aspect-square max-w-lg mx-auto">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 aspect-square max-w-sm sm:max-w-md lg:max-w-lg mx-auto">
               {imageSets[currentImageSet].map((image, index) => {
                 // Staggered vertical positioning
                 const staggerOffsets = [
                   'transform-none', // Top left - no offset
-                  'transform translate-y-2', // Top right - slight down
+                  'transform translate-y-1 sm:translate-y-2', // Top right - slight down
                   'transform -translate-y-1', // Bottom left - slight up  
                   'transform translate-y-1' // Bottom right - slight down
                 ]
@@ -134,7 +141,7 @@ export default function Hero() {
                 return (
                   <div
                     key={`${currentImageSet}-${index}`}
-                    className={`relative overflow-hidden rounded-2xl shadow-xl group transition-all duration-700 ease-out ${
+                    className={`relative overflow-hidden rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl group transition-all duration-700 ease-out ${
                       staggerOffsets[index]
                     } ${
                       imageAnimations[index] 
@@ -150,12 +157,12 @@ export default function Hero() {
                       alt={`Motivational content ${index + 1}`}
                       fill
                       className="object-cover transition-all duration-700 group-hover:scale-105"
-                      sizes="(max-width: 768px) 50vw, 25vw"
+                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-navy-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-purple-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     
                     {/* Subtle inner shadow for depth */}
-                    <div className="absolute inset-0 rounded-2xl shadow-inner opacity-20"></div>
+                    <div className="absolute inset-0 rounded-xl sm:rounded-2xl shadow-inner opacity-20"></div>
                   </div>
                 )
               })}
@@ -167,9 +174,9 @@ export default function Hero() {
       {/* Email Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 animate-in fade-in-0 zoom-in-95 duration-200">
-            <h3 className="text-2xl font-bold text-navy-900 mb-2">Stay Inspired</h3>
-            <p className="text-navy-700 mb-6">
+          <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-md w-full mx-4 animate-in fade-in-0 zoom-in-95 duration-200">
+            <h3 className="text-xl sm:text-2xl font-bold text-purple-900 mb-2">Stay Inspired</h3>
+            <p className="text-sm sm:text-base text-purple-700 mb-6">
               Get notified about new motivational content and exclusive updates.
             </p>
             <form onSubmit={handleEmailSubmit} className="space-y-4">
@@ -179,20 +186,20 @@ export default function Hero() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full"
+                className="w-full text-base sm:text-sm"
               />
-              <div className="flex space-x-3">
+              <div className="flex flex-col sm:flex-row gap-3 sm:space-x-3 sm:gap-0">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => setIsModalOpen(false)}
-                  className="flex-1"
+                  className="flex-1 w-full sm:w-auto"
                 >
                   Cancel
                 </Button>
                 <Button
                   type="submit"
-                  className="flex-1"
+                  className="flex-1 w-full sm:w-auto"
                 >
                   Submit & Continue
                 </Button>

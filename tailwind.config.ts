@@ -9,15 +9,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        navy: {
-          900: '#08152B',
-          800: '#0A1F44',
-          700: '#0F2E6E',
+        pink: {
+          900: '#B85C89',
+          700: '#D774A0',
+          500: '#EA8BB8', // main
+          300: '#F4B6D1',
+          100: '#FBE4EE',
         },
-        gold: {
-          DEFAULT: '#C49A3A',
-          700: '#A97C18',
-          300: '#E0C063',
+        purple: {
+          900: '#2E0F38',
+          800: '#3A1547',
+          700: '#4A235A', // main
+          500: '#6C3483',
+          300: '#A569BD',
         },
         neutral: {
           bg: '#F5F7FA',

@@ -5,7 +5,7 @@ A motivational video platform landing page built with Next.js 14, TypeScript, Ta
 ## 🚀 Features
 
 - **Modern Tech Stack**: Next.js 14 with App Router, TypeScript, Tailwind CSS
-- **Component Library**: shadcn/ui components with custom navy/gold theme
+- **Component Library**: shadcn/ui components with custom pink/purple theme
 - **Animations**: Framer Motion for smooth micro-animations
 - **Accessibility**: WCAG compliant with focus states, ARIA labels, and reduced motion support
 - **Responsive Design**: Mobile-first approach (360px-430px, tablet, desktop)
@@ -15,17 +15,20 @@ A motivational video platform landing page built with Next.js 14, TypeScript, Ta
 ## 🎨 Design System
 
 ### Color Palette
-- **Navy Primary**: `#0A1F44`
-- **Navy Hover**: `#0F2E6E` 
-- **Navy Dark**: `#08152B`
-- **Gold Accent**: `#C49A3A`
-- **Gold Hover**: `#A97C18`
-- **Gold Soft**: `#E0C063`
+- **Pink Primary**: `#EA8BB8`
+- **Pink Hover**: `#D774A0`
+- **Pink Dark**: `#B85C89`
+- **Pink Soft**: `#F4B6D1`
+- **Pink Light**: `#FBE4EE`
+- **Purple Primary**: `#4A235A`
+- **Purple Hover**: `#6C3483`
+- **Purple Dark**: `#2E0F38`
+- **Purple Soft**: `#A569BD`
 - **Neutral BG**: `#F5F7FA`
 
 ### Typography
 - **Font**: Inter (system font fallback)
-- **Headings**: Bold, navy color
+- **Headings**: Bold, purple color
 - **Body**: Regular weight, secondary text color
 
 ## 📱 Sections

@@ -7,16 +7,16 @@ import { faqs } from '@/lib/data'
 
 export default function FAQ() {
   return (
-    <section id="faq" className="py-20 px-4 bg-neutral-bg">
+    <section id="faq" className="py-12 sm:py-16 lg:py-20 px-4 bg-neutral-bg">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-12 sm:mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-navy-800 mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-purple-800 mb-4 sm:mb-6">
             {t('faq.title')}
           </h2>
         </motion.div>
@@ -27,7 +27,7 @@ export default function FAQ() {
           transition={{ duration: 0.6, delay: 0.2 }}
           viewport={{ once: true }}
         >
-          <Accordion type="single" collapsible className="space-y-4">
+          <Accordion type="single" collapsible className="space-y-3 sm:space-y-4">
             {faqs.map((faq, index) => (
               <motion.div
                 key={faq.id}
@@ -38,12 +38,12 @@ export default function FAQ() {
               >
                 <AccordionItem 
                   value={faq.id} 
-                  className="bg-white rounded-2xl shadow-sm border border-gray-100"
+                  className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100"
                 >
-                  <AccordionTrigger className="px-6 py-4 text-left font-semibold text-navy-800 hover:text-gold transition-colors">
+                  <AccordionTrigger className="px-4 sm:px-6 py-3 sm:py-4 text-left font-semibold text-purple-800 hover:text-pink-500 transition-colors text-sm sm:text-base">
                     {faq.question}
                   </AccordionTrigger>
-                  <AccordionContent className="px-6 pb-4 text-text-secondary leading-relaxed">
+                  <AccordionContent className="px-4 sm:px-6 pb-3 sm:pb-4 text-text-secondary leading-relaxed text-sm sm:text-base">
                     {faq.answer}
                   </AccordionContent>
                 </AccordionItem>

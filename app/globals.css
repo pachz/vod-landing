@@ -3,12 +3,16 @@
 @tailwind utilities;
 
 :root {
-  --navy-900: #08152B;
-  --navy-800: #0A1F44;
-  --navy-700: #0F2E6E;
-  --gold: #C49A3A;
-  --gold-700: #A97C18;
-  --gold-300: #E0C063;
+  --pink-900: #B85C89;
+  --pink-700: #D774A0;
+  --pink-500: #EA8BB8;
+  --pink-300: #F4B6D1;
+  --pink-100: #FBE4EE;
+  --purple-900: #2E0F38;
+  --purple-800: #3A1547;
+  --purple-700: #4A235A;
+  --purple-500: #6C3483;
+  --purple-300: #A569BD;
   --neutral-bg: #F5F7FA;
   --text-primary: #111827;
   --text-secondary: #4B5563;
@@ -34,7 +38,7 @@ body {
 
 /* Focus styles for accessibility */
 *:focus-visible {
-  outline: 2px solid var(--gold);
+  outline: 2px solid var(--pink-500);
   outline-offset: 2px;
 }
 
@@ -56,6 +60,26 @@ img {
   height: auto;
 }
 
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  /* Improve touch targets */
+  button, a, input, select, textarea {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Better text rendering on mobile */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Prevent horizontal scroll */
+  html, body {
+    overflow-x: hidden;
+  }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -66,12 +90,12 @@ img {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--gold);
+  background: var(--pink-500);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--gold-700);
+  background: var(--pink-700);
 }
 
 /* Utility classes */
@@ -124,4 +148,41 @@ img {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+}
+
+/* Performance optimizations */
+* {
+  will-change: auto;
+}
+
+/* Optimize animations for mobile */
+@media (max-width: 768px) {
+  * {
+    will-change: auto;
+  }
+  
+  /* Reduce motion on mobile for better performance */
+  .animate-marquee-left,
+  .animate-marquee-right {
+    animation-duration: 60s !important;
+  }
+}
+
+/* Prevent layout shifts */
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
+.aspect-video {
+  aspect-ratio: 16 / 9;
+}
+
+/* Smooth scrolling for better UX */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Optimize images */
+img {
+  content-visibility: auto;
 }

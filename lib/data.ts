@@ -24,6 +24,14 @@ export interface FAQ {
   answer: string
 }
 
+export interface Testimonial {
+  id: string
+  name: string
+  role: string
+  text: string
+  image: string
+}
+
 export const courses: Course[] = [
   {
     id: '1',
@@ -131,6 +139,37 @@ export const instructors: Instructor[] = [
     statement: 'Inner peace is the foundation of true success.',
     image: '/images/w8.png',
     cta: 'Join Her Sessions'
+  }
+]
+
+export const testimonials: Testimonial[] = [
+  {
+    id: '1',
+    name: 'Sarah Johnson',
+    role: 'Marketing Manager',
+    text: 'This platform completely changed the way I consume video content. The smooth navigation, the personalized recommendations, and the high-quality streaming make it stand out from every other service I\'ve tried. It honestly feels like it was built exactly for my needs.',
+    image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face'
+  },
+  {
+    id: '2',
+    name: 'Ahmed Al-Farsi',
+    role: 'Entrepreneur',
+    text: 'The VOD service is reliable, fast, and always accessible. I can watch my favorite shows while traveling, working, or relaxing at home without interruptions. It has quickly become an essential part of my daily routine and I truly value the convenience it offers.',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'
+  },
+  {
+    id: '3',
+    name: 'Emily Carter',
+    role: 'Student',
+    text: 'I was looking for an affordable platform with a simple design, but I got much more than that. The user interface is modern, easy to navigate, and fun to use. I enjoy how quickly I can find new content, and I\'ve already recommended it to most of my classmates.',
+    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face'
+  },
+  {
+    id: '4',
+    name: 'David Kim',
+    role: 'Software Engineer',
+    text: 'What impressed me the most is the attention to detail throughout the platform. From the streaming quality to the layout and responsiveness, everything feels polished. It\'s rare to find such a seamless blend of technology and design in a streaming service.',
+    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face'
   }
 ]
 

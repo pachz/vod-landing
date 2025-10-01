@@ -48,24 +48,24 @@ const features = [
 
 export default function Features() {
   return (
-    <section id="features" className="py-20 px-4 bg-white">
+    <section id="features" className="py-12 sm:py-16 lg:py-20 px-4 bg-white">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-12 sm:mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-navy-800 mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-purple-800 mb-4 sm:mb-6">
             {t('features.title')}
           </h2>
-          <p className="text-xl text-text-secondary max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl text-text-secondary max-w-3xl mx-auto">
             {t('features.subtitle')}
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-8 sm:mb-12">
           {features.map((feature, index) => (
             <motion.div
               key={index}
@@ -75,16 +75,16 @@ export default function Features() {
               viewport={{ once: true }}
             >
               <Card className="h-full hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-0 shadow-lg">
-                <CardHeader className="text-center pb-4">
-                  <div className="w-16 h-16 bg-gold-300/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <feature.icon className="w-8 h-8 text-gold" />
+                <CardHeader className="text-center pb-3 sm:pb-4 p-4 sm:p-6">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-pink-300/10 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                    <feature.icon className="w-6 h-6 sm:w-8 sm:h-8 text-pink-500" />
                   </div>
-                  <CardTitle className="text-xl text-navy-800">
+                  <CardTitle className="text-lg sm:text-xl text-purple-800">
                     {feature.title}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="text-center">
-                  <CardDescription className="text-text-secondary">
+                <CardContent className="text-center p-4 sm:p-6 pt-0">
+                  <CardDescription className="text-sm sm:text-base text-text-secondary">
                     {feature.description}
                   </CardDescription>
                 </CardContent>
@@ -98,12 +98,12 @@ export default function Features() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
           viewport={{ once: true }}
-          className="flex flex-col sm:flex-row gap-4 justify-center"
+          className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center"
         >
-          <Button size="lg" className="bg-gold hover:bg-gold-700 text-white">
+          <Button size="lg" className="bg-pink-500 hover:bg-pink-700 text-white w-full sm:w-auto">
             {t('features.cta.primary')}
           </Button>
-          <Button size="lg" variant="outline" className="border-navy-800 text-navy-800 hover:bg-navy-800 hover:text-white">
+          <Button size="lg" variant="outline" className="border-purple-800 text-purple-800 hover:bg-purple-800 hover:text-white w-full sm:w-auto">
             {t('features.cta.secondary')}
           </Button>
         </motion.div>

@@ -34,32 +34,39 @@ export default function SiteFooter() {
   }
 
   return (
-    <footer className="bg-navy-800 text-white">
-      <div className="max-w-7xl mx-auto px-4 py-16">
-        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
+    <footer className="bg-purple-800 text-white">
+      <div className="max-w-7xl mx-auto px-4 py-12 sm:py-16">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-6 sm:gap-8">
           {/* Brand & Mission */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="lg:col-span-2"
+            className="sm:col-span-2 lg:col-span-2"
           >
-            <h3 className="text-2xl font-bold text-gold mb-4">vod lady</h3>
-            <p className="text-gray-300 leading-relaxed mb-6">
-              {t('footer.mission')}
-            </p>
-            <div className="flex space-x-4">
+            <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
+              <img 
+                src="/images/RehamDivaLogoWithText.png" 
+                alt="Reham Diva" 
+                className="h-20 sm:h-24 lg:h-28 w-auto"
+              />
+              <div className="flex flex-col text-center sm:text-left">
+                <h4 className="text-base sm:text-lg font-semibold text-pink-500 mb-1">Empowering Women</h4>
+                <p className="text-xs sm:text-sm text-gray-300">{t('footer.mission')}</p>
+              </div>
+            </div>
+            <div className="flex justify-center sm:justify-start space-x-3 sm:space-x-4">
               {socialLinks.map((social, index) => (
                 <motion.a
                   key={social.label}
                   href={social.href}
-                  className="w-10 h-10 bg-gold/10 hover:bg-gold/20 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
+                  className="w-9 h-9 sm:w-10 sm:h-10 bg-pink-500/10 hover:bg-pink-500/20 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                   aria-label={social.label}
                 >
-                  <social.icon className="w-5 h-5 text-gold" />
+                  <social.icon className="w-4 h-4 sm:w-5 sm:h-5 text-pink-500" />
                 </motion.a>
               ))}
             </div>
@@ -71,13 +78,14 @@ export default function SiteFooter() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             viewport={{ once: true }}
+            className="text-center sm:text-left"
           >
-            <h4 className="text-lg font-semibold mb-4">Navigation</h4>
+            <h4 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Navigation</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-gray-300 hover:text-gold transition-colors">{t('footer.navigation.courses')}</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-gold transition-colors">{t('footer.navigation.about')}</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-gold transition-colors">{t('footer.navigation.blog')}</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-gold transition-colors">{t('footer.navigation.contact')}</a></li>
+              <li><a href="#" className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">{t('footer.navigation.courses')}</a></li>
+              <li><a href="#" className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">{t('footer.navigation.about')}</a></li>
+              <li><a href="#" className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">{t('footer.navigation.blog')}</a></li>
+              <li><a href="#" className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">{t('footer.navigation.contact')}</a></li>
             </ul>
           </motion.div>
 
@@ -87,12 +95,13 @@ export default function SiteFooter() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
+            className="text-center sm:text-left"
           >
-            <h4 className="text-lg font-semibold mb-4">Support</h4>
+            <h4 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Support</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-gray-300 hover:text-gold transition-colors">{t('footer.support.faq')}</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-gold transition-colors">{t('footer.support.terms')}</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-gold transition-colors">{t('footer.support.privacy')}</a></li>
+              <li><a href="#" className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">{t('footer.support.faq')}</a></li>
+              <li><a href="#" className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">{t('footer.support.terms')}</a></li>
+              <li><a href="#" className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">{t('footer.support.privacy')}</a></li>
             </ul>
           </motion.div>
 
@@ -102,9 +111,10 @@ export default function SiteFooter() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
             viewport={{ once: true }}
+            className="sm:col-span-2 lg:col-span-1"
           >
-            <h4 className="text-lg font-semibold mb-4">Newsletter</h4>
-            <p className="text-gray-300 text-sm mb-4">
+            <h4 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-center sm:text-left">Newsletter</h4>
+            <p className="text-gray-300 text-xs sm:text-sm mb-3 sm:mb-4 text-center sm:text-left">
               {t('footer.newsletter.title')}
             </p>
             <form onSubmit={handleSubscribe} className="space-y-3">
@@ -113,13 +123,13 @@ export default function SiteFooter() {
                 placeholder={t('footer.newsletter.placeholder')}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-white/10 border-gray-600 text-white placeholder:text-gray-400 focus:border-gold"
+                className="bg-white/10 border-gray-600 text-white placeholder:text-gray-400 focus:border-pink-500 text-sm sm:text-base"
                 required
               />
               <Button 
                 type="submit" 
                 size="sm" 
-                className="w-full bg-gold hover:bg-gold-700 text-white"
+                className="w-full bg-pink-500 hover:bg-pink-700 text-white text-sm sm:text-base"
                 disabled={isSubscribed}
               >
                 {isSubscribed ? 'Subscribed!' : t('footer.newsletter.subscribe')}
@@ -134,9 +144,9 @@ export default function SiteFooter() {
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
-          className="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400"
+          className="border-t border-gray-700 mt-8 sm:mt-12 pt-6 sm:pt-8 text-center text-gray-400"
         >
-          <p>{t('footer.copyright')}</p>
+          <p className="text-xs sm:text-sm">{t('footer.copyright')}</p>
         </motion.div>
       </div>
     </footer>

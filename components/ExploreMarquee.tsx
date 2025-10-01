@@ -19,7 +19,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, className }) => {
   return (
     <Card 
       className={cn(
-        "relative w-80 h-48 overflow-hidden cursor-pointer transition-all duration-300 ease-out group",
+        "relative w-64 sm:w-72 lg:w-80 h-36 sm:h-40 lg:h-48 overflow-hidden cursor-pointer transition-all duration-300 ease-out group",
         "hover:scale-105 hover:shadow-xl hover:shadow-black/20",
         isHovered && "scale-105 shadow-xl shadow-black/20",
         className
@@ -33,17 +33,18 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, className }) => {
           alt={course.title}
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-110"
+          sizes="(max-width: 640px) 256px, (max-width: 1024px) 288px, 320px"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
         
-        <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-xs bg-gold/20 text-gold px-2 py-1 rounded-full border border-gold/30">
+        <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 text-white">
+          <div className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
+            <span className="text-xs bg-pink-500/20 text-pink-500 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full border border-pink-500/30">
               {course.category}
             </span>
             <span className="text-xs text-white/70">{course.duration}</span>
           </div>
-          <h3 className="font-semibold text-sm leading-tight mb-1 line-clamp-2">
+          <h3 className="font-semibold text-xs sm:text-sm leading-tight mb-1 line-clamp-2">
             {course.title}
           </h3>
           <p className="text-xs text-white/80 line-clamp-1">
@@ -187,7 +188,7 @@ const ExploreMarquee: React.FC = () => {
   return (
     <section className="relative min-h-screen bg-gradient-to-b from-neutral-bg to-white overflow-hidden">
       {/* Background Marquee - Single Row */}
-      <div className="absolute inset-0 flex items-center py-20">
+      <div className="absolute inset-0 flex items-center py-12 sm:py-20">
         <MarqueeRow
           courses={singleRowCourses}
           direction="left"
@@ -198,40 +199,42 @@ const ExploreMarquee: React.FC = () => {
       </div>
 
       {/* Center Overlay */}
-      <div className="relative z-10 flex items-center justify-center min-h-screen px-4">
+      <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-8 sm:py-0">
         <div className="text-center max-w-4xl mx-auto">
           {/* Main Content */}
-          <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8 md:p-12 shadow-2xl border border-white/20">
-            <h2 className="text-3xl md:text-5xl font-bold text-navy-900 mb-6 leading-tight">
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-12 shadow-2xl border border-white/20">
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-purple-900 mb-4 sm:mb-6 leading-tight">
               Discover courses that inspire your next step
             </h2>
             
-            <p className="text-lg md:text-xl text-text-secondary mb-8 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-text-secondary mb-6 sm:mb-8 max-w-2xl mx-auto leading-relaxed">
               From confidence to career — find your path in short, motivational courses.
             </p>
 
             {/* Category Chips */}
-            <div className="flex flex-wrap justify-center gap-3 mb-8">
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6 sm:mb-8">
               {categories.map((category) => (
                 <Link
                   key={category.slug}
                   href={`/courses?category=${category.slug}`}
-                  className="px-4 py-2 bg-navy-800/10 text-navy-800 rounded-full text-sm font-medium hover:bg-gold hover:text-white transition-colors duration-200"
+                  className="px-3 sm:px-4 py-1.5 sm:py-2 bg-purple-800/10 text-purple-800 rounded-full text-xs sm:text-sm font-medium hover:bg-pink-500 hover:text-white transition-colors duration-200"
                 >
                   {category.name}
                 </Link>
               ))}
             </div>
 
-            {/* CTA Button */}
-            <Link href="/courses">
-              <Button 
-                size="lg" 
-                className="text-lg px-8 py-4 h-auto font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
-              >
-                View All Courses
-              </Button>
-            </Link>
+            {/* CTA Button - Hidden on mobile, shown on larger screens */}
+            <div className="hidden sm:block">
+              <Link href="/courses">
+                <Button 
+                  size="lg" 
+                  className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 h-auto font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+                >
+                  View All Courses
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -242,7 +245,7 @@ const ExploreMarquee: React.FC = () => {
           <Link href="/courses" className="block">
             <Button 
               size="lg" 
-              className="w-full text-lg py-4 h-auto font-semibold"
+              className="w-full text-base py-3 h-auto font-semibold"
             >
               View All Courses
             </Button>
