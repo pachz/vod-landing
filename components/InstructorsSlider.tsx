@@ -61,7 +61,7 @@ export default function RehamDivaShowcase() {
                   <div className="relative">
                     <div className="absolute -left-4 top-0 w-1 h-12 bg-gradient-to-b from-purple-600 to-pink-500 rounded-full"></div>
                     <p className="text-gray-700 text-base leading-relaxed pl-6 italic">
-                      "Start your journey to the self. As an Arab woman, married with children, and a developmental business owner, I was among those most in need of regaining balance in every part of my life—not only for myself but also for the people I love and who love me around me."
+                      &ldquo;Start your journey to the self. As an Arab woman, married with children, and a developmental business owner, I was among those most in need of regaining balance in every part of my life—not only for myself but also for the people I love and who love me around me.&rdquo;
                     </p>
                   </div>
                   

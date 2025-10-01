@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -46,10 +47,13 @@ export default function SiteFooter() {
             className="sm:col-span-2 lg:col-span-2"
           >
             <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
-              <img 
+              <Image 
                 src="/images/RehamDivaLogoWithText.png" 
                 alt="Reham Diva" 
+                width={200}
+                height={112}
                 className="h-20 sm:h-24 lg:h-28 w-auto"
+                sizes="(max-width: 640px) 80px, (max-width: 1024px) 96px, 112px"
               />
               <div className="flex flex-col text-center sm:text-left">
                 <h4 className="text-base sm:text-lg font-semibold text-pink-500 mb-1">Empowering Women</h4>

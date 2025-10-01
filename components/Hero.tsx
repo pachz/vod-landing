@@ -81,10 +81,13 @@ export default function Hero() {
         </div>
         
         {/* Decorative pattern in bottom right corner - hidden on mobile */}
-        <img 
+        <Image 
           src="/images/RehamDivaSinglePattern.png"
           alt="Decorative pattern"
+          width={600}
+          height={600}
           className="absolute bottom-0 right-0 w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] lg:w-[600px] lg:h-[600px] opacity-30 sm:opacity-60 pointer-events-none object-contain object-bottom object-right hidden sm:block"
+          sizes="(max-width: 640px) 300px, (max-width: 1024px) 400px, 600px"
         />
       </div>
 

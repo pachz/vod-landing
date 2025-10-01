@@ -1,6 +1,6 @@
 import en from '@/locales/en.json'
 
-type Locale = 'en' | 'ar'
+export type Locale = 'en' | 'ar'
 
 interface Translations {
   [key: string]: string | Translations

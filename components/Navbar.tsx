@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Menu, X } from 'lucide-react'
 
@@ -52,10 +53,13 @@ export default function Navbar() {
               onClick={() => scrollToSection('#home')}
               className="flex items-center space-x-2 sm:space-x-3 transition-opacity duration-200 hover:opacity-80"
             >
-              <img 
+              <Image 
                 src="/images/RehamDivaLogo.png" 
                 alt="Reham Diva" 
+                width={32}
+                height={32}
                 className="h-6 sm:h-8 w-auto"
+                sizes="(max-width: 640px) 24px, 32px"
               />
               <span className={`text-lg sm:text-2xl font-bold transition-colors duration-200 ${
                 scrolled

@@ -99,7 +99,7 @@ export default function Testimonials() {
 
               {/* Quote mark */}
               <div className="flex justify-center mb-4 sm:mb-6">
-                <span className="text-4xl sm:text-6xl font-bold text-purple-800">"</span>
+                <span className="text-4xl sm:text-6xl font-bold text-purple-800">&ldquo;</span>
               </div>
 
               {/* Name and role */}
