@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { t } from '@/lib/i18n'
+import { useTranslation } from '@/lib/useTranslation'
 import { 
   Play, 
   Headphones, 
@@ -13,40 +13,41 @@ import {
   Users 
 } from 'lucide-react'
 
-const features = [
-  {
-    icon: Play,
-    title: t('features.cards.courses.title'),
-    description: t('features.cards.courses.description'),
-  },
-  {
-    icon: Headphones,
-    title: t('features.cards.audio.title'),
-    description: t('features.cards.audio.description'),
-  },
-  {
-    icon: Download,
-    title: t('features.cards.offline.title'),
-    description: t('features.cards.offline.description'),
-  },
-  {
-    icon: Monitor,
-    title: t('features.cards.devices.title'),
-    description: t('features.cards.devices.description'),
-  },
-  {
-    icon: Star,
-    title: t('features.cards.content.title'),
-    description: t('features.cards.content.description'),
-  },
-  {
-    icon: Users,
-    title: t('features.cards.community.title'),
-    description: t('features.cards.community.description'),
-  },
-]
-
 export default function Features() {
+  const { t } = useTranslation()
+
+  const features = [
+    {
+      icon: Play,
+      title: t('features.cards.courses.title'),
+      description: t('features.cards.courses.description'),
+    },
+    {
+      icon: Headphones,
+      title: t('features.cards.audio.title'),
+      description: t('features.cards.audio.description'),
+    },
+    {
+      icon: Download,
+      title: t('features.cards.offline.title'),
+      description: t('features.cards.offline.description'),
+    },
+    {
+      icon: Monitor,
+      title: t('features.cards.devices.title'),
+      description: t('features.cards.devices.description'),
+    },
+    {
+      icon: Star,
+      title: t('features.cards.content.title'),
+      description: t('features.cards.content.description'),
+    },
+    {
+      icon: Users,
+      title: t('features.cards.community.title'),
+      description: t('features.cards.community.description'),
+    },
+  ]
   return (
     <section id="features" className="py-12 sm:py-16 lg:py-20 px-4 bg-white">
       <div className="max-w-7xl mx-auto">

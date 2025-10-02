@@ -18,8 +18,15 @@ export function useLanguageDetection() {
     } else if (path.startsWith('/en') || path.includes('/en/')) {
       detectedLocale = 'en'
     } else {
-      // Default to English for root path
-      detectedLocale = 'en'
+      // Check for query parameter as fallback
+      const urlParams = new URLSearchParams(window.location.search)
+      const localeParam = urlParams.get('locale')
+      if (localeParam === 'ar') {
+        detectedLocale = 'ar'
+      } else {
+        // Default to English for root path
+        detectedLocale = 'en'
+      }
     }
 
     // Update the locale in the i18n system

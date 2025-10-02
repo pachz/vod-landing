@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useTranslation } from '@/lib/useTranslation'
 
 const imageSets = [
   ['/images/1.webp', '/images/2.webp', '/images/3.webp', '/images/4.webp'],
@@ -13,6 +14,7 @@ const imageSets = [
 ]
 
 export default function Hero() {
+  const { t, locale } = useTranslation()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [email, setEmail] = useState('')
   const [currentImageSet, setCurrentImageSet] = useState(0)
@@ -80,13 +82,17 @@ export default function Hero() {
           ></div>
         </div>
         
-        {/* Decorative pattern in bottom right corner - hidden on mobile */}
+        {/* Decorative pattern - positioned based on language */}
         <Image 
           src="/images/RehamDivaSinglePattern.png"
           alt="Decorative pattern"
           width={600}
           height={600}
-          className="absolute bottom-0 right-0 w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] lg:w-[600px] lg:h-[600px] opacity-30 sm:opacity-60 pointer-events-none object-contain object-bottom object-right hidden sm:block"
+          className={`absolute w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] lg:w-[600px] lg:h-[600px] opacity-30 sm:opacity-60 pointer-events-none object-contain hidden sm:block ${
+            locale === 'ar' 
+              ? 'bottom-0 left-0 object-bottom object-left rotate-90' 
+              : 'bottom-0 right-0 object-bottom object-right'
+          }`}
           sizes="(max-width: 640px) 300px, (max-width: 1024px) 400px, 600px"
         />
       </div>
@@ -100,11 +106,10 @@ export default function Hero() {
             {/* Main Heading */}
             <div className="space-y-3 lg:space-y-4">
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-purple-900 leading-tight">
-                Find Your Strength,{' '}
-                <span className="text-pink-500">Shape Your Future.</span>
+                {t('hero.title')}
               </h1>
               <p className="text-lg sm:text-xl text-purple-700 leading-relaxed">
-                Unlimited motivational classes in bite-sized episodes designed for women who want to grow.
+                {t('hero.subtitle')}
               </p>
             </div>
 
@@ -112,17 +117,17 @@ export default function Hero() {
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4">
               <Button 
                 size="lg" 
+                onClick={() => setIsModalOpen(true)}
                 className="bg-pink-500 hover:bg-pink-700 text-white w-full sm:w-auto"
               >
-                Explore all
+                {t('hero.subscribeNow')}
               </Button>
               <Button 
                 variant="outline" 
                 size="lg"
-                onClick={() => setIsModalOpen(true)}
                 className="border-purple-700 text-purple-700 hover:bg-purple-700 hover:text-white w-full sm:w-auto"
               >
-                Subscribe Now
+                {t('hero.exploreAll')}
               </Button>
             </div>
           </div>
@@ -178,14 +183,14 @@ export default function Hero() {
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-md w-full mx-4 animate-in fade-in-0 zoom-in-95 duration-200">
-            <h3 className="text-xl sm:text-2xl font-bold text-purple-900 mb-2">Stay Inspired</h3>
+            <h3 className="text-xl sm:text-2xl font-bold text-purple-900 mb-2">{t('hero.stayInspired')}</h3>
             <p className="text-sm sm:text-base text-purple-700 mb-6">
-              Get notified about new motivational content and exclusive updates.
+              {t('hero.getNotified')}
             </p>
             <form onSubmit={handleEmailSubmit} className="space-y-4">
               <Input
                 type="email"
-                placeholder="Enter your email"
+                placeholder={t('hero.enterEmail')}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -198,13 +203,13 @@ export default function Hero() {
                   onClick={() => setIsModalOpen(false)}
                   className="flex-1 w-full sm:w-auto"
                 >
-                  Cancel
+                  {t('hero.cancel')}
                 </Button>
                 <Button
                   type="submit"
                   className="flex-1 w-full sm:w-auto"
                 >
-                  Submit & Continue
+                  {t('hero.submitContinue')}
                 </Button>
               </div>
             </form>

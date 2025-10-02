@@ -1,10 +1,16 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Almarai } from 'next/font/google'
 import './globals.css'
 import { DirectionProvider } from '@/providers/DirectionProvider'
 import Navbar from '@/components/Navbar'
+import HtmlAttributes from '@/components/HtmlAttributes'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const almarai = Almarai({ 
+  subsets: ['arabic'], 
+  weight: ['300', '400', '700', '800'],
+  variable: '--font-almarai' 
+})
 
 export const metadata: Metadata = {
   title: 'vod lady - Find Your Strength, Shape Your Future',
@@ -30,8 +36,9 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html>
-      <body className={`${inter.variable} font-sans antialiased`}>
+    <html lang="en">
+      <body className={`${inter.variable} ${almarai.variable} font-sans antialiased`}>
+        <HtmlAttributes />
         <DirectionProvider>
           <Navbar />
           {children}

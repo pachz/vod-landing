@@ -10,7 +10,14 @@
       "career": "Boost career & leadership",
       "other": "Something else"
     },
-    "continue": "Continue"
+    "continue": "Continue",
+    "exploreAll": "Explore all",
+    "subscribeNow": "Subscribe Now",
+    "stayInspired": "Stay Inspired",
+    "getNotified": "Get notified about new motivational content and exclusive updates.",
+    "enterEmail": "Enter your email",
+    "cancel": "Cancel",
+    "submitContinue": "Submit & Continue"
   },
   "features": {
     "title": "Everything you need to stay inspired and motivated",
@@ -81,5 +88,13 @@
       "subscribe": "Subscribe"
     },
     "copyright": "© 2025 vod lady. All rights reserved."
+  },
+  "navbar": {
+    "home": "Home",
+    "features": "Features",
+    "instructors": "Instructors",
+    "faq": "FAQ",
+    "getStarted": "Get Started",
+    "logoText": "Reham Diva"
   }
 }

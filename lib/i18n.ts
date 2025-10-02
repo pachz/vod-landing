@@ -1,4 +1,5 @@
 import en from '@/locales/en.json'
+import ar from '@/locales/ar.json'
 
 export type Locale = 'en' | 'ar'
 
@@ -8,7 +9,7 @@ interface Translations {
 
 const translations: Record<Locale, Translations> = {
   en,
-  ar: {} // Will be added later for Arabic support
+  ar
 }
 
 let currentLocale: Locale = 'en'
@@ -24,21 +25,33 @@ export function getLocale(): Locale {
 export function t(key: string): string {
   const keys = key.split('.')
   let value: any = translations[currentLocale]
+  let foundInCurrentLocale = true
   
+  // Try to find the key in current locale
   for (const k of keys) {
     if (value && typeof value === 'object' && k in value) {
       value = value[k]
     } else {
-      // Fallback to English if key not found
-      value = translations.en
-      for (const fallbackKey of keys) {
-        if (value && typeof value === 'object' && fallbackKey in value) {
-          value = value[fallbackKey]
-        } else {
-          return key // Return the key if not found anywhere
-        }
+      foundInCurrentLocale = false
+      break
+    }
+  }
+  
+  // If not found in current locale, try English fallback
+  if (!foundInCurrentLocale && currentLocale !== 'en') {
+    console.warn(`Translation key "${key}" not found in ${currentLocale} locale, falling back to English`)
+    value = translations.en
+    for (const fallbackKey of keys) {
+      if (value && typeof value === 'object' && fallbackKey in value) {
+        value = value[fallbackKey]
+      } else {
+        console.warn(`Translation key "${key}" not found in English fallback either`)
+        return key // Return the key if not found anywhere
       }
     }
+  } else if (!foundInCurrentLocale) {
+    console.warn(`Translation key "${key}" not found in any locale`)
+    return key
   }
   
   return typeof value === 'string' ? value : key

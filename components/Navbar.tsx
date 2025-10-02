@@ -4,17 +4,38 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Menu, X } from 'lucide-react'
+import { useDirection } from '@/providers/DirectionProvider'
+import { useTranslation } from '@/lib/useTranslation'
+import LanguageSwitcher from './LanguageSwitcher'
 
 const navigationItems = [
-  { name: 'Home', href: '#home' },
-  { name: 'Features', href: '#features' },
-  { name: 'Instructors', href: '#instructors' },
-  { name: 'FAQ', href: '#faq' },
+  { nameKey: 'navbar.home', href: '#home' },
+  { nameKey: 'navbar.features', href: '#features' },
+  { nameKey: 'navbar.instructors', href: '#instructors' },
+  { nameKey: 'navbar.faq', href: '#faq' },
 ]
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const { direction, locale } = useDirection()
+  const { t } = useTranslation()
+
+  // Get translations based on current locale
+  const getNavbarText = (key: string) => {
+    if (locale === 'ar') {
+      const arTranslations: Record<string, string> = {
+        'navbar.home': 'الرئيسية',
+        'navbar.features': 'الميزات',
+        'navbar.instructors': 'المدربات',
+        'navbar.faq': 'الأسئلة الشائعة',
+        'navbar.getStarted': 'ابدئي الآن',
+        'navbar.logoText': 'رهام دیفا'
+      }
+      return arTranslations[key] || t(key)
+    }
+    return t(key)
+  }
 
   // Handle scroll effect
   useEffect(() => {
@@ -46,12 +67,12 @@ export default function Navbar() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-14 sm:h-16">
+        <div className="flex items-center h-14 sm:h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
             <button
               onClick={() => scrollToSection('#home')}
-              className="flex items-center space-x-2 sm:space-x-3 transition-opacity duration-200 hover:opacity-80"
+              className="flex items-center transition-opacity duration-200 hover:opacity-80"
             >
               <Image 
                 src="/images/RehamDivaLogo.png" 
@@ -62,41 +83,47 @@ export default function Navbar() {
                 sizes="(max-width: 640px) 24px, 32px"
               />
               <span className={`text-lg sm:text-2xl font-bold transition-colors duration-200 ${
+                direction === 'rtl' ? 'mr-2 sm:mr-3' : 'ml-2 sm:ml-3'
+              } ${
                 scrolled
                   ? 'text-purple-900'
                   : 'text-purple-900'
               }`}>
-                Reham Diva
+                {getNavbarText('navbar.logoText')}
               </span>
             </button>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-6 lg:space-x-8">
+          {/* Desktop Navigation - Centered */}
+          <div className="hidden md:flex flex-1 justify-center">
+            <div className={`flex items-center ${direction === 'rtl' ? 'space-x-reverse' : ''} space-x-4 lg:space-x-6`}>
               {navigationItems.map((item) => (
                 <button
-                  key={item.name}
+                  key={item.nameKey}
                   onClick={() => scrollToSection(item.href)}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:text-pink-500 ${
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:text-pink-500 ${
                     scrolled
                       ? 'text-purple-800 hover:bg-pink-100'
                       : 'text-purple-800 hover:bg-pink-100'
                   }`}
                 >
-                  {item.name}
+                  {getNavbarText(item.nameKey)}
                 </button>
               ))}
+              {/* Language Switcher with consistent spacing */}
+              <div className="ml-4 lg:ml-6">
+                <LanguageSwitcher />
+              </div>
             </div>
           </div>
 
           {/* CTA Button */}
-          <div className="hidden md:block">
+          <div className="hidden md:block flex-shrink-0">
             <Button
               onClick={() => scrollToSection('#home')}
               className="bg-pink-500 hover:bg-pink-700 text-white text-sm sm:text-base"
             >
-              Get Started
+              {getNavbarText('navbar.getStarted')}
             </Button>
           </div>
 
@@ -128,19 +155,23 @@ export default function Navbar() {
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white/95 backdrop-blur-md border-t border-gray-200">
             {navigationItems.map((item) => (
               <button
-                key={item.name}
+                key={item.nameKey}
                 onClick={() => scrollToSection(item.href)}
-                className="block px-3 py-2 rounded-md text-sm sm:text-base font-medium text-purple-800 hover:text-pink-500 hover:bg-pink-100 transition-colors duration-200 w-full text-left"
+                className={`block px-3 py-2 rounded-md text-sm sm:text-base font-medium text-purple-800 hover:text-pink-500 hover:bg-pink-100 transition-colors duration-200 w-full ${direction === 'rtl' ? 'text-right' : 'text-left'}`}
               >
-                {item.name}
+                {getNavbarText(item.nameKey)}
               </button>
             ))}
-            <div className="pt-3 sm:pt-4">
+            <div className="pt-3 sm:pt-4 space-y-3">
+              {/* Language Switcher for Mobile */}
+              <div className="flex justify-center">
+                <LanguageSwitcher />
+              </div>
               <Button
                 onClick={() => scrollToSection('#home')}
                 className="w-full bg-pink-500 hover:bg-pink-700 text-white text-sm sm:text-base"
               >
-                Get Started
+                {getNavbarText('navbar.getStarted')}
               </Button>
             </div>
           </div>
