@@ -7,10 +7,10 @@ import { Input } from '@/components/ui/input'
 import { useTranslation } from '@/lib/useTranslation'
 
 const imageSets = [
-  ['/images/1.webp', '/images/2.webp', '/images/3.webp', '/images/4.webp'],
-  ['/images/5.webp', '/images/6.webp', '/images/7.webp', '/images/8.webp'],
-  ['/images/9.webp', '/images/10.webp', '/images/1.webp', '/images/2.webp'],
-  ['/images/3.webp', '/images/4.webp', '/images/5.webp', '/images/6.webp']
+  ['/images/hero/1.png', '/images/hero/2.png', '/images/hero/3.png', '/images/hero/4.png'],
+  ['/images/hero/5.png', '/images/hero/6.png', '/images/hero/7.png', '/images/hero/8.png'],
+  ['/images/hero/3.png', '/images/hero/8.png', '/images/hero/1.png', '/images/hero/5.png'],
+  ['/images/hero/6.png', '/images/hero/4.png', '/images/hero/5.png', '/images/hero/2.png'],
 ]
 
 export default function Hero() {
