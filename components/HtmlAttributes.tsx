@@ -1,19 +1,16 @@
 'use client'
 
 import { useEffect } from 'react'
+import { useDirection } from '@/providers/DirectionProvider'
 
 export default function HtmlAttributes() {
+  const { locale, direction } = useDirection()
+
   useEffect(() => {
-    const path = window.location.pathname
-    
-    if (path.startsWith('/ar')) {
-      document.documentElement.lang = 'ar'
-      document.documentElement.dir = 'rtl'
-    } else {
-      document.documentElement.lang = 'en'
-      document.documentElement.dir = 'ltr'
-    }
-  }, [])
+    // Update HTML attributes based on current locale and direction
+    document.documentElement.lang = locale
+    document.documentElement.dir = direction
+  }, [locale, direction])
 
   return null
 }

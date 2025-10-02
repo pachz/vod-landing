@@ -1,12 +1,12 @@
 import { DirectionProvider } from '@/providers/DirectionProvider'
 
-export default function ArabicLayout({
+export default function EnglishLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    <DirectionProvider initialLocale="ar">
+    <DirectionProvider initialLocale="en">
       {children}
     </DirectionProvider>
   )

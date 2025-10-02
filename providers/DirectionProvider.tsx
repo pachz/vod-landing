@@ -16,7 +16,7 @@ const DirectionContext = createContext<DirectionContextType | undefined>(undefin
 
 export function DirectionProvider({ 
   children, 
-  initialLocale = 'en' 
+  initialLocale = 'ar' 
 }: { 
   children: React.ReactNode
   initialLocale?: Locale 
@@ -29,32 +29,31 @@ export function DirectionProvider({
     setI18nLocale(initialLocale)
   }, [initialLocale])
 
-  // Auto-detect locale on mount (only for client-side detection)
+  // Check URL for language prefix and stored locale preference on mount
   useEffect(() => {
-    const detectLocale = () => {
+    const detectLocaleFromURL = () => {
       const path = window.location.pathname
-      let detectedLocale: Locale = initialLocale
-
-      if (path.startsWith('/ar') || path.includes('/ar/')) {
+      let detectedLocale: Locale = 'ar' // Default to Arabic
+      
+      // Check URL for language prefix
+      if (path.startsWith('/ar/') || path === '/ar') {
         detectedLocale = 'ar'
-      } else if (path.startsWith('/en') || path.includes('/en/')) {
+      } else if (path.startsWith('/en/') || path === '/en') {
         detectedLocale = 'en'
       } else {
-        // Check for query parameter as fallback
-        const urlParams = new URLSearchParams(window.location.search)
-        const localeParam = urlParams.get('locale')
-        if (localeParam === 'ar') {
-          detectedLocale = 'ar'
+        // No language prefix in URL, check localStorage
+        const storedLocale = localStorage.getItem('preferred-locale') as Locale
+        if (storedLocale && (storedLocale === 'ar' || storedLocale === 'en')) {
+          detectedLocale = storedLocale
         }
       }
-      if (detectedLocale !== initialLocale) {
-        setLocale(detectedLocale)
-        setI18nLocale(detectedLocale)
-      }
+      
+      setLocale(detectedLocale)
+      setI18nLocale(detectedLocale)
     }
 
-    detectLocale()
-  }, [initialLocale])
+    detectLocaleFromURL()
+  }, [])
 
   useEffect(() => {
     // Set the HTML dir and lang attributes
@@ -70,6 +69,8 @@ export function DirectionProvider({
   const handleSetLocale = (newLocale: Locale) => {
     setLocale(newLocale)
     setI18nLocale(newLocale)
+    // Store the preference in localStorage
+    localStorage.setItem('preferred-locale', newLocale)
   }
 
   return (

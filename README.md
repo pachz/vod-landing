@@ -1,4 +1,4 @@
-# vod lady - Landing Page
+# Reham Diva - Landing Page
 
 A motivational video platform landing page built with Next.js 14, TypeScript, Tailwind CSS, and modern web technologies.
 
@@ -131,4 +131,4 @@ The project builds to static files and can be deployed to:
 
 ## 📝 License
 
-© 2025 vod lady. All rights reserved.
+© 2025 Reham Diva. All rights reserved.

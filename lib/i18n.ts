@@ -4,7 +4,7 @@ import ar from '@/locales/ar.json'
 export type Locale = 'en' | 'ar'
 
 interface Translations {
-  [key: string]: string | Translations
+  [key: string]: any
 }
 
 const translations: Record<Locale, Translations> = {
@@ -12,7 +12,7 @@ const translations: Record<Locale, Translations> = {
   ar
 }
 
-let currentLocale: Locale = 'en'
+let currentLocale: Locale = 'ar'
 
 export function setLocale(locale: Locale) {
   currentLocale = locale
@@ -22,7 +22,7 @@ export function getLocale(): Locale {
   return currentLocale
 }
 
-export function t(key: string): string {
+export function t(key: string): any {
   const keys = key.split('.')
   let value: any = translations[currentLocale]
   let foundInCurrentLocale = true
@@ -54,5 +54,5 @@ export function t(key: string): string {
     return key
   }
   
-  return typeof value === 'string' ? value : key
+  return value !== undefined ? value : key
 }

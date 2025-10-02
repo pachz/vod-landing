@@ -42,28 +42,34 @@ export default function LanguageSwitcher() {
   const handleLanguageChange = (languageCode: string) => {
     const newLocale = languageCode as 'en' | 'ar'
     
-    // Navigate to the correct URL first
+    // Update the locale state
+    setLocale(newLocale)
+    
+    // Navigate to the appropriate URL with language prefix
+    let newPath = pathname
+    
     if (newLocale === 'ar') {
       // Navigate to Arabic version
-      if (pathname === '/') {
-        router.push('/ar')
+      if (pathname === '/' || !pathname.startsWith('/ar') && !pathname.startsWith('/en')) {
+        // Root path or no language prefix - add /ar
+        newPath = pathname === '/' ? '/ar' : `/ar${pathname}`
       } else if (pathname.startsWith('/en')) {
-        router.push(pathname.replace('/en', '/ar'))
-      } else if (!pathname.startsWith('/ar')) {
-        router.push(`/ar${pathname}`)
+        // Replace /en with /ar
+        newPath = pathname.replace('/en', '/ar')
       }
     } else {
       // Navigate to English version
-      if (pathname.startsWith('/ar')) {
-        const englishPath = pathname.replace('/ar', '') || '/'
-        router.push(englishPath)
-      } else if (pathname.startsWith('/en')) {
-        router.push(pathname.replace('/en', ''))
+      if (pathname === '/' || !pathname.startsWith('/ar') && !pathname.startsWith('/en')) {
+        // Root path or no language prefix - add /en
+        newPath = pathname === '/' ? '/en' : `/en${pathname}`
+      } else if (pathname.startsWith('/ar')) {
+        // Replace /ar with /en
+        newPath = pathname.replace('/ar', '/en')
       }
     }
     
-    // Update the locale state after navigation
-    setLocale(newLocale)
+    // Navigate to the new path
+    router.push(newPath)
     setIsOpen(false)
   }
 

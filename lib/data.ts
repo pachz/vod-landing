@@ -18,11 +18,6 @@ export interface Instructor {
   cta: string
 }
 
-export interface FAQ {
-  id: string
-  question: string
-  answer: string
-}
 
 export interface Testimonial {
   id: string
@@ -173,30 +168,3 @@ export const testimonials: Testimonial[] = [
   }
 ]
 
-export const faqs: FAQ[] = [
-  {
-    id: '1',
-    question: 'What is vod lady?',
-    answer: 'A motivational video platform with structured courses, chapters, and short episodes led by inspiring women.'
-  },
-  {
-    id: '2',
-    question: 'Do I need to subscribe to access the videos?',
-    answer: 'You can start exploring courses for free. Some advanced features may be added later.'
-  },
-  {
-    id: '3',
-    question: 'Can I watch on my phone?',
-    answer: 'Yes — vod lady works on desktop, tablet, and mobile devices.'
-  },
-  {
-    id: '4',
-    question: 'Are new courses added regularly?',
-    answer: 'Yes — new motivational content will be added every month.'
-  },
-  {
-    id: '5',
-    question: 'Can I download videos to watch offline?',
-    answer: 'Offline mode will be available in the near future.'
-  }
-]

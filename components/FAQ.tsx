@@ -2,10 +2,11 @@
 
 import { motion } from 'framer-motion'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import { t } from '@/lib/i18n'
-import { faqs } from '@/lib/data'
+import { useTranslation } from '@/lib/useTranslation'
 
 export default function FAQ() {
+  const { t } = useTranslation()
+  
   return (
     <section id="faq" className="py-12 sm:py-16 lg:py-20 px-4 bg-neutral-bg">
       <div className="max-w-4xl mx-auto">
@@ -28,7 +29,7 @@ export default function FAQ() {
           viewport={{ once: true }}
         >
           <Accordion type="single" collapsible className="space-y-3 sm:space-y-4">
-            {faqs.map((faq, index) => (
+            {t('faq.items').map((faq: any, index: number) => (
               <motion.div
                 key={faq.id}
                 initial={{ opacity: 0, y: 20 }}

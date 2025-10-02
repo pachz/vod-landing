@@ -1,13 +1,22 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { t } from '@/lib/i18n'
-import { testimonials } from '@/lib/data'
+import { useTranslation } from '@/lib/useTranslation'
+import { useDirection } from '@/providers/DirectionProvider'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
 
 export default function Testimonials() {
+  const { t } = useTranslation()
+  const { direction } = useDirection()
   const [currentIndex, setCurrentIndex] = useState(0)
+  
+  // Get testimonials from translations with fallback
+  const testimonials = (t('testimonials.items') as Array<{
+    name: string
+    role: string
+    text: string
+  }>) || []
 
   // Auto-advance slider
   useEffect(() => {
@@ -18,7 +27,7 @@ export default function Testimonials() {
     }, 5000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [testimonials.length])
 
   const nextSlide = () => {
     setCurrentIndex(currentIndex === testimonials.length - 1 ? 0 : currentIndex + 1)
@@ -28,7 +37,12 @@ export default function Testimonials() {
     setCurrentIndex(currentIndex === 0 ? testimonials.length - 1 : currentIndex - 1)
   }
 
-  if (testimonials.length === 0) return null
+  // Safety check for testimonials data
+  if (!testimonials || testimonials.length === 0) return null
+  
+  // Ensure current index is valid
+  const currentTestimonial = testimonials[currentIndex]
+  if (!currentTestimonial) return null
 
   return (
     <section id="testimonials" className="py-12 sm:py-16 lg:py-20 px-4 bg-gradient-to-br from-purple-50 to-pink-50">
@@ -52,21 +66,23 @@ export default function Testimonials() {
           {/* Navigation arrows - hidden on mobile, shown on larger screens */}
           <button
             onClick={prevSlide}
-            className="hidden md:block absolute -left-12 lg:-left-16 top-1/2 -translate-y-1/2 w-10 h-10 lg:w-12 lg:h-12 bg-purple-800 hover:bg-purple-700 rounded-full flex items-center justify-center text-white hover:text-white transition-all duration-300 z-10 shadow-lg"
+            className="hidden md:block absolute -left-12 lg:-left-16 top-1/2 -translate-y-1/2 w-10 h-10 lg:w-12 lg:h-12 bg-purple-800 hover:bg-purple-700 rounded-full text-white hover:text-white transition-all duration-300 z-10 shadow-lg"
             aria-label="Previous testimonial"
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
-            <svg className="w-5 h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <svg className="w-4 h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ margin: 'auto' }}>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
           
           <button
             onClick={nextSlide}
-            className="hidden md:block absolute -right-12 lg:-right-16 top-1/2 -translate-y-1/2 w-10 h-10 lg:w-12 lg:h-12 bg-purple-800 hover:bg-purple-700 rounded-full flex items-center justify-center text-white hover:text-white transition-all duration-300 z-10 shadow-lg"
+            className="hidden md:block absolute -right-12 lg:-right-16 top-1/2 -translate-y-1/2 w-10 h-10 lg:w-12 lg:h-12 bg-purple-800 hover:bg-purple-700 rounded-full text-white hover:text-white transition-all duration-300 z-10 shadow-lg"
             aria-label="Next testimonial"
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
-            <svg className="w-5 h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            <svg className="w-4 h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ margin: 'auto' }}>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
             </svg>
           </button>
 
@@ -81,20 +97,18 @@ export default function Testimonials() {
             <div className="bg-white rounded-2xl p-6 sm:p-8 md:p-12 shadow-lg">
               {/* Profile image */}
               <div className="flex justify-center mb-6 sm:mb-8">
-                <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden shadow-lg">
-                  <Image
-                    src={testimonials[currentIndex].image}
-                    alt={testimonials[currentIndex].name}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 640px) 80px, 96px"
-                  />
+                <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden shadow-lg bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center">
+                  <span className="text-white text-2xl sm:text-3xl font-bold">
+                    {currentTestimonial.name?.charAt(0) || '?'}
+                  </span>
                 </div>
               </div>
 
               {/* Testimonial text */}
-              <blockquote className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed mb-6 sm:mb-8 text-left max-w-3xl mx-auto">
-                {testimonials[currentIndex].text}
+              <blockquote className={`text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed mb-6 sm:mb-8 max-w-3xl mx-auto ${
+                direction === 'rtl' ? 'text-right' : 'text-left'
+              }`}>
+                {currentTestimonial.text}
               </blockquote>
 
               {/* Quote mark */}
@@ -103,19 +117,19 @@ export default function Testimonials() {
               </div>
 
               {/* Name and role */}
-              <div>
+              <div className="text-center">
                 <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-1 sm:mb-2">
-                  {testimonials[currentIndex].name}
+                  {currentTestimonial.name}
                 </h3>
                 <p className="text-sm sm:text-base text-gray-600 font-medium">
-                  {testimonials[currentIndex].role}
+                  {currentTestimonial.role}
                 </p>
               </div>
             </div>
           </motion.div>
 
           {/* Dots indicator */}
-          <div className="flex justify-center mt-6 sm:mt-8 space-x-2 sm:space-x-3">
+          <div className="flex justify-center mt-6 sm:mt-8 gap-2 sm:gap-3">
             {testimonials.map((_, index) => (
               <button
                 key={index}
@@ -131,24 +145,26 @@ export default function Testimonials() {
           </div>
 
           {/* Mobile navigation buttons */}
-          <div className="flex justify-center mt-6 md:hidden space-x-4">
+          <div className="flex justify-center mt-6 md:hidden gap-4">
             <button
               onClick={prevSlide}
-              className="w-10 h-10 bg-purple-800 hover:bg-purple-700 rounded-full flex items-center justify-center text-white transition-all duration-300 shadow-lg"
+              className="w-10 h-10 bg-purple-800 hover:bg-purple-700 rounded-full text-white transition-all duration-300 shadow-lg"
               aria-label="Previous testimonial"
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ margin: 'auto' }}>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
             
             <button
               onClick={nextSlide}
-              className="w-10 h-10 bg-purple-800 hover:bg-purple-700 rounded-full flex items-center justify-center text-white transition-all duration-300 shadow-lg"
+              className="w-10 h-10 bg-purple-800 hover:bg-purple-700 rounded-full text-white transition-all duration-300 shadow-lg"
               aria-label="Next testimonial"
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ margin: 'auto' }}>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
               </svg>
             </button>
           </div>

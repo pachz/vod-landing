@@ -13,20 +13,20 @@ const almarai = Almarai({
 })
 
 export const metadata: Metadata = {
-  title: 'vod lady - Find Your Strength, Shape Your Future',
-  description: 'Unlimited motivational classes in bite-sized episodes designed for women who want to grow.',
-  keywords: 'motivation, women empowerment, personal growth, online courses, self-improvement',
-  authors: [{ name: 'vod lady' }],
+  title: 'Reham Diva - اكتشفي قوتك، شكلي مستقبلك',
+  description: 'دورات تحفيزية غير محدودة في حلقات قصيرة مصممة للنساء اللواتي يردن النمو.',
+  keywords: 'تحفيز, تمكين المرأة, النمو الشخصي, دورات أونلاين, تطوير الذات',
+  authors: [{ name: 'Reham Diva' }],
   openGraph: {
-    title: 'vod lady - Find Your Strength, Shape Your Future',
-    description: 'Unlimited motivational classes in bite-sized episodes designed for women who want to grow.',
+    title: 'Reham Diva - اكتشفي قوتك، شكلي مستقبلك',
+    description: 'دورات تحفيزية غير محدودة في حلقات قصيرة مصممة للنساء اللواتي يردن النمو.',
     type: 'website',
-    locale: 'en_US',
+    locale: 'ar_SA',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'vod lady - Find Your Strength, Shape Your Future',
-    description: 'Unlimited motivational classes in bite-sized episodes designed for women who want to grow.',
+    title: 'Reham Diva - اكتشفي قوتك، شكلي مستقبلك',
+    description: 'دورات تحفيزية غير محدودة في حلقات قصيرة مصممة للنساء اللواتي يردن النمو.',
   },
 }
 
@@ -36,10 +36,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="ar" dir="rtl">
       <body className={`${inter.variable} ${almarai.variable} font-sans antialiased`}>
-        <HtmlAttributes />
-        <DirectionProvider>
+        <DirectionProvider initialLocale="ar">
+          <HtmlAttributes />
           <Navbar />
           {children}
         </DirectionProvider>
