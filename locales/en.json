@@ -47,7 +47,17 @@
   "explore": {
     "title": "Discover courses that inspire your next step",
     "subtitle": "From confidence to career — find your path in short, motivational courses.",
-    "cta": "View All Courses"
+    "cta": "View All Courses",
+    "viewCourse": "View Course",
+    "noVideosFound": "No videos found in this category",
+    "viewAll": "View All",
+    "by": "by",
+    "categories": {
+      "confidence": "Confidence",
+      "career": "Career", 
+      "wellness": "Wellness",
+      "finance": "Finance"
+    }
   },
   "instructors": {
     "title": "Learn from inspiring voices",

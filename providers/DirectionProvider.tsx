@@ -31,6 +31,8 @@ export function DirectionProvider({
 
   // Check URL for language prefix and stored locale preference on mount
   useEffect(() => {
+    if (typeof window === 'undefined') return
+    
     const detectLocaleFromURL = () => {
       const path = window.location.pathname
       let detectedLocale: Locale = 'ar' // Default to Arabic
