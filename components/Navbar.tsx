@@ -11,7 +11,8 @@ import LanguageSwitcher from './LanguageSwitcher'
 const navigationItems = [
   { nameKey: 'navbar.home', href: '#home' },
   { nameKey: 'navbar.features', href: '#features' },
-  { nameKey: 'navbar.instructors', href: '#instructors' },
+  { nameKey: 'navbar.instructors', href: '#instructor' },
+  { nameKey: 'navbar.testimonials', href: '#testimonials' },
   { nameKey: 'navbar.faq', href: '#faq' },
 ]
 
@@ -23,11 +24,15 @@ export default function Navbar() {
 
   // Get translations based on current locale
   const getNavbarText = (key: string) => {
-    if (locale === 'ar') {
+    // Check if we're on an Arabic route
+    const isArabicRoute = typeof window !== 'undefined' && window.location.pathname.startsWith('/ar')
+    
+    if (locale === 'ar' || isArabicRoute) {
       const arTranslations: Record<string, string> = {
         'navbar.home': 'الرئيسية',
         'navbar.features': 'الميزات',
         'navbar.instructors': 'المدربات',
+        'navbar.testimonials': 'الشهادات',
         'navbar.faq': 'الأسئلة الشائعة',
         'navbar.getStarted': 'ابدئي الآن',
         'navbar.logoText': 'رهام دیفا'
@@ -48,22 +53,39 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Smooth scroll to section
+  // Smooth scroll to section or redirect to landing page
   const scrollToSection = (href: string) => {
-    const element = document.querySelector(href)
-    if (element) {
-      element.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      })
+    if (typeof window === 'undefined') return
+    
+    // Check if we're on the landing page
+    const isLandingPage = window.location.pathname === '/' || 
+                         window.location.pathname === '/ar' || 
+                         window.location.pathname === '/en'
+    
+    if (isLandingPage) {
+      // On landing page, scroll to section
+      const element = document.querySelector(href)
+      if (element) {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        })
+      }
+    } else {
+      // Not on landing page, redirect to landing page with section
+      const baseUrl = locale === 'ar' ? '/ar' : locale === 'en' ? '/en' : '/'
+      window.location.href = `${baseUrl}${href}`
     }
     setIsOpen(false) // Close mobile menu after clicking
   }
 
+  // Check if we're on a course page
+  const isCoursePage = typeof window !== 'undefined' && window.location.pathname.includes('/courses')
+  
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
+        scrolled || isCoursePage
           ? 'bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200'
           : 'bg-white/10 backdrop-blur-sm'
       }`}

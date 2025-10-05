@@ -1,5 +1,6 @@
 'use client'
 
+import { useDirection } from '@/providers/DirectionProvider'
 import Hero from '@/components/Hero'
 import Features from '@/components/Features'
 import ExploreMarquee from '@/components/ExploreMarquee'
@@ -95,6 +96,8 @@ const sampleVideos = [
 const sampleCategories = ['confidence', 'career', 'wellness', 'finance']
 
 export default function Home() {
+  const { locale } = useDirection()
+  
   return (
     <main className="min-h-screen">
       <Hero />
@@ -107,9 +110,9 @@ export default function Home() {
         marqueeSpeed={30}
         onCourseClick={(videoId) => {
           console.log('Course clicked:', videoId)
-          // Navigate to course page
+          // Navigate to language-specific course page
           if (typeof window !== 'undefined') {
-            window.location.href = `/courses/${videoId}`
+            window.location.href = `/${locale}/courses/${videoId}`
           }
         }}
       />
