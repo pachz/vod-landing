@@ -1,0 +1,6 @@
+export { default as Hero } from './Hero'
+export { default as Features } from './Features'
+export { default as ExploreMarquee } from './ExploreMarquee'
+export { default as InstructorsSlider } from './InstructorsSlider'
+export { default as Testimonials } from './Testimonials'
+export { default as FAQ } from './FAQ'

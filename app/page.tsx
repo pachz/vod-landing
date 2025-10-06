@@ -1,13 +1,8 @@
 'use client'
 
 import { useDirection } from '@/providers/DirectionProvider'
-import Hero from '@/components/Hero'
-import Features from '@/components/Features'
-import ExploreMarquee from '@/components/ExploreMarquee'
-import RehamDivaShowcase from '@/components/InstructorsSlider'
-import Testimonials from '@/components/Testimonials'
-import FAQ from '@/components/FAQ'
-import SiteFooter from '@/components/SiteFooter'
+import { Hero, Features, ExploreMarquee, InstructorsSlider, Testimonials, FAQ } from '@/components/home'
+import { SiteFooter } from '@/components/layout'
 
 // Sample data for the ExploreMarquee component
 const sampleVideos = [
@@ -116,7 +111,7 @@ export default function Home() {
           }
         }}
       />
-      <RehamDivaShowcase />
+      <InstructorsSlider />
       <Testimonials />
       <FAQ />
       <SiteFooter />

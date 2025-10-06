@@ -5,8 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { courses } from '@/lib/data'
-import Navbar from '@/components/Navbar'
-import SiteFooter from '@/components/SiteFooter'
+import { Navbar, SiteFooter } from '@/components/layout'
 
 interface CourseDetailPageProps {
   params: {

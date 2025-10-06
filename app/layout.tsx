@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import { Inter, Almarai } from 'next/font/google'
 import './globals.css'
 import { DirectionProvider } from '@/providers/DirectionProvider'
-import Navbar from '@/components/Navbar'
-import HtmlAttributes from '@/components/HtmlAttributes'
+import { Navbar } from '@/components/layout'
+import { HtmlAttributes } from '@/components/common'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const almarai = Almarai({ 
