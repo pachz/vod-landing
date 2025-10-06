@@ -30,46 +30,24 @@ const getCourseDetails = (id: string) => {
       "Develop powerful self-talk and affirmation practices"
     ],
     metaData: {
-      totalDuration: "2 hours 30 minutes",
+      totalDuration: "2h 30m",
       lessonsCount: 12,
       studentsCount: "2,847",
-      level: "Beginner",
-      language: "English",
       lastUpdated: "December 2024"
     },
     curriculum: [
-      {
-        section: "Introduction",
-        lessons: [
-          { title: "Welcome to Your Confidence Journey", duration: "8:45", isPreview: true },
-          { title: "Understanding Confidence vs. Arrogance", duration: "12:30", isPreview: false },
-          { title: "Your Personal Confidence Assessment", duration: "15:20", isPreview: false }
-        ]
-      },
-      {
-        section: "Building Your Foundation",
-        lessons: [
-          { title: "The Science of Self-Confidence", duration: "18:15", isPreview: false },
-          { title: "Identifying Your Strengths and Values", duration: "22:10", isPreview: false },
-          { title: "Overcoming Imposter Syndrome", duration: "16:45", isPreview: false }
-        ]
-      },
-      {
-        section: "Practical Confidence Building",
-        lessons: [
-          { title: "Body Language and Presence", duration: "14:30", isPreview: false },
-          { title: "Voice and Communication Confidence", duration: "19:25", isPreview: false },
-          { title: "Setting and Achieving Personal Goals", duration: "21:15", isPreview: false }
-        ]
-      },
-      {
-        section: "Advanced Techniques",
-        lessons: [
-          { title: "Handling Criticism and Feedback", duration: "17:40", isPreview: false },
-          { title: "Building Confidence in Relationships", duration: "20:30", isPreview: false },
-          { title: "Creating Your Confidence Maintenance Plan", duration: "13:20", isPreview: false }
-        ]
-      }
+      { title: "Welcome to Your Confidence Journey", duration: "8:45", isPreview: true },
+      { title: "Understanding Confidence vs. Arrogance", duration: "12:30", isPreview: false },
+      { title: "Your Personal Confidence Assessment", duration: "15:20", isPreview: false },
+      { title: "The Science of Self-Confidence", duration: "18:15", isPreview: false },
+      { title: "Identifying Your Strengths and Values", duration: "22:10", isPreview: false },
+      { title: "Overcoming Imposter Syndrome", duration: "16:45", isPreview: false },
+      { title: "Body Language and Presence", duration: "14:30", isPreview: false },
+      { title: "Voice and Communication Confidence", duration: "19:25", isPreview: false },
+      { title: "Setting and Achieving Personal Goals", duration: "21:15", isPreview: false },
+      { title: "Handling Criticism and Feedback", duration: "17:40", isPreview: false },
+      { title: "Building Confidence in Relationships", duration: "20:30", isPreview: false },
+      { title: "Creating Your Confidence Maintenance Plan", duration: "13:20", isPreview: false }
     ],
     instructor: {
       name: "Reham Diva",
@@ -84,7 +62,6 @@ const getCourseDetails = (id: string) => {
 
 export default function CourseDetailPage({ params }: CourseDetailPageProps) {
   const [activeTab, setActiveTab] = useState<'overview' | 'curriculum'>('overview')
-  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['Introduction']))
   
   const course = getCourseDetails(params.id)
   
@@ -102,17 +79,6 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
     )
   }
 
-  const toggleSection = (sectionName: string) => {
-    setExpandedSections(prev => {
-      const newSet = new Set(prev)
-      if (newSet.has(sectionName)) {
-        newSet.delete(sectionName)
-      } else {
-        newSet.add(sectionName)
-      }
-      return newSet
-    })
-  }
 
   const handleEnroll = () => {
     // Handle enrollment logic
@@ -194,25 +160,85 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
                 </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button 
-                  size="lg" 
-                  onClick={handleEnroll}
-                  className="bg-pink-500 hover:bg-pink-700 text-white flex-1"
-                >
-                  Enroll Now - $29
-                </Button>
+              {/* Pricing & Enrollment Section */}
+              <div className="bg-white border border-purple-200 rounded-xl p-6 shadow-sm">
+                {/* Primary Enrollment Option */}
+                <div className="mb-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h3 className="text-xl font-semibold text-purple-900">One-time Purchase</h3>
+                      <p className="text-sm text-purple-600">Get lifetime access to this course</p>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-3xl font-bold text-purple-900">8.5 KWD</div>
+                      <div className="text-sm text-purple-600">One-time payment</div>
+                    </div>
+                  </div>
+                  <Button 
+                    size="lg" 
+                    onClick={handleEnroll}
+                    className="w-full bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 text-lg"
+                  >
+                    Enroll Now - 8.5 KWD
+                  </Button>
+                  
+                  {/* Secure Payment Note */}
+                  <div className="flex flex-col items-center mt-3 text-sm text-purple-600">
+                  <span style={{ color: '#665BFF' }}>Secure payment</span>
+                    <Image
+                      src="/images/stripe.png"
+                      alt="Stripe"
+                      width={150}
+                      height={35}
+                      className="mb-2"
+                    />
+                    
+                  </div>
+                </div>
+
+                {/* Trust Signals */}
+                <div className="pt-4 border-t border-purple-100">
+                  <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                    <div className="flex items-center text-sm text-purple-700">
+                      <svg className="w-4 h-4 text-green-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      30-day money-back guarantee
+                    </div>
+                    <div className="flex items-center text-sm text-purple-700">
+                      <svg className="w-4 h-4 text-green-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      Lifetime access to this course
+                    </div>
+                    <div className="flex items-center text-sm text-purple-700">
+                      <svg className="w-4 h-4 text-green-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      Access on mobile & desktop
+                    </div>
+                    <div className="flex items-center text-sm text-purple-700">
+                      <svg className="w-4 h-4 text-green-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      Certificate of completion
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Share Button */}
+              <div className="mt-4">
                 <Button 
                   variant="outline" 
                   size="lg"
                   onClick={handleShare}
-                  className="border-purple-700 text-purple-700 hover:bg-purple-700 hover:text-white"
+                  className="w-full border-purple-300 text-purple-700 hover:bg-purple-50"
                 >
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
                   </svg>
-                  Share
+                  Share Course
                 </Button>
               </div>
             </div>
@@ -324,23 +350,15 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
                   <div className="grid sm:grid-cols-2 gap-6">
                     <div className="space-y-4">
                       <div className="flex justify-between">
-                        <span className="text-purple-600">Level:</span>
-                        <span className="text-purple-900 font-medium">{course.metaData.level}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-purple-600">Language:</span>
-                        <span className="text-purple-900 font-medium">{course.metaData.language}</span>
-                      </div>
-                      <div className="flex justify-between">
                         <span className="text-purple-600">Duration:</span>
                         <span className="text-purple-900 font-medium">{course.metaData.totalDuration}</span>
                       </div>
-                    </div>
-                    <div className="space-y-4">
                       <div className="flex justify-between">
                         <span className="text-purple-600">Lessons:</span>
                         <span className="text-purple-900 font-medium">{course.metaData.lessonsCount}</span>
                       </div>
+                    </div>
+                    <div className="space-y-4">
                       <div className="flex justify-between">
                         <span className="text-purple-600">Students:</span>
                         <span className="text-purple-900 font-medium">{course.metaData.studentsCount}</span>
@@ -357,58 +375,58 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
 
             {activeTab === 'curriculum' && (
               <div className="space-y-6">
-                <h3 className="text-2xl font-semibold text-purple-900 mb-6">Course Curriculum</h3>
-                {course.curriculum.map((section, sectionIndex) => (
-                  <div key={sectionIndex} className="border border-purple-100 rounded-xl overflow-hidden">
-                    <button
-                      onClick={() => toggleSection(section.section)}
-                      className="w-full px-6 py-4 bg-purple-50 hover:bg-purple-100 transition-colors flex items-center justify-between"
-                    >
-                      <div className="text-left">
-                        <h4 className="font-semibold text-purple-900">{section.section}</h4>
-                        <p className="text-sm text-purple-600">{section.lessons.length} lessons</p>
-                      </div>
-                      <svg
-                        className={`w-5 h-5 text-purple-600 transition-transform ${
-                          expandedSections.has(section.section) ? 'rotate-180' : ''
-                        }`}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                    
-                    {expandedSections.has(section.section) && (
-                      <div className="border-t border-purple-100">
-                        {section.lessons.map((lesson, lessonIndex) => (
-                          <div
-                            key={lessonIndex}
-                            className="px-6 py-4 flex items-center justify-between hover:bg-purple-25 transition-colors"
-                          >
-                            <div className="flex items-center space-x-3">
-                              <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                                <svg className="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
-                                  <path d="M8 5v14l11-7z"/>
-                                </svg>
-                              </div>
-                              <div>
-                                <h5 className="font-medium text-purple-900">{lesson.title}</h5>
-                                {lesson.isPreview && (
-                                  <span className="text-xs bg-pink-100 text-pink-600 px-2 py-1 rounded-full">
-                                    Preview
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                            <span className="text-sm text-purple-600">{lesson.duration}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-2xl font-semibold text-purple-900">Course Curriculum</h3>
+                  <div className="text-sm text-purple-600">
+                    {course.curriculum.length} lessons • {course.metaData.totalDuration}
                   </div>
-                ))}
+                </div>
+                
+                <div className="bg-white border border-purple-100 rounded-xl overflow-hidden shadow-sm">
+                  {course.curriculum.map((lesson, index) => (
+                    <div
+                      key={index}
+                      className={`px-6 py-4 flex items-center justify-between transition-colors ${
+                        index !== course.curriculum.length - 1 ? 'border-b border-purple-50' : ''
+                      } hover:bg-purple-25`}
+                    >
+                      <div className="flex items-center space-x-4">
+                        <div className="flex-shrink-0">
+                          <div className="w-10 h-10 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center">
+                            <span className="text-sm font-semibold text-purple-700">{index + 1}</span>
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3">
+                            <h5 className="font-medium text-purple-900">{lesson.title}</h5>
+                            {lesson.isPreview && (
+                              <span className="text-xs bg-pink-100 text-pink-600 px-2 py-1 rounded-full font-medium">
+                                Preview
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center space-x-2 mt-1">
+                            <svg className="w-4 h-4 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z"/>
+                            </svg>
+                            <span className="text-sm text-purple-500">Video lesson</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <span className="text-sm font-medium text-purple-600 bg-purple-50 px-3 py-1 rounded-full">
+                          {lesson.duration}
+                        </span>
+                        <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                          <svg className="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
               </div>
             )}
           </div>

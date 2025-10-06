@@ -1,93 +1,104 @@
 'use client'
 
-import Hero from '@/components/Hero'
-import Features from '@/components/Features'
-import ExploreMarquee from '@/components/ExploreMarquee'
-import RehamDivaShowcase from '@/components/InstructorsSlider'
-import Testimonials from '@/components/Testimonials'
-import FAQ from '@/components/FAQ'
-import SiteFooter from '@/components/SiteFooter'
+import { Hero, Features, ExploreMarquee, InstructorsSlider, Testimonials, FAQ } from '@/components/home'
+import { SiteFooter } from '@/components/layout'
 
 // Sample data for the ExploreMarquee component
 const sampleVideos = [
   {
     id: '1',
     title: 'بناء الثقة من الداخل',
+    description: 'دورة شاملة لبناء الثقة الداخلية والقوة الشخصية',
     instructor: 'رهام دیفا',
     thumbnailUrl: '/images/w1.png',
-    duration: '45 دقيقة',
+    totalTime: '45 دقيقة',
+    totalStudents: 1250,
+    rating: 4.8,
     tags: ['confidence', 'personal-growth'],
-    price: '$29',
     isFeatured: true
   },
   {
     id: '2',
     title: 'عادات يومية للنجاح',
+    description: 'تعلم العادات اليومية التي تقودك للنجاح',
     instructor: 'رهام دیفا',
     thumbnailUrl: '/images/w2.png',
-    duration: '30 دقيقة',
+    totalTime: '30 دقيقة',
+    totalStudents: 980,
+    rating: 4.6,
     tags: ['habits', 'productivity'],
-    price: '$19',
     isFeatured: false
   },
   {
     id: '3',
     title: 'القيادة ونمو المسيرة المهنية',
+    description: 'مهارات القيادة والتطوير المهني',
     instructor: 'رهام دیفا',
     thumbnailUrl: '/images/w3.png',
-    duration: '60 دقيقة',
+    totalTime: '60 دقيقة',
+    totalStudents: 2100,
+    rating: 4.9,
     tags: ['career', 'leadership'],
-    price: '$39',
     isFeatured: true
   },
   {
     id: '4',
     title: 'اليقظة الذهنية والنمو العاطفي',
+    description: 'تطوير الوعي الذهني والنمو العاطفي',
     instructor: 'رهام دیفا',
     thumbnailUrl: '/images/w4.png',
-    duration: '40 دقيقة',
+    totalTime: '40 دقيقة',
+    totalStudents: 1500,
+    rating: 4.7,
     tags: ['wellness', 'mindfulness'],
-    price: '$24',
     isFeatured: false
   },
   {
     id: '5',
     title: 'تحويل نمط الحياة الصحي',
+    description: 'خطوات عملية لتحويل نمط حياتك إلى نمط صحي',
     instructor: 'رهام دیفا',
     thumbnailUrl: '/images/w5.png',
-    duration: '50 دقيقة',
+    totalTime: '50 دقيقة',
+    totalStudents: 1800,
+    rating: 4.5,
     tags: ['lifestyle', 'wellness'],
-    price: '$34',
     isFeatured: false
   },
   {
     id: '6',
     title: 'التغلب على الشك الذاتي',
+    description: 'استراتيجيات للتغلب على الشك الذاتي وبناء الثقة',
     instructor: 'رهام دیفا',
     thumbnailUrl: '/images/w6.png',
-    duration: '35 دقيقة',
+    totalTime: '35 دقيقة',
+    totalStudents: 1650,
+    rating: 4.8,
     tags: ['confidence', 'personal-growth'],
-    price: '$27',
     isFeatured: true
   },
   {
     id: '7',
     title: 'الاستقلال المالي للمرأة',
+    description: 'مبادئ الاستقلال المالي وإدارة الأموال',
     instructor: 'رهام دیفا',
     thumbnailUrl: '/images/w7.png',
-    duration: '55 دقيقة',
+    totalTime: '55 دقيقة',
+    totalStudents: 2200,
+    rating: 4.9,
     tags: ['finance', 'career'],
-    price: '$44',
     isFeatured: false
   },
   {
     id: '8',
     title: 'التعبير الإبداعي والعلاج بالفن',
+    description: 'استكشاف الإبداع والعلاج بالفنون',
     instructor: 'رهام دیفا',
     thumbnailUrl: '/images/w8.png',
-    duration: '40 دقيقة',
+    totalTime: '40 دقيقة',
+    totalStudents: 1200,
+    rating: 4.6,
     tags: ['creativity', 'wellness'],
-    price: '$29',
     isFeatured: false
   }
 ]
@@ -113,7 +124,7 @@ export default function ArabicHome() {
           }
         }}
       />
-      <RehamDivaShowcase />
+      <InstructorsSlider />
       <Testimonials />
       <FAQ />
       <SiteFooter />

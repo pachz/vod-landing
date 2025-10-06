@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import ExploreMarquee, { Video } from '@/components/ExploreMarquee'
+import { ExploreMarquee } from '@/components/home'
+import { Video } from '@/components/course'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 
@@ -10,121 +11,145 @@ const demoVideos: Video[] = [
   {
     id: '1',
     title: 'Building Confidence from Within',
+    description: 'A comprehensive course on building inner confidence and personal strength',
     instructor: 'Reham Diva',
     thumbnailUrl: '/images/w1.png',
-    duration: '45 min',
+    totalTime: '45 min',
+    totalStudents: 1250,
+    rating: 4.8,
     tags: ['confidence', 'personal-growth'],
-    price: '$29',
     isFeatured: true
   },
   {
     id: '2',
     title: 'Daily Habits for Success',
+    description: 'Learn the daily habits that lead to success',
     instructor: 'Reham Diva',
     thumbnailUrl: '/images/w2.png',
-    duration: '30 min',
+    totalTime: '30 min',
+    totalStudents: 980,
+    rating: 4.6,
     tags: ['habits', 'productivity'],
-    price: '$19',
     isFeatured: false
   },
   {
     id: '3',
     title: 'Leadership & Career Growth',
+    description: 'Leadership skills and professional development',
     instructor: 'Reham Diva',
     thumbnailUrl: '/images/w3.png',
-    duration: '60 min',
+    totalTime: '60 min',
+    totalStudents: 2100,
+    rating: 4.9,
     tags: ['career', 'leadership'],
-    price: '$39',
     isFeatured: true
   },
   {
     id: '4',
     title: 'Mindfulness & Emotional Growth',
+    description: 'Developing mindfulness and emotional growth',
     instructor: 'Reham Diva',
     thumbnailUrl: '/images/w4.png',
-    duration: '40 min',
+    totalTime: '40 min',
+    totalStudents: 1500,
+    rating: 4.7,
     tags: ['wellness', 'mindfulness'],
-    price: '$24',
     isFeatured: false
   },
   {
     id: '5',
     title: 'Healthy Lifestyle Transformation',
+    description: 'Practical steps to transform your lifestyle to a healthy one',
     instructor: 'Reham Diva',
     thumbnailUrl: '/images/w5.png',
-    duration: '50 min',
+    totalTime: '50 min',
+    totalStudents: 1800,
+    rating: 4.5,
     tags: ['lifestyle', 'wellness'],
-    price: '$34',
     isFeatured: false
   },
   {
     id: '6',
     title: 'Overcoming Self-Doubt',
+    description: 'Strategies to overcome self-doubt and build confidence',
     instructor: 'Reham Diva',
     thumbnailUrl: '/images/w6.png',
-    duration: '35 min',
+    totalTime: '35 min',
+    totalStudents: 1650,
+    rating: 4.8,
     tags: ['confidence', 'personal-growth'],
-    price: '$27',
     isFeatured: true
   },
   {
     id: '7',
     title: 'Financial Independence for Women',
+    description: 'Principles of financial independence and money management',
     instructor: 'Reham Diva',
     thumbnailUrl: '/images/w7.png',
-    duration: '55 min',
+    totalTime: '55 min',
+    totalStudents: 2200,
+    rating: 4.9,
     tags: ['finance', 'career'],
-    price: '$44',
     isFeatured: false
   },
   {
     id: '8',
     title: 'Creative Expression & Art Therapy',
+    description: 'Exploring creativity and art therapy',
     instructor: 'Reham Diva',
     thumbnailUrl: '/images/w8.png',
-    duration: '40 min',
+    totalTime: '40 min',
+    totalStudents: 1200,
+    rating: 4.6,
     tags: ['creativity', 'wellness'],
-    price: '$29',
     isFeatured: false
   },
   {
     id: '9',
     title: 'Advanced Leadership Strategies',
+    description: 'Advanced strategies for effective leadership',
     instructor: 'Reham Diva',
     thumbnailUrl: '/images/w3.png',
-    duration: '75 min',
+    totalTime: '75 min',
+    totalStudents: 1800,
+    rating: 4.9,
     tags: ['leadership', 'career'],
-    price: '$49',
     isFeatured: true
   },
   {
     id: '10',
     title: 'Mindful Productivity Techniques',
+    description: 'Productivity techniques with mindfulness approach',
     instructor: 'Reham Diva',
     thumbnailUrl: '/images/w4.png',
-    duration: '35 min',
+    totalTime: '35 min',
+    totalStudents: 1400,
+    rating: 4.7,
     tags: ['productivity', 'mindfulness'],
-    price: '$22',
     isFeatured: false
   },
   {
     id: '11',
     title: 'Financial Planning for Beginners',
+    description: 'Basic financial planning and money management',
     instructor: 'Reham Diva',
     thumbnailUrl: '/images/w7.png',
-    duration: '65 min',
+    totalTime: '65 min',
+    totalStudents: 1900,
+    rating: 4.8,
     tags: ['finance', 'personal-growth'],
-    price: '$37',
     isFeatured: false
   },
   {
     id: '12',
     title: 'Creative Writing for Self-Expression',
+    description: 'Using creative writing for personal expression',
     instructor: 'Reham Diva',
     thumbnailUrl: '/images/w8.png',
-    duration: '45 min',
+    totalTime: '45 min',
+    totalStudents: 1100,
+    rating: 4.6,
     tags: ['creativity', 'personal-growth'],
-    price: '$31',
     isFeatured: true
   }
 ]

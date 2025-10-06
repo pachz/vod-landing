@@ -234,21 +234,21 @@ const ExploreMarquee: React.FC<ExploreMarqueeProps> = ({
     ? safeVideos 
     : safeVideos.filter(video => video.tags.includes(selectedCategory))
 
-  // Carousel logic
-  const cardsPerView = isMobile ? 1 : (typeof window !== 'undefined' && window.innerWidth < 1024) ? 2 : 3
+  // Carousel logic - only for mobile
+  const cardsPerView = isMobile ? 1 : 3 // Desktop shows 3 cards, mobile shows 1
   const totalSlides = Math.ceil(filteredVideos.length / cardsPerView)
   const maxSlide = Math.max(0, totalSlides - 1)
 
-  // Auto-play functionality
+  // Auto-play functionality - only for mobile
   useEffect(() => {
-    if (!isAutoPlaying || prefersReducedMotion || filteredVideos.length <= cardsPerView) return
+    if (!isMobile || !isAutoPlaying || prefersReducedMotion || filteredVideos.length <= cardsPerView) return
 
     const interval = setInterval(() => {
       setCurrentSlide(prev => (prev + 1) % totalSlides)
-    }, 4000) // Change slide every 4 seconds
+    }, 3500) // Change slide every 3.5 seconds
 
     return () => clearInterval(interval)
-  }, [isAutoPlaying, prefersReducedMotion, filteredVideos.length, cardsPerView, totalSlides])
+  }, [isMobile, isAutoPlaying, prefersReducedMotion, filteredVideos.length, cardsPerView, totalSlides])
 
   // Reset slide when category changes
   useEffect(() => {
@@ -416,46 +416,83 @@ const ExploreMarquee: React.FC<ExploreMarqueeProps> = ({
                 </div>
               ) : (
                 <>
-                  {/* Carousel Container */}
-                  <div className="relative">
-                    {/* Navigation Arrows */}
-                    {hasMoreVideos && totalSlides > 1 && (
-                      <>
-                        <button
-                          onClick={prevSlide}
-                          className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow-lg rounded-full p-2 transition-all duration-200 hover:scale-110"
-                          aria-label="Previous videos"
-                        >
-                          <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                          </svg>
-                        </button>
-                        <button
-                          onClick={nextSlide}
-                          className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow-lg rounded-full p-2 transition-all duration-200 hover:scale-110"
-                          aria-label="Next videos"
-                        >
-                          <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                          </svg>
-                        </button>
-                      </>
-                    )}
+                  {isMobile ? (
+                    /* Mobile Slider */
+                    <div className="relative">
+                      {/* Navigation Controls (Mobile) will render below the card */}
 
-                    {/* Carousel Content */}
+                      {/* Mobile Carousel Content */}
+                      <div 
+                        className="relative overflow-hidden"
+                        onTouchStart={handleTouchStart}
+                        onTouchMove={handleTouchMove}
+                        onTouchEnd={handleTouchEnd}
+                        aria-live="polite"
+                        aria-label={`Showing ${currentSlideVideos.length} of ${filteredVideos.length} videos`}
+                      >
+                        <div 
+                          className={cn(
+                            "flex transition-transform duration-500 ease-in-out",
+                            isTransitioning && "opacity-50"
+                          )}
+                          style={{
+                            transform: `translateX(-${currentSlide * 100}%)`
+                          }}
+                        >
+                          {filteredVideos.map((video, index) => (
+                            <div 
+                              key={video.id} 
+                              className="w-full flex-shrink-0 px-1"
+                              style={{ width: '100%', minWidth: 0 }}
+                            >
+                              <VideoCard 
+                                video={video}
+                                className="w-full"
+                                viewCourseLabel={viewCourseLabel || t('explore.viewCourse')}
+                                onCourseClick={onCourseClick}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      {/* Centered, grouped controls under the video card (mobile only) */}
+                      {hasMoreVideos && totalSlides > 1 && (
+                        <div className="mt-3 flex justify-center">
+                          <div className="inline-flex items-center gap-3">
+                            <button
+                              onClick={prevSlide}
+                              className="bg-purple-600 text-white shadow-lg rounded-full p-3 active:scale-95 transition-transform hover:bg-purple-700"
+                              aria-label="Previous videos"
+                            >
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                              </svg>
+                            </button>
+                            <button
+                              onClick={nextSlide}
+                              className="bg-purple-600 text-white shadow-lg rounded-full p-3 active:scale-95 transition-transform hover:bg-purple-700"
+                              aria-label="Next videos"
+                            >
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    /* Desktop/Tablet Grid Layout */
                     <div 
                       className={cn(
-                        "grid gap-3 sm:gap-4 transition-all duration-500 ease-in-out",
-                        `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`,
+                        "grid gap-4 sm:gap-6 transition-all duration-500 ease-in-out",
+                        "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
                         isTransitioning && "opacity-50 scale-95"
                       )}
-                      onTouchStart={handleTouchStart}
-                      onTouchMove={handleTouchMove}
-                      onTouchEnd={handleTouchEnd}
                       aria-live="polite"
-                      aria-label={`Showing ${currentSlideVideos.length} of ${filteredVideos.length} videos`}
+                      aria-label={`Showing ${Math.min(filteredVideos.length, 4)} of ${filteredVideos.length} videos`}
                     >
-                      {currentSlideVideos.map((video) => (
+                      {filteredVideos.slice(0, 4).map((video) => (
                         <div key={video.id} className="w-full" style={{ width: '100%', minWidth: 0 }}>
                           <VideoCard 
                             video={video}
@@ -466,11 +503,8 @@ const ExploreMarquee: React.FC<ExploreMarqueeProps> = ({
                         </div>
                       ))}
                     </div>
+                  )}
 
-
-                  </div>
-
-                  
                   {/* View All CTA */}
                   {hasMoreVideos && (
                     <div className="mt-4 sm:mt-6 text-center">

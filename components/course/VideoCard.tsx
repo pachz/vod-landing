@@ -168,7 +168,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({
         <div className="flex flex-col gap-3 mt-auto">
           <div className="flex-1 min-w-0">
             <div className="text-sm text-purple-600 font-medium">Included in subscription</div>
-            <div className="text-sm text-purple-700 font-semibold">$29/month • All courses</div>
+            <div className="text-sm text-purple-700 font-semibold">8.5 KWD/month • All courses</div>
           </div>
           <button
             onClick={handleCourseClick}
