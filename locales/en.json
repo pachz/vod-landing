@@ -163,4 +163,11 @@
     "getStarted": "Get Started",
     "logoText": "Reham Diva"
   }
+  ,
+  "courses": {
+    "allCoursesTitle": "All Courses",
+    "allCoursesSubtitle": "Discover our comprehensive collection of courses designed to help you grow, learn, and achieve your goals.",
+    "viewCourse": "View Course",
+    "noCoursesFound": "No courses found."
+  }
 }

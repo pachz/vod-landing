@@ -20,7 +20,6 @@ export interface ExploreMarqueeProps {
   viewAllRoute?: string
   marqueeSpeed?: number
   reduceMotionFallback?: boolean
-  viewCourseLabel?: string
   onCourseClick?: (videoId: string) => void
 }
 
@@ -185,7 +184,6 @@ const ExploreMarquee: React.FC<ExploreMarqueeProps> = ({
   viewAllRoute = "/videos",
   marqueeSpeed = 30,
   reduceMotionFallback = false,
-  viewCourseLabel,
   onCourseClick
 }) => {
   const { t, locale } = useTranslation()
@@ -448,7 +446,6 @@ const ExploreMarquee: React.FC<ExploreMarqueeProps> = ({
                               <VideoCard 
                                 video={video}
                                 className="w-full"
-                                viewCourseLabel={viewCourseLabel || t('explore.viewCourse')}
                                 onCourseClick={onCourseClick}
                               />
                             </div>
@@ -497,7 +494,6 @@ const ExploreMarquee: React.FC<ExploreMarqueeProps> = ({
                           <VideoCard 
                             video={video}
                             className="w-full"
-                            viewCourseLabel={viewCourseLabel || t('explore.viewCourse')}
                             onCourseClick={onCourseClick}
                           />
                         </div>

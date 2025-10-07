@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { setLocale as setI18nLocale, type Locale } from '@/lib/i18n'
 
 type Direction = 'ltr' | 'rtl'
@@ -24,7 +24,14 @@ export function DirectionProvider({
   const [direction, setDirection] = useState<Direction>(initialLocale === 'ar' ? 'rtl' : 'ltr')
   const [locale, setLocale] = useState<Locale>(initialLocale)
 
-  // Initialize i18n with the initial locale
+  // Ensure i18n locale is set before first render to avoid flash of wrong language
+  const initializedRef = useRef(false)
+  if (!initializedRef.current) {
+    setI18nLocale(initialLocale)
+    initializedRef.current = true
+  }
+
+  // Keep i18n in sync if initialLocale prop changes (rare)
   useEffect(() => {
     setI18nLocale(initialLocale)
   }, [initialLocale])
@@ -43,11 +50,11 @@ export function DirectionProvider({
       } else if (path.startsWith('/en/') || path === '/en') {
         detectedLocale = 'en'
       } else {
-        // No language prefix in URL, check localStorage
+        // No language prefix in URL, check cookie then localStorage
+        const cookieMatch = document.cookie.match(/(?:^|; )preferred-locale=(en|ar)/)
+        const cookieLocale = (cookieMatch ? cookieMatch[1] : undefined) as Locale | undefined
         const storedLocale = localStorage.getItem('preferred-locale') as Locale
-        if (storedLocale && (storedLocale === 'ar' || storedLocale === 'en')) {
-          detectedLocale = storedLocale
-        }
+        detectedLocale = cookieLocale ?? (storedLocale === 'ar' || storedLocale === 'en' ? storedLocale : 'ar')
       }
       
       setLocale(detectedLocale)
@@ -71,8 +78,12 @@ export function DirectionProvider({
   const handleSetLocale = (newLocale: Locale) => {
     setLocale(newLocale)
     setI18nLocale(newLocale)
-    // Store the preference in localStorage
+    // Store the preference in localStorage and cookie for SSR usage
     localStorage.setItem('preferred-locale', newLocale)
+    // Cookie: 180 days, path=/
+    const maxAgeDays = 180
+    const maxAge = maxAgeDays * 24 * 60 * 60
+    document.cookie = `preferred-locale=${newLocale}; max-age=${maxAge}; path=/; samesite=lax`
   }
 
   return (

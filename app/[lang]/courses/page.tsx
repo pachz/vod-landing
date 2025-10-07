@@ -2,28 +2,27 @@
 
 import { courses } from '@/lib/data'
 import { VideoCard, Video, CoursesHero } from '@/components/course'
-import { Navbar, SiteFooter } from '@/components/layout'
+import { SiteFooter } from '@/components/layout'
 import { useMemo, useState } from 'react'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
 import { useTranslation } from '@/lib/useTranslation'
+import { useDirection } from '@/providers/DirectionProvider'
 
-// Helper function to convert Course to Video format
-const convertCourseToVideo = (course: any): Video => ({
+const toVideoForLocale = (course: any, locale: 'en' | 'ar'): Video => ({
   id: course.id,
-  title: course.title,
-  description: course.description || '',
-  instructor: course.instructor,
+  title: locale === 'ar' ? (course.titleAr || course.title) : course.title,
+  description: locale === 'ar' ? (course.descriptionAr || course.description) : (course.description || ''),
+  instructor: locale === 'ar' ? (course.instructorAr || course.instructor) : course.instructor,
   thumbnailUrl: course.image,
-  totalTime: course.duration,
+  totalTime: locale === 'ar' ? (course.durationAr || course.duration) : course.duration,
   totalStudents: course.students || 0,
   rating: course.rating || 4.5,
   tags: [course.category],
   isFeatured: false
 })
 
-export default function CoursesPage() {
-  const { locale } = useTranslation()
+export default function LangCoursesPage() {
+  const { t } = useTranslation()
+  const { locale } = useDirection()
   const [query, setQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<'All' | string>('All')
   const categories = useMemo(() => {
@@ -42,14 +41,13 @@ export default function CoursesPage() {
       : base.filter((c: any) => c.category === selectedCategory)
     return byCategory
   }, [query, selectedCategory])
+
   return (
     <div className="min-h-screen bg-neutral-bg">
-      <Navbar />
-      
       <main className="pt-16">
-        <CoursesHero 
-          title="All Courses"
-          subtitle="Discover our comprehensive collection of courses designed to help you grow, learn, and achieve your goals."
+        <CoursesHero
+          title={t('courses.allCoursesTitle')}
+          subtitle={t('courses.allCoursesSubtitle')}
           query={query}
           onQueryChange={setQuery}
           categories={categories}
@@ -58,31 +56,30 @@ export default function CoursesPage() {
           locale={locale}
         />
 
-        {/* Courses Grid */}
         <section className="py-16">
           <div className="max-w-7xl mx-auto px-4">
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredCourses.map((course) => (
                 <VideoCard
                   key={course.id}
-                  video={convertCourseToVideo(course)}
-                  viewCourseLabel="View Course"
+                  video={toVideoForLocale(course, locale)}
                   onCourseClick={(videoId) => {
                     if (typeof window !== 'undefined') {
-                      window.location.href = `/courses/${videoId}`
+                      window.location.href = `/${locale}/courses/${videoId}`
                     }
                   }}
                 />
               ))}
             </div>
             {filteredCourses.length === 0 && (
-              <p className="text-center text-text-secondary mt-8">No courses found.</p>
+              <p className="text-center text-text-secondary mt-8">{t('courses.noCoursesFound')}</p>
             )}
           </div>
         </section>
       </main>
-      
       <SiteFooter />
     </div>
   )
 }
+
+

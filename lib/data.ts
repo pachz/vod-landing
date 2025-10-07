@@ -7,6 +7,11 @@ export interface Course {
   category: string
   image: string
   level: 'beginner' | 'intermediate' | 'advanced'
+  // Arabic-localized fields for dynamic display
+  titleAr?: string
+  descriptionAr?: string
+  instructorAr?: string
+  durationAr?: string
 }
 
 export interface Instructor {
@@ -36,7 +41,11 @@ export const courses: Course[] = [
     duration: '45 min',
     category: 'confidence',
     image: '/images/w1.png',
-    level: 'beginner'
+    level: 'beginner',
+    titleAr: 'بناء الثقة من الداخل',
+    descriptionAr: 'دورة شاملة لبناء الثقة الداخلية والقوة الشخصية',
+    instructorAr: 'رهام دیفا',
+    durationAr: '45 دقيقة'
   },
   {
     id: '2',
@@ -46,7 +55,11 @@ export const courses: Course[] = [
     duration: '30 min',
     category: 'habits',
     image: '/images/w2.png',
-    level: 'beginner'
+    level: 'beginner',
+    titleAr: 'عادات يومية للنجاح',
+    descriptionAr: 'تعلم العادات اليومية التي تقودك للنجاح',
+    instructorAr: 'رهام دیفا',
+    durationAr: '30 دقيقة'
   },
   {
     id: '3',
@@ -56,7 +69,11 @@ export const courses: Course[] = [
     duration: '60 min',
     category: 'career',
     image: '/images/w3.png',
-    level: 'intermediate'
+    level: 'intermediate',
+    titleAr: 'القيادة ونمو المسيرة المهنية',
+    descriptionAr: 'مهارات القيادة والتطوير المهني',
+    instructorAr: 'رهام دیفا',
+    durationAr: '60 دقيقة'
   },
   {
     id: '4',
@@ -66,7 +83,11 @@ export const courses: Course[] = [
     duration: '40 min',
     category: 'wellness',
     image: '/images/w4.png',
-    level: 'beginner'
+    level: 'beginner',
+    titleAr: 'اليقظة الذهنية والنمو العاطفي',
+    descriptionAr: 'تطوير الوعي الذهني والنمو العاطفي',
+    instructorAr: 'رهام دیفا',
+    durationAr: '40 دقيقة'
   },
   {
     id: '5',
@@ -76,7 +97,11 @@ export const courses: Course[] = [
     duration: '50 min',
     category: 'lifestyle',
     image: '/images/w5.png',
-    level: 'intermediate'
+    level: 'intermediate',
+    titleAr: 'تحويل نمط الحياة الصحي',
+    descriptionAr: 'خطوات عملية لتحويل نمط حياتك إلى نمط صحي',
+    instructorAr: 'رهام دیفا',
+    durationAr: '50 دقيقة'
   },
   {
     id: '6',
@@ -86,7 +111,11 @@ export const courses: Course[] = [
     duration: '35 min',
     category: 'confidence',
     image: '/images/w6.png',
-    level: 'intermediate'
+    level: 'intermediate',
+    titleAr: 'التغلب على الشك الذاتي',
+    descriptionAr: 'استراتيجيات للتغلب على الشك الذاتي وبناء الثقة',
+    instructorAr: 'رهام دیفا',
+    durationAr: '35 دقيقة'
   },
   {
     id: '7',
@@ -96,7 +125,11 @@ export const courses: Course[] = [
     duration: '55 min',
     category: 'finance',
     image: '/images/w7.png',
-    level: 'intermediate'
+    level: 'intermediate',
+    titleAr: 'الاستقلال المالي للمرأة',
+    descriptionAr: 'مبادئ الاستقلال المالي وإدارة الأموال',
+    instructorAr: 'رهام دیفا',
+    durationAr: '55 دقيقة'
   },
   {
     id: '8',
@@ -106,7 +139,11 @@ export const courses: Course[] = [
     duration: '40 min',
     category: 'creativity',
     image: '/images/w8.png',
-    level: 'beginner'
+    level: 'beginner',
+    titleAr: 'التعبير الإبداعي والعلاج بالفن',
+    descriptionAr: 'استكشاف الإبداع والعلاج بالفنون',
+    instructorAr: 'رهام دیفا',
+    durationAr: '40 دقيقة'
   }
 ]
 
