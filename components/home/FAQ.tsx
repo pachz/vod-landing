@@ -39,13 +39,21 @@ export default function FAQ() {
               >
                 <AccordionItem 
                   value={faq.id} 
-                  className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100"
+                  className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-md"
                 >
-                  <AccordionTrigger className="px-4 sm:px-6 py-3 sm:py-4 text-left font-semibold text-purple-800 hover:text-pink-500 transition-colors text-sm sm:text-base">
-                    {faq.question}
+                  <AccordionTrigger className="px-4 sm:px-6 py-3 sm:py-4 text-left font-semibold text-purple-800 hover:text-pink-500 transition-all duration-300 text-sm sm:text-base group">
+                    <span className="group-hover:translate-x-1 transition-transform duration-300">
+                      {faq.question}
+                    </span>
                   </AccordionTrigger>
                   <AccordionContent className="px-4 sm:px-6 pb-3 sm:pb-4 text-text-secondary leading-relaxed text-sm sm:text-base">
-                    {faq.answer}
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.3, delay: 0.1 }}
+                    >
+                      {faq.answer}
+                    </motion.div>
                   </AccordionContent>
                 </AccordionItem>
               </motion.div>

@@ -103,6 +103,25 @@ export const VideoCard: React.FC<VideoCardProps> = ({
           )}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
         />
+        {/* Hover Play Overlay */}
+        <div
+          aria-hidden="true"
+          className={cn(
+            'absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-200',
+            isHovered ? 'opacity-100' : 'opacity-0'
+          )}
+        >
+          <div className="bg-white/70 dark:bg-white/60 backdrop-blur-md rounded-xl p-2 shadow-lg">
+            <svg
+              className="w-6 h-6 text-gray-900"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M8 5v14l11-7-11-7z" />
+            </svg>
+          </div>
+        </div>
         {video.isMostPopular && (
           <div className="absolute top-3 left-3">
             <span className="text-xs bg-pink-500 text-white px-3 py-1 rounded-full font-semibold">
@@ -125,7 +144,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({
         {/* Category Tag */}
         <div className="mb-3">
           <span className="text-xs bg-purple-500 text-white px-3 py-1 rounded-full font-semibold">
-            {displayTag}
+            {displayTag ? t(`explore.categories.${displayTag}`) : ''}
           </span>
         </div>
 
@@ -166,7 +185,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({
         <div className="flex flex-col gap-3 mt-auto">
           <div className="flex-1 min-w-0">
             <div className="text-sm text-purple-600 font-medium">{locale === 'ar' ? 'ضمن الاشتراك' : 'Included in subscription'}</div>
-            <div className="text-sm text-purple-700 font-semibold">{locale === 'ar' ? '8.5 دينار كويتي/شهريًا • جميع الدورات' : '8.5 KWD/month • All courses'}</div>
+            <div className="text-sm text-purple-700 font-semibold">{locale === 'ar' ? '8.5 د.ك/شهريًا • جميع الدورات' : '8.5 KWD/month • All courses'}</div>
           </div>
           <button
             onClick={handleCourseClick}

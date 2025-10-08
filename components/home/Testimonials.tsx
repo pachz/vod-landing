@@ -16,6 +16,7 @@ export default function Testimonials() {
     name: string
     role: string
     text: string
+    image: string
   }>) || []
 
   // Auto-advance slider
@@ -97,10 +98,22 @@ export default function Testimonials() {
             <div className="bg-white rounded-2xl p-6 sm:p-8 md:p-12 shadow-lg">
               {/* Profile image */}
               <div className="flex justify-center mb-6 sm:mb-8">
-                <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden shadow-lg bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center">
-                  <span className="text-white text-2xl sm:text-3xl font-bold">
-                    {currentTestimonial.name?.charAt(0) || '?'}
-                  </span>
+                <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden shadow-lg">
+                  {currentTestimonial.image ? (
+                    <Image
+                      src={currentTestimonial.image}
+                      alt={currentTestimonial.name}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 80px, 96px"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center">
+                      <span className="text-white text-2xl sm:text-3xl font-bold">
+                        {currentTestimonial.name?.charAt(0) || '?'}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
 

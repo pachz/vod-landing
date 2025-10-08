@@ -54,6 +54,12 @@ export default function LangCoursesPage() {
           selectedCategory={selectedCategory}
           onSelectCategory={(c) => setSelectedCategory(c)}
           locale={locale}
+          translatedCategories={{
+            all: t('courses.all'),
+            ...Object.fromEntries(
+              categories.map(cat => [cat.toLowerCase(), t(`courses.categories.${cat.toLowerCase()}`)])
+            )
+          }}
         />
 
         <section className="py-16">

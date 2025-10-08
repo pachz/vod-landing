@@ -1,7 +1,7 @@
 {
   "hero": {
-    "title": "Find Your Strength, Shape Your Future.",
-    "subtitle": "Unlimited motivational classes in bite-sized episodes designed for women who want to grow.",
+    "title": "The feminine power within you",
+    "subtitle": "Restore balance in your life by connecting with your feminine energy, return to the depth of your self-love, and elevate your self-confidence",
     "exploreAll": "Explore all",
     "subscribeNow": "Subscribe Now",
     "stayInspired": "Stay Inspired",
@@ -46,7 +46,7 @@
   },
   "explore": {
     "title": "Discover courses that inspire your next step",
-    "subtitle": "From confidence to career — find your path in short, motivational courses.",
+    "subtitle": "From confidence to career , find your path in short, motivational courses.",
     "cta": "View All Courses",
     "viewCourse": "View Course",
     "noVideosFound": "No videos found in this category",
@@ -56,7 +56,10 @@
       "confidence": "Confidence",
       "career": "Career", 
       "wellness": "Wellness",
-      "finance": "Finance"
+      "finance": "Finance",
+      "habits": "Habits",
+      "lifestyle": "Lifestyle",
+      "creativity": "Creativity"
     }
   },
   "instructors": {
@@ -79,19 +82,34 @@
     "subtitle": "Discover how Reham Diva has transformed the lives of women around the world.",
     "items": [
       {
-        "name": "Sarah Johnson",
-        "role": "Marketing Manager",
-        "text": "This platform completely changed the way I consume video content. The smooth navigation, the personalized recommendations, and the high-quality streaming make it stand out from every other service I've tried. It honestly feels like it was built exactly for my needs."
+        "name": "Nesreen Tafesh",
+        "role": "Syrian Actress and Singer",
+        "text": "One of the most important consciousness teachers in the Arab world with a blend of intelligence and kindness and a comfortable, heart-warming style. She presents her materials in a smooth, understandable way for different levels of consciousness. I expect her to continue with strong impact, which will enable beautiful spiritual consciousness shifts for many in our Arab world, especially women.",
+        "image": "/images/testimonials/NesreenTafesh.png"
       },
       {
-        "name": "Ahmed Al-Farsi",
-        "role": "Entrepreneur",
-        "text": "The VOD service is reliable, fast, and always accessible. I can watch my favorite shows while traveling, working, or relaxing at home without interruptions. It has quickly become an essential part of my daily routine and I truly value the convenience it offers."
+        "name": "Dr. Fawz Al-Drai",
+        "role": "Specialist in Psychological, Spiritual and Sexual Culture",
+        "text": "There are those who start their work and there are those who start their work - Reham Al-Rashidi has started. Great... authentic... majestic and at all levels: idea and thought, plan and implementation... stability and change. Without a doubt, she is a distinguished addition in the world of self-development, and perhaps the strongest thing about her is that her self was the first project, so the performance was sincere and successful. I feel that her creativity box is in the peak of legitimate pride and it tells us (there is still much more). We are proud of her and reassured that the space of truth in the world of human spiritual development is in good hands.",
+        "image": "/images/testimonials/DrFawzAl-Drai.png"
       },
       {
-        "name": "Emily Carter",
-        "role": "Student",
-        "text": "I was looking for an affordable platform with a simple design, but I got much more than that. The user interface is modern, easy to navigate, and fun to use. I enjoy how quickly I can find new content, and I've already recommended it to most of my classmates."
+        "name": "Kinda Alloush",
+        "role": "Syrian Actress",
+        "text": "Her presence and appearance caught my attention before I knew her specialty... and when she spoke, I recognized a strong, confident personality capable of convincing everyone of her ideas with calm and gentleness. For a woman to defend women and their existence in society through the weapon of femininity without asking her to change her skin or imitate men, and to confirm through her proposals and ideas the enhancement of women's self-confidence and charging their inner strength without this affecting the essence of their difference, which is softness, tenderness, and femininity in all its manifestations. This is what Reham insisted on and what she was able to achieve through her great influence on a wide segment of women in Kuwait and the Arab world...",
+        "image": "/images/testimonials/KindaAlloush.png"
+      },
+      {
+        "name": "Samir Al-Qaisi",
+        "role": "Journalist, News Anchor and Program Host, Humanitarian Activist",
+        "text": "I follow Reham Al-Rashidi with enthusiasm to launch into my world, enjoying my complete femininity... I soar... I flourish... and I enjoy...",
+        "image": "/images/testimonials/SamirAl-Qaisi.png"
+      },
+      {
+        "name": "Dr. Mustafa Abu Saad",
+        "role": "Psychological and Educational Consultant, Family and Educational Guidance Trainer, Author of Educational Books",
+        "text": "Reham Al-Rashidi has unlimited ambition and unstoppable creativity. My daughter Reham is distinguished by her scientific ambition and her awareness towards specializing in a neglected and new field that deeply penetrates the world of women in order to restore balance to herself, elevate her femininity, and make her happy. May God guide her, and my advice is that she continues as I have known her while maintaining our Islamic identity and reference that contains tranquility, balance, and happiness in both worlds.",
+        "image": "/images/testimonials/DrMustafaAbuSaad.png"
       }
     ]
   },
@@ -100,28 +118,53 @@
     "items": [
       {
         "id": "1",
-        "question": "What is Reham Diva?",
-        "answer": "A motivational video platform with structured courses, chapters, and short episodes led by inspiring women."
+        "question": "How many programs are included in the Reham Diva curriculum?",
+        "answer": "The Reham Diva curriculum includes 6 comprehensive programs in feminine awareness and self-love, with over 40 hours of training and more than 250 lessons"
       },
       {
         "id": "2",
-        "question": "Do I need to subscribe to access the videos?",
-        "answer": "You can start exploring courses for free. Some advanced features may be added later."
+        "question": "What is the duration of membership in the Reham Diva curriculum?",
+        "answer": "You get a golden membership in the Reham Diva curriculum that lasts for 3 full years through the website"
       },
       {
         "id": "3",
-        "question": "Can I watch on my phone?",
-        "answer": "Yes — Reham Diva works on desktop, tablet, and mobile devices."
+        "question": "How can I stay updated on all Reham Diva curriculum activities?",
+        "answer": "You can find out about upcoming curriculum activities by accessing the calendar in the main menu of the website, and the upcoming activity will also appear on the homepage once you log in to the website. You can add activities to your mobile phone calendar to get reminders"
       },
       {
         "id": "4",
-        "question": "Are new courses added regularly?",
-        "answer": "Yes — new motivational content will be added every month."
+        "question": "What are the details of my membership in the Reham Diva club?",
+        "answer": "The Reham Diva club allows you to ask questions directly to Reham and listen to participants' experiences, which energizes you and motivates you to continue your personal journey in a positive and enlightened community. Your annual membership in the Reham Diva club allows you to attend 6 live meetings with Reham during the first year of the curriculum. You can attend in person in Kuwait or follow the live broadcast from your country and get recordings of all meetings to watch at your convenience"
       },
       {
         "id": "5",
-        "question": "Can I download videos to watch offline?",
-        "answer": "Offline mode will be available in the near future."
+        "question": "When are the Reham Diva club meeting schedules?",
+        "answer": "You will receive an email from us to notify you of the Reham Diva club meeting times, in addition to the activity appearing in your calendar within the website. We suggest adding the dates to your personal mobile phone calendar for easy reminder of appointments"
+      },
+      {
+        "id": "6",
+        "question": "Where can I get the training workbook?",
+        "answer": "You can find the training workbook in the first lesson of each new chapter, and for additional materials, you can find the training workbook on the additional material page"
+      },
+      {
+        "id": "7",
+        "question": "How can I contact the Reham House team?",
+        "answer": "You can send an email to hello@reham.com or contact via WhatsApp +96550406406. We are always at your service"
+      },
+      {
+        "id": "8",
+        "question": "Why do training materials appear gradually in the curriculum?",
+        "answer": "The gradual appearance of materials makes it easier for you to complete the journey without feeling overwhelmed by the amount of available content. The order of material appearance is carefully planned by Ms. Reham. We want to reassure you that you won't log into the website and find a small amount of content, as we continuously open materials - you will always find plenty of content that you can enjoy watching and benefiting from. However, this will be done gradually according to the teachings of the feminine curriculum"
+      },
+      {
+        "id": "9",
+        "question": "What are the terms and conditions for refunds?",
+        "answer": "We are happy to help you with refunds if the program doesn't meet your expectations, provided that the refund request is made during the golden guarantee period, which is within thirty days from the date of purchasing the program by contacting the Reham House team via email at Hello@reham.com"
+      },
+      {
+        "id": "10",
+        "question": "How can I keep the materials for life?",
+        "answer": "You can keep the materials for life through the download feature that appears to you after one month from the subscription date in the curriculum"
       }
     ]
   },
@@ -168,6 +211,16 @@
     "allCoursesTitle": "All Courses",
     "allCoursesSubtitle": "Discover our comprehensive collection of courses designed to help you grow, learn, and achieve your goals.",
     "viewCourse": "View Course",
-    "noCoursesFound": "No courses found."
+    "noCoursesFound": "No courses found.",
+    "all": "All",
+    "categories": {
+      "confidence": "Confidence",
+      "career": "Career",
+      "wellness": "Wellness",
+      "finance": "Finance",
+      "habits": "Habits",
+      "lifestyle": "Lifestyle",
+      "creativity": "Creativity"
+    }
   }
 }

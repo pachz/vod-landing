@@ -4,10 +4,11 @@ import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useTranslation } from '@/lib/useTranslation'
 
 export default function RehamDivaShowcase() {
-  const { t } = useTranslation()
+  const { t, locale } = useTranslation()
   return (
     <section id="instructor" className="py-16 sm:py-20 lg:py-24 px-4 bg-gradient-to-br from-gray-50 to-white">
       <div className="max-w-7xl mx-auto">
@@ -53,7 +54,6 @@ export default function RehamDivaShowcase() {
                   <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-purple-800">
                     {t('instructors.rehamDiva')}
                   </h3>
-                  <div className="w-16 sm:w-20 h-1 bg-gradient-to-r from-purple-600 to-pink-500 rounded-full"></div>
                   <p className="text-pink-600 text-xl sm:text-2xl font-medium">
                     {t('instructors.tagline')}
                   </p>
@@ -61,8 +61,7 @@ export default function RehamDivaShowcase() {
                 
                 <div className="space-y-4">
                   <div className="relative">
-                    <div className="absolute -left-4 top-0 w-1 h-12 bg-gradient-to-b from-purple-600 to-pink-500 rounded-full"></div>
-                    <p className="text-gray-700 text-base leading-relaxed pl-6 italic">
+                    <p className="text-gray-700 text-base leading-relaxed italic">
                       &ldquo;{t('instructors.quote')}&rdquo;
                     </p>
                   </div>
@@ -87,16 +86,19 @@ export default function RehamDivaShowcase() {
                 <div className="flex flex-col sm:flex-row gap-4 pt-4">
                   <Button 
                     size="lg" 
-                    className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white px-8 py-4 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300"
+                    className="bg-pink-500 hover:bg-pink-700 text-white px-8 py-4 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     {t('instructors.startJourneyBtn')}
                   </Button>
                   <Button 
                     size="lg" 
                     variant="outline"
-                    className="border-2 border-pink-500 text-pink-600 hover:bg-pink-50 px-8 py-4 text-lg font-medium transition-all duration-300"
+                    className="border-purple-700 text-purple-700 hover:bg-purple-700 hover:text-white px-8 py-4 text-lg font-medium transition-all duration-300"
+                    asChild
                   >
-                    {t('instructors.explorePrograms')}
+                    <Link href={`/${locale}/courses`}>
+                      {t('instructors.explorePrograms')}
+                    </Link>
                   </Button>
                 </div>
               </div>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useTranslation } from '@/lib/useTranslation'
@@ -126,8 +127,11 @@ export default function Hero() {
                 variant="outline" 
                 size="lg"
                 className="border-purple-700 text-purple-700 hover:bg-purple-700 hover:text-white w-full sm:w-auto"
+                asChild
               >
-                {t('hero.exploreAll')}
+                <Link href={`/${locale}/courses`}>
+                  {t('hero.exploreAll')}
+                </Link>
               </Button>
             </div>
           </div>

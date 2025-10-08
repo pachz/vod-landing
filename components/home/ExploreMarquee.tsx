@@ -358,165 +358,162 @@ const ExploreMarquee: React.FC<ExploreMarqueeProps> = ({
 
       {/* Center Overlay */}
       <div className="relative z-10 flex items-center justify-center min-h-screen px-2 sm:px-4 py-6 sm:py-8 md:py-0">
-        <div className="text-center max-w-6xl mx-auto w-full">
-          {/* Main Content */}
-          <div className="bg-white/95 backdrop-blur-sm rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 lg:p-12 shadow-2xl border border-white/20">
-            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-purple-900 mb-3 sm:mb-4 md:mb-6 leading-tight px-2">
-              {t('explore.title')}
-            </h2>
-            
-            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-text-secondary mb-4 sm:mb-6 md:mb-8 max-w-2xl mx-auto leading-relaxed px-2">
-              {t('explore.subtitle')}
-            </p>
+        <div className="text-center max-w-7xl mx-auto w-full">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-purple-900 mb-3 sm:mb-4 md:mb-6 leading-tight px-2">
+            {t('explore.title')}
+          </h2>
+          
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-text-secondary mb-4 sm:mb-6 md:mb-8 max-w-2xl mx-auto leading-relaxed px-2">
+            {t('explore.subtitle')}
+          </p>
 
-            {/* Category Chips */}
-            <div 
-              className="flex flex-wrap justify-center gap-1.5 sm:gap-2 md:gap-3 mb-4 sm:mb-6 md:mb-8 px-2"
-              role="tablist"
-              aria-label="Video categories"
-            >
-              {["All", ...categories].map((category) => (
-                <button
-                  key={category}
-                  onClick={() => handleCategoryChange(category)}
-                  onKeyDown={(e) => handleKeyDown(e, category)}
-                  className={cn(
-                    "px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2",
-                    selectedCategory === category
-                      ? "bg-pink-500 text-white shadow-lg"
-                      : "bg-purple-800/10 text-purple-800 hover:bg-pink-500 hover:text-white"
-                  )}
-                  role="tab"
-                  aria-selected={selectedCategory === category}
-                  aria-label={`Filter videos by ${category} category`}
-                  tabIndex={0}
-                >
-                  {category === "All" ? (locale === 'ar' ? 'الكل' : 'All') : t(`explore.categories.${category}`)}
-                </button>
-              ))}
-            </div>
+          {/* Category Chips */}
+          <div 
+            className="flex flex-wrap justify-center gap-1.5 sm:gap-2 md:gap-3 mb-4 sm:mb-6 md:mb-8 px-2"
+            role="tablist"
+            aria-label="Video categories"
+          >
+            {["All", ...categories].map((category) => (
+              <button
+                key={category}
+                onClick={() => handleCategoryChange(category)}
+                onKeyDown={(e) => handleKeyDown(e, category)}
+                className={cn(
+                  "px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2",
+                  selectedCategory === category
+                    ? "bg-pink-500 text-white shadow-lg"
+                    : "bg-purple-800/10 text-purple-800 hover:bg-pink-500 hover:text-white"
+                )}
+                role="tab"
+                aria-selected={selectedCategory === category}
+                aria-label={`Filter videos by ${category} category`}
+                tabIndex={0}
+              >
+                {category === "All" ? (locale === 'ar' ? 'الكل' : 'All') : t(`explore.categories.${category}`)}
+              </button>
+            ))}
+          </div>
 
-            {/* Video Preview Grid */}
-            <div className="mb-4 sm:mb-6 md:mb-8">
-              {filteredVideos.length === 0 ? (
-                <div className="text-center py-8 sm:py-12">
-                  <p className="text-base sm:text-lg text-gray-600 mb-4 px-4">{t('explore.noVideosFound')}</p>
-                  {hasMoreVideos && (
+          {/* Video Preview Grid */}
+          <div className="mb-4 sm:mb-6 md:mb-8">
+            {filteredVideos.length === 0 ? (
+              <div className="text-center py-8 sm:py-12">
+                <p className="text-base sm:text-lg text-gray-600 mb-4 px-4">{t('explore.noVideosFound')}</p>
+                {hasMoreVideos && (
+                  <Button
+                    onClick={handleViewAllClick}
+                    size="lg"
+                    className="text-sm sm:text-base px-4 sm:px-6 py-2 sm:py-3 h-auto font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+                    aria-label="View all videos"
+                  >
+                    {t('explore.viewAll')}
+                  </Button>
+                )}
+              </div>
+            ) : (
+              <>
+                {isMobile ? (
+                  /* Mobile Slider */
+                  <div className="relative">
+                    {/* Navigation Controls (Mobile) will render below the card */}
+
+                    {/* Mobile Carousel Content */}
+                    <div 
+                      className="relative overflow-hidden"
+                      onTouchStart={handleTouchStart}
+                      onTouchMove={handleTouchMove}
+                      onTouchEnd={handleTouchEnd}
+                      aria-live="polite"
+                      aria-label={`Showing ${currentSlideVideos.length} of ${filteredVideos.length} videos`}
+                    >
+                      <div 
+                        className={cn(
+                          "flex transition-transform duration-500 ease-in-out",
+                          isTransitioning && "opacity-50"
+                        )}
+                        style={{
+                          transform: `translateX(-${currentSlide * 100}%)`
+                        }}
+                      >
+                        {filteredVideos.map((video, index) => (
+                          <div 
+                            key={video.id} 
+                            className="w-full flex-shrink-0 px-1"
+                            style={{ width: '100%', minWidth: 0 }}
+                          >
+                            <VideoCard 
+                              video={video}
+                              className="w-full"
+                              onCourseClick={onCourseClick}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    {/* Centered, grouped controls under the video card (mobile only) */}
+                    {hasMoreVideos && totalSlides > 1 && (
+                      <div className="mt-3 flex justify-center">
+                        <div className="inline-flex items-center gap-3">
+                          <button
+                            onClick={prevSlide}
+                            className="bg-purple-600 text-white shadow-lg rounded-full p-3 active:scale-95 transition-transform hover:bg-purple-700"
+                            aria-label="Previous videos"
+                          >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={nextSlide}
+                            className="bg-purple-600 text-white shadow-lg rounded-full p-3 active:scale-95 transition-transform hover:bg-purple-700"
+                            aria-label="Next videos"
+                          >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  /* Desktop/Tablet Grid Layout */
+                  <div 
+                    className={cn(
+                      "grid gap-4 sm:gap-6 transition-all duration-500 ease-in-out",
+                      "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
+                      isTransitioning && "opacity-50 scale-95"
+                    )}
+                    aria-live="polite"
+                    aria-label={`Showing ${Math.min(filteredVideos.length, 4)} of ${filteredVideos.length} videos`}
+                  >
+                    {filteredVideos.slice(0, 4).map((video) => (
+                      <div key={video.id} className="w-full" style={{ width: '100%', minWidth: 0 }}>
+                        <VideoCard 
+                          video={video}
+                          className="w-full"
+                          onCourseClick={onCourseClick}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* View All CTA */}
+                {hasMoreVideos && (
+                  <div className="mt-4 sm:mt-6 text-center">
                     <Button
                       onClick={handleViewAllClick}
                       size="lg"
                       className="text-sm sm:text-base px-4 sm:px-6 py-2 sm:py-3 h-auto font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
-                      aria-label="View all videos"
+                      aria-label={`View all ${filteredVideos.length} videos in ${selectedCategory} category`}
                     >
-                      {t('explore.viewAll')}
+                      {t('explore.viewAll')} ({filteredVideos.length} {locale === 'ar' ? 'فيديو' : 'videos'})
                     </Button>
-                  )}
-                </div>
-              ) : (
-                <>
-                  {isMobile ? (
-                    /* Mobile Slider */
-                    <div className="relative">
-                      {/* Navigation Controls (Mobile) will render below the card */}
-
-                      {/* Mobile Carousel Content */}
-                      <div 
-                        className="relative overflow-hidden"
-                        onTouchStart={handleTouchStart}
-                        onTouchMove={handleTouchMove}
-                        onTouchEnd={handleTouchEnd}
-                        aria-live="polite"
-                        aria-label={`Showing ${currentSlideVideos.length} of ${filteredVideos.length} videos`}
-                      >
-                        <div 
-                          className={cn(
-                            "flex transition-transform duration-500 ease-in-out",
-                            isTransitioning && "opacity-50"
-                          )}
-                          style={{
-                            transform: `translateX(-${currentSlide * 100}%)`
-                          }}
-                        >
-                          {filteredVideos.map((video, index) => (
-                            <div 
-                              key={video.id} 
-                              className="w-full flex-shrink-0 px-1"
-                              style={{ width: '100%', minWidth: 0 }}
-                            >
-                              <VideoCard 
-                                video={video}
-                                className="w-full"
-                                onCourseClick={onCourseClick}
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      {/* Centered, grouped controls under the video card (mobile only) */}
-                      {hasMoreVideos && totalSlides > 1 && (
-                        <div className="mt-3 flex justify-center">
-                          <div className="inline-flex items-center gap-3">
-                            <button
-                              onClick={prevSlide}
-                              className="bg-purple-600 text-white shadow-lg rounded-full p-3 active:scale-95 transition-transform hover:bg-purple-700"
-                              aria-label="Previous videos"
-                            >
-                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                              </svg>
-                            </button>
-                            <button
-                              onClick={nextSlide}
-                              className="bg-purple-600 text-white shadow-lg rounded-full p-3 active:scale-95 transition-transform hover:bg-purple-700"
-                              aria-label="Next videos"
-                            >
-                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                              </svg>
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    /* Desktop/Tablet Grid Layout */
-                    <div 
-                      className={cn(
-                        "grid gap-4 sm:gap-6 transition-all duration-500 ease-in-out",
-                        "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
-                        isTransitioning && "opacity-50 scale-95"
-                      )}
-                      aria-live="polite"
-                      aria-label={`Showing ${Math.min(filteredVideos.length, 4)} of ${filteredVideos.length} videos`}
-                    >
-                      {filteredVideos.slice(0, 4).map((video) => (
-                        <div key={video.id} className="w-full" style={{ width: '100%', minWidth: 0 }}>
-                          <VideoCard 
-                            video={video}
-                            className="w-full"
-                            onCourseClick={onCourseClick}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* View All CTA */}
-                  {hasMoreVideos && (
-                    <div className="mt-4 sm:mt-6 text-center">
-                      <Button
-                        onClick={handleViewAllClick}
-                        size="lg"
-                        className="text-sm sm:text-base px-4 sm:px-6 py-2 sm:py-3 h-auto font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
-                        aria-label={`View all ${filteredVideos.length} videos in ${selectedCategory} category`}
-                      >
-                        {t('explore.viewAll')} ({filteredVideos.length} {locale === 'ar' ? 'فيديو' : 'videos'})
-                      </Button>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>

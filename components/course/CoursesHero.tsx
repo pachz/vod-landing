@@ -13,6 +13,7 @@ export interface CoursesHeroProps {
   selectedCategory: string
   onSelectCategory: (category: string) => void
   locale?: string
+  translatedCategories?: { [key: string]: string }
 }
 
 export default function CoursesHero({
@@ -23,7 +24,8 @@ export default function CoursesHero({
   categories,
   selectedCategory,
   onSelectCategory,
-  locale
+  locale,
+  translatedCategories
 }: CoursesHeroProps) {
   const isArabic = locale === 'ar'
   return (
@@ -81,20 +83,29 @@ export default function CoursesHero({
         {/* Category Chips - positioned at bottom */}
         <div className="mt-auto pb-4">
           <div className="flex flex-wrap justify-center gap-2 px-2">
-            {['All', ...categories.slice(0, 4)].map((category) => (
-              <button
-                key={category}
-                onClick={() => onSelectCategory(category)}
-                className={`px-4 md:px-6 py-2 md:py-2.5 rounded-full text-sm font-semibold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 ${
-                  selectedCategory === category
-                    ? 'bg-white text-purple-600 shadow-xl border-2 border-white/20'
-                    : 'bg-white/20 text-white hover:bg-white hover:text-purple-600 border border-white/30 hover:border-white/50 hover:shadow-lg'
-                }`}
-                aria-pressed={selectedCategory === category}
-              >
-                {category === 'All' ? (isArabic ? 'الكل' : 'All') : category.charAt(0).toUpperCase() + category.slice(1)}
-              </button>
-            ))}
+            {['All', ...categories.slice(0, 4)].map((category) => {
+              const getCategoryDisplayName = (cat: string) => {
+                if (cat === 'All') {
+                  return translatedCategories?.all || (isArabic ? 'الكل' : 'All')
+                }
+                return translatedCategories?.[cat.toLowerCase()] || cat.charAt(0).toUpperCase() + cat.slice(1)
+              }
+              
+              return (
+                <button
+                  key={category}
+                  onClick={() => onSelectCategory(category)}
+                  className={`px-4 md:px-6 py-2 md:py-2.5 rounded-full text-sm font-semibold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 ${
+                    selectedCategory === category
+                      ? 'bg-white text-purple-600 shadow-xl border-2 border-white/20'
+                      : 'bg-white/20 text-white hover:bg-white hover:text-purple-600 border border-white/30 hover:border-white/50 hover:shadow-lg'
+                  }`}
+                  aria-pressed={selectedCategory === category}
+                >
+                  {getCategoryDisplayName(category)}
+                </button>
+              )
+            })}
           </div>
         </div>
       </div>

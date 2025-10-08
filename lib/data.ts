@@ -42,8 +42,8 @@ export const courses: Course[] = [
     category: 'confidence',
     image: '/images/w1.png',
     level: 'beginner',
-    titleAr: 'بناء الثقة من الداخل',
-    descriptionAr: 'دورة شاملة لبناء الثقة الداخلية والقوة الشخصية',
+    titleAr: 'برنامج أنوثة الديفا',
+    descriptionAr: 'طريقك للتوازن بين الأنوثة والذكورة',
     instructorAr: 'رهام دیفا',
     durationAr: '45 دقيقة'
   },
@@ -56,8 +56,8 @@ export const courses: Course[] = [
     category: 'habits',
     image: '/images/w2.png',
     level: 'beginner',
-    titleAr: 'عادات يومية للنجاح',
-    descriptionAr: 'تعلم العادات اليومية التي تقودك للنجاح',
+    titleAr: 'برنامج سحر الديفا',
+    descriptionAr: 'رحلتك للعودة إلى حب الذات',
     instructorAr: 'رهام دیفا',
     durationAr: '30 دقيقة'
   },
@@ -70,8 +70,8 @@ export const courses: Course[] = [
     category: 'career',
     image: '/images/w3.png',
     level: 'intermediate',
-    titleAr: 'القيادة ونمو المسيرة المهنية',
-    descriptionAr: 'مهارات القيادة والتطوير المهني',
+    titleAr: 'برنامج جمال الديفا',
+    descriptionAr: 'ارفعي من وعيك الجمالي وجاذبيتك',
     instructorAr: 'رهام دیفا',
     durationAr: '60 دقيقة'
   },
@@ -84,8 +84,8 @@ export const courses: Course[] = [
     category: 'wellness',
     image: '/images/w4.png',
     level: 'beginner',
-    titleAr: 'اليقظة الذهنية والنمو العاطفي',
-    descriptionAr: 'تطوير الوعي الذهني والنمو العاطفي',
+    titleAr: 'برنامج قلب الديفا',
+    descriptionAr: 'البرنامج الذي يساعدك في اتخاذ القرار في حكمة القلب',
     instructorAr: 'رهام دیفا',
     durationAr: '40 دقيقة'
   },
@@ -98,8 +98,8 @@ export const courses: Course[] = [
     category: 'lifestyle',
     image: '/images/w5.png',
     level: 'intermediate',
-    titleAr: 'تحويل نمط الحياة الصحي',
-    descriptionAr: 'خطوات عملية لتحويل نمط حياتك إلى نمط صحي',
+    titleAr: 'برنامج نوايا الديفا',
+    descriptionAr: 'البرنامج الذي يساعدك في تفعيل قوة النية',
     instructorAr: 'رهام دیفا',
     durationAr: '50 دقيقة'
   },
@@ -112,8 +112,8 @@ export const courses: Course[] = [
     category: 'confidence',
     image: '/images/w6.png',
     level: 'intermediate',
-    titleAr: 'التغلب على الشك الذاتي',
-    descriptionAr: 'استراتيجيات للتغلب على الشك الذاتي وبناء الثقة',
+    titleAr: 'برنامج روح الديفا',
+    descriptionAr: 'تعرفي على أهم إنسان في حياتك تعرفي عليك',
     instructorAr: 'رهام دیفا',
     durationAr: '35 دقيقة'
   },
@@ -126,8 +126,8 @@ export const courses: Course[] = [
     category: 'finance',
     image: '/images/w7.png',
     level: 'intermediate',
-    titleAr: 'الاستقلال المالي للمرأة',
-    descriptionAr: 'مبادئ الاستقلال المالي وإدارة الأموال',
+    titleAr: 'برنامج رهام حب',
+    descriptionAr: 'رحلتك في الحب الروحي من الروح إلى الجسد',
     instructorAr: 'رهام دیفا',
     durationAr: '55 دقيقة'
   },
@@ -140,8 +140,8 @@ export const courses: Course[] = [
     category: 'creativity',
     image: '/images/w8.png',
     level: 'beginner',
-    titleAr: 'التعبير الإبداعي والعلاج بالفن',
-    descriptionAr: 'استكشاف الإبداع والعلاج بالفنون',
+    titleAr: 'برنامج أسطورتك الذاتية',
+    descriptionAr: 'خططي لحياتك واكتشفي رسالتك',
     instructorAr: 'رهام دیفا',
     durationAr: '40 دقيقة'
   }
