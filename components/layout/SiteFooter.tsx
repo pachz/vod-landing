@@ -90,7 +90,6 @@ export default function SiteFooter() {
             <ul className="space-y-2">
               <li><a href="#" className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">{t('footer.navigation.courses')}</a></li>
               <li><a href="#" className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">{t('footer.navigation.about')}</a></li>
-              <li><a href="#" className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">{t('footer.navigation.blog')}</a></li>
               <li><a href="#" className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">{t('footer.navigation.contact')}</a></li>
             </ul>
           </motion.div>
