@@ -1,26 +1,34 @@
-'use client'
+"use client";
 
-import { Hero, Features, ExploreMarquee, InstructorsSlider, Testimonials, FAQ } from '@/components/home'
-import { SiteFooter } from '@/components/layout'
-import { useDirection } from '@/providers/DirectionProvider'
-import { courses } from '@/lib/data'
+import {
+  Hero,
+  Features,
+  ExploreMarquee,
+  InstructorsSlider,
+  Testimonials,
+  FAQ,
+} from "@/components/home";
+import { SiteFooter } from "@/components/layout";
+import { useDirection } from "@/providers/DirectionProvider";
+import { courses } from "@/lib/data";
 
-const sampleCategories = ['confidence', 'career', 'wellness', 'finance']
+const sampleCategories = ["confidence", "career", "wellness", "finance"];
 
 export default function LangHomePage() {
-  const { locale } = useDirection()
+  const { locale } = useDirection();
   return (
     <main className="min-h-screen">
       <Hero />
-      <Features />
-      <ExploreMarquee 
-        videos={courses.map(c => ({
+      <ExploreMarquee
+        videos={courses.map((c) => ({
           id: c.id,
-          title: locale === 'ar' ? (c.titleAr || c.title) : c.title,
-          description: locale === 'ar' ? (c.descriptionAr || c.description) : c.description,
-          instructor: locale === 'ar' ? (c.instructorAr || c.instructor) : c.instructor,
+          title: locale === "ar" ? c.titleAr || c.title : c.title,
+          description:
+            locale === "ar" ? c.descriptionAr || c.description : c.description,
+          instructor:
+            locale === "ar" ? c.instructorAr || c.instructor : c.instructor,
           thumbnailUrl: c.image,
-          totalTime: locale === 'ar' ? (c.durationAr || c.duration) : c.duration,
+          totalTime: locale === "ar" ? c.durationAr || c.duration : c.duration,
           totalStudents: 0,
           rating: 0,
           tags: [c.category],
@@ -31,17 +39,16 @@ export default function LangHomePage() {
         viewAllRoute={`/${locale}/courses`}
         marqueeSpeed={30}
         onCourseClick={(videoId) => {
-          if (typeof window !== 'undefined') {
-            window.location.href = `/${locale}/courses/${videoId}`
+          if (typeof window !== "undefined") {
+            window.location.href = `/${locale}/courses/${videoId}`;
           }
         }}
       />
       <InstructorsSlider />
+      <Features />
       <Testimonials />
       <FAQ />
       <SiteFooter />
     </main>
-  )
+  );
 }
-
-

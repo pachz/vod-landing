@@ -52,6 +52,62 @@
     "noVideosFound": "لم يتم العثور على فيديوهات في هذه الفئة",
     "viewAll": "عرض الكل",
     "by": "بواسطة",
+    "carousel": [
+      {
+        "id": "confidence-within",
+        "title": "برنامج أنوثة الديفا",
+        "description": "احتضني ذاتك الحقيقية وعبّري عن ثقتك بحضور أنثوي.",
+        "instructor": "رهام ديفا",
+        "duration": "45 دقيقة",
+        "category": "الثقة",
+        "image": "/images/w1.png"
+      },
+      {
+        "id": "daily-habits",
+        "title": "برنامج سحر الديفا",
+        "description": "حوّلي يومك بعادات بسيطة تصنع فرقاً دائماً.",
+        "instructor": "رهام ديفا",
+        "duration": "30 دقيقة",
+        "category": "العادات",
+        "image": "/images/w2.png"
+      },
+      {
+        "id": "leadership-growth",
+        "title": "برنامج جمال الديفا",
+        "description": "أطلقي قيادتك الداخلية وتقدمي في مسارك المهني.",
+        "instructor": "رهام ديفا",
+        "duration": "60 دقيقة",
+        "category": "المهنة",
+        "image": "/images/w3.png"
+      },
+      {
+        "id": "mindfulness-emotions",
+        "title": "برنامج قلب الديفا",
+        "description": "اجدي السكينة والتوازن العاطفي في تفاصيلك اليومية.",
+        "instructor": "رهام ديفا",
+        "duration": "40 دقيقة",
+        "category": "العافية",
+        "image": "/images/w4.png"
+      },
+      {
+        "id": "healthy-lifestyle",
+        "title": "برنامج نوايا الديفا",
+        "description": "ابني نمط حياة صحي ومستدام ينعش طاقتك.",
+        "instructor": "رهام ديفا",
+        "duration": "50 دقيقة",
+        "category": "نمط الحياة",
+        "image": "/images/w5.png"
+      },
+      {
+        "id": "financial-independence",
+        "title": "برنامج رهام حب",
+        "description": "تعلّمي كيف تصنعين أمانك المالي بخطوات واثقة.",
+        "instructor": "رهام ديفا",
+        "duration": "55 دقيقة",
+        "category": "المالية",
+        "image": "/images/w7.png"
+      }
+    ],
     "categories": {
       "confidence": "الثقة",
       "career": "المهنة",

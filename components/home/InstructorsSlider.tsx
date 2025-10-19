@@ -1,17 +1,49 @@
-'use client'
+"use client";
 
-import { motion } from 'framer-motion'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import Image from 'next/image'
-import Link from 'next/link'
-import { useTranslation } from '@/lib/useTranslation'
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import Link from "next/link";
+import { useTranslation } from "@/lib/useTranslation";
 
 export default function RehamDivaShowcase() {
-  const { t, locale } = useTranslation()
+  const { t, locale } = useTranslation();
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    const onPlay = () => setIsPlaying(true);
+    const onPause = () => setIsPlaying(false);
+    const onLoaded = () => setIsLoaded(true);
+    v.addEventListener("play", onPlay);
+    v.addEventListener("pause", onPause);
+    v.addEventListener("loadeddata", onLoaded);
+    if (v.muted) {
+      v.play().catch(() => setIsPlaying(false));
+    }
+    return () => {
+      v.removeEventListener("play", onPlay);
+      v.removeEventListener("pause", onPause);
+      v.removeEventListener("loadeddata", onLoaded);
+    };
+  }, []);
+
+  const togglePlay = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) v.play();
+    else v.pause();
+  };
   return (
-    <section id="instructor" className="py-16 sm:py-20 lg:py-24 px-4 bg-gradient-to-br from-gray-50 to-white">
-      <div className="max-w-7xl mx-auto">
+    <section
+      id="instructor"
+      className="py-16 sm:py-20 lg:py-24 px-0 bg-gradient-to-br from-gray-50 to-white"
+    >
+      <div className="w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -20,84 +52,116 @@ export default function RehamDivaShowcase() {
           className="text-center mb-12 sm:mb-16"
         >
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-purple-800 mb-4 sm:mb-6">
-            {t('instructors.meetGuide')}
+            {t("instructors.meetGuide")}
           </h2>
           <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
-            {t('instructors.startJourney')}
+            {t("instructors.startJourney")}
           </p>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={{ opacity: 0, scale: 1 }}
           whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: 'easeInOut' }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
           viewport={{ once: true }}
-          className="flex justify-center"
+          className="w-full"
         >
-          <Card className="w-full max-w-6xl mx-auto shadow-2xl border-0 bg-white/80 backdrop-blur-sm">
-            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 p-6 sm:p-8 lg:p-12">
-              {/* Image */}
-              <div className="flex items-center justify-center order-2 lg:order-1">
-                <Image
-                  src="/images/reham.png"
-                  alt="Reham Diva"
-                  width={448}
-                  height={512}
-                  className="object-contain rounded-lg"
-                  sizes="(max-width: 640px) 320px, (max-width: 1024px) 384px, 448px"
-                />
-              </div>
+          <Card className="relative w-full max-w-none shadow-2xl border-0 bg-transparent overflow-hidden rounded-none">
+            {/* Background video */}
+            <div className="absolute inset-0 z-0">
+              <video
+                ref={videoRef}
+                className="h-full w-full object-cover object-right"
+                muted
+                playsInline
+                autoPlay
+                loop
+                poster="/images/hero.png"
+              >
+                <source src="/images/hero/full.mp4" type="video/mp4" />
+              </video>
+              {/* Dim overall + fade-left so video emphasis is right */}
+              <div className="pointer-events-none absolute inset-0 bg-black/25" />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-l from-transparent via-black/50 to-black/80" />
+              {!isLoaded && (
+                <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-black/10 via-transparent to-black/10" />
+              )}
+            </div>
 
-              {/* Content */}
-              <div className="flex flex-col justify-center space-y-4 lg:space-y-6 order-1">
-                <div className="space-y-4">
-                  <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-purple-800">
-                    {t('instructors.rehamDiva')}
-                  </h3>
-                  <p className="text-pink-600 text-xl sm:text-2xl font-medium">
-                    {t('instructors.tagline')}
+            {/* Play/Pause control */}
+            <button
+              type="button"
+              onClick={togglePlay}
+              aria-label={
+                isPlaying ? "Pause background video" : "Play background video"
+              }
+              aria-pressed={!isPlaying}
+              className="absolute top-4 right-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/30 text-white backdrop-blur-md ring-1 ring-white/40 hover:bg-white/40 transition z-20"
+            >
+              {isPlaying ? (
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <rect x="6" y="4" width="4" height="16" rx="1" />
+                  <rect x="14" y="4" width="4" height="16" rx="1" />
+                </svg>
+              ) : (
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              )}
+            </button>
+
+            {/* Foreground content */}
+            <div className="relative z-10 px-6 sm:px-10 lg:px-16 py-10 sm:py-14 lg:py-20 min-h-[420px] flex items-center">
+              <div className="max-w-2xl">
+                <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.35)]">
+                  {t("instructors.meetGuide")}
+                </h3>
+                <p className="text-white/90 text-lg sm:text-xl mt-3 sm:mt-4 max-w-xl">
+                  {t("instructors.startJourney")}
+                </p>
+
+                <div className="mt-8 space-y-4 text-white/95">
+                  <p className="text-xl font-semibold">
+                    {t("instructors.rehamDiva")}
+                  </p>
+                  <p className="text-white/85 text-sm leading-relaxed italic">
+                    &ldquo;{t("instructors.quote")}&rdquo;
+                  </p>
+                  <p className="text-white/85 text-sm leading-relaxed">
+                    {t("instructors.description1")}
+                  </p>
+                  <p className="text-white/85 text-sm leading-relaxed">
+                    {t("instructors.description2")}
                   </p>
                 </div>
-                
-                <div className="space-y-4">
-                  <div className="relative">
-                    <p className="text-gray-700 text-base leading-relaxed italic">
-                      &ldquo;{t('instructors.quote')}&rdquo;
-                    </p>
-                  </div>
-                  
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    {t('instructors.description1')}
-                  </p>
-                  
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    {t('instructors.description2')}
-                  </p>
-                  
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    {t('instructors.description3')}
-                  </p>
-                  
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    {t('instructors.description4')}
-                  </p>
-                </div>
-                
-                <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                  <Button 
-                    size="lg" 
+
+                <div className="flex flex-col sm:flex-row gap-4 mt-8">
+                  <Button
+                    size="lg"
                     className="bg-pink-500 hover:bg-pink-700 text-white px-8 py-4 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300"
                   >
-                    {t('instructors.startJourneyBtn')}
+                    {t("instructors.startJourneyBtn")}
                   </Button>
-                  <Button 
-                    size="lg" 
+                  <Button
+                    size="lg"
                     variant="outline"
-                    className="border-purple-700 text-purple-700 hover:bg-purple-700 hover:text-white px-8 py-4 text-lg font-medium transition-all duration-300"
+                    className="border-white/70 text-white hover:bg-white/10 px-8 py-4 text-lg font-medium transition-all duration-300"
                     asChild
                   >
                     <Link href={`/${locale}/courses`}>
-                      {t('instructors.explorePrograms')}
+                      {t("instructors.explorePrograms")}
                     </Link>
                   </Button>
                 </div>
@@ -107,5 +171,5 @@ export default function RehamDivaShowcase() {
         </motion.div>
       </div>
     </section>
-  )
+  );
 }
