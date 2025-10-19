@@ -8,6 +8,7 @@ import { courses } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/lib/useTranslation";
 import { Video } from "@/components/course";
+import { motion } from "framer-motion";
 
 // Component props interface
 export interface ExploreMarqueeProps {
@@ -72,9 +73,9 @@ const CourseCard: React.FC<CourseCardProps> = ({
           <h3 className="font-semibold text-sm sm:text-base leading-tight mb-1 line-clamp-2">
             {course.title}
           </h3>
-          <p className="text-[11px] sm:text-xs text-white/85 line-clamp-1">
+          {/* <p className="text-[11px] sm:text-xs text-white/85 line-clamp-1">
             {byLabel} {course.instructor}
-          </p>
+          </p> */}
         </div>
       </div>
     </Card>
@@ -240,37 +241,45 @@ const ExploreMarquee: React.FC<ExploreMarqueeProps> = ({
   };
 
   return (
-    <section className="relative py-10 sm:py-14 lg:py-20 bg-white overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 text-center mb-6 sm:mb-10">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-purple-900">
-          {t("explore.title")}
-        </h2>
-        <p className="text-sm sm:text-base text-gray-600 mt-2 mb-6 sm:mb-8">
-          {t("explore.subtitle")}
-        </p>
-      </div>
-
-      {/* Full-width marquee row */}
-      <div className="relative w-full">
-        <MarqueeRow
-          courses={carouselItems}
-          byLabel={byLabel}
-          direction={isRTL ? "right" : "left"}
-          speed={marqueeSpeedValue}
-          reduceMotion={shouldReduceMotion}
-        />
-        <div className="text-center mt-6 sm:mt-10">
-          <Button
-            size="lg"
-            onClick={handleViewAll}
-            className="mx-auto"
-            aria-label={t("explore.viewAll")}
-          >
-            {t("explore.viewAll")}
-          </Button>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      viewport={{ once: true }}
+      className="text-center mb-12 sm:mb-16"
+    >
+      <section className="relative py-10 sm:py-14 lg:py-20 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 text-center mb-6 sm:mb-10">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-purple-900">
+            {t("explore.title")}
+          </h2>
+          <p className="text-sm sm:text-base text-gray-600 mt-2 mb-6 sm:mb-8">
+            {t("explore.subtitle")}
+          </p>
         </div>
-      </div>
-    </section>
+
+        {/* Full-width marquee row */}
+        <div className="relative w-full">
+          <MarqueeRow
+            courses={carouselItems}
+            byLabel={byLabel}
+            direction={isRTL ? "right" : "left"}
+            speed={marqueeSpeedValue}
+            reduceMotion={shouldReduceMotion}
+          />
+          <div className="text-center mt-6 sm:mt-10">
+            <Button
+              size="lg"
+              onClick={handleViewAll}
+              className="mx-auto"
+              aria-label={t("explore.viewAll")}
+            >
+              {t("explore.viewAll")}
+            </Button>
+          </div>
+        </div>
+      </section>
+    </motion.div>
   );
 };
 
