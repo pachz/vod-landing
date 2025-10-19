@@ -64,14 +64,14 @@ export default function RehamDivaShowcase() {
           whileInView={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
           viewport={{ once: true }}
-          className="w-full"
+          className="w-full  sm:object-cover"
         >
           <Card className="relative w-full max-w-none shadow-2xl border-0 bg-transparent overflow-hidden rounded-none">
             {/* Background video */}
             <div className="absolute inset-0 z-0">
               <video
                 ref={videoRef}
-                className="h-full w-full object-cover object-right"
+                className="h-full w-full object-cover sm:object-right object-center"
                 muted
                 playsInline
                 autoPlay
@@ -96,7 +96,7 @@ export default function RehamDivaShowcase() {
                 isPlaying ? "Pause background video" : "Play background video"
               }
               aria-pressed={!isPlaying}
-              className="absolute top-4 right-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/30 text-white backdrop-blur-md ring-1 ring-white/40 hover:bg-white/40 transition z-20"
+              className="absolute bottom-4 left-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/30 text-white backdrop-blur-md ring-1 ring-white/40 hover:bg-white/40 transition z-20"
             >
               {isPlaying ? (
                 <svg
@@ -160,7 +160,10 @@ export default function RehamDivaShowcase() {
                     className="border-white/70 text-white hover:bg-white/10 px-8 py-4 text-lg font-medium transition-all duration-300"
                     asChild
                   >
-                    <Link href={`/${locale}/courses`}>
+                    <Link
+                      className="flex items-center"
+                      href={`/${locale}/courses`}
+                    >
                       {t("instructors.explorePrograms")}
                     </Link>
                   </Button>

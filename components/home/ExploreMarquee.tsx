@@ -1,8 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useKeenSlider } from "keen-slider/react";
-import "keen-slider/keen-slider.min.css";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -83,6 +81,92 @@ const CourseCard: React.FC<CourseCardProps> = ({
   );
 };
 
+interface MarqueeRowProps {
+  courses: CarouselItem[];
+  byLabel: string;
+  direction: "left" | "right";
+  speed: number;
+  reduceMotion: boolean;
+}
+
+const MarqueeRow: React.FC<MarqueeRowProps> = ({
+  courses,
+  byLabel,
+  direction,
+  speed,
+  reduceMotion,
+}) => {
+  const rowRef = useRef<HTMLDivElement | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    const row = rowRef.current;
+    if (!row || reduceMotion) return;
+
+    const handleEnter = () => setIsPaused(true);
+    const handleLeave = () => setIsPaused(false);
+
+    row.addEventListener("mouseenter", handleEnter);
+    row.addEventListener("mouseleave", handleLeave);
+    row.addEventListener("touchstart", handleEnter, { passive: true });
+    row.addEventListener("touchend", handleLeave, { passive: true });
+
+    return () => {
+      row.removeEventListener("mouseenter", handleEnter);
+      row.removeEventListener("mouseleave", handleLeave);
+      row.removeEventListener("touchstart", handleEnter);
+      row.removeEventListener("touchend", handleLeave);
+    };
+  }, [reduceMotion]);
+
+  if (reduceMotion) {
+    return (
+      <div
+        className={cn(
+          "flex gap-4 sm:gap-6 px-4 overflow-x-auto scrollbar-hide",
+          direction === "right" ? "flex-row-reverse" : ""
+        )}
+      >
+        {courses.map((course) => (
+          <div
+            key={course.id}
+            className="w-[260px] sm:w-[300px] lg:w-[360px] flex-shrink-0 mx-4"
+          >
+            <CourseCard course={course} byLabel={byLabel} />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="overflow-hidden">
+      <div
+        ref={rowRef}
+        className={cn(
+          "flex gap-4 sm:gap-6 w-max px-4 will-change-transform",
+          direction === "left"
+            ? "animate-marquee-left"
+            : "animate-marquee-right"
+        )}
+        style={{
+          animationDuration: `${Math.max(10, speed)}s`,
+          animationPlayState: isPaused ? "paused" : "running",
+        }}
+      >
+        {[...courses, ...courses].map((course, index) => (
+          <div
+            key={`${course.id}-${index}`}
+            className="w-[260px] sm:w-[300px] lg:w-[360px] flex-shrink-0 mx-6"
+          >
+            <CourseCard course={course} byLabel={byLabel} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const ExploreMarquee: React.FC<ExploreMarqueeProps> = ({
   marqueeSpeed = 30,
   reduceMotionFallback = false,
@@ -90,7 +174,6 @@ const ExploreMarquee: React.FC<ExploreMarqueeProps> = ({
   onViewAllClick,
 }) => {
   const { t, locale } = useTranslation();
-  const [isMobile, setIsMobile] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   // Check for reduced motion preference
@@ -106,18 +189,6 @@ const ExploreMarquee: React.FC<ExploreMarqueeProps> = ({
 
     mediaQuery.addEventListener("change", handleChange);
     return () => mediaQuery.removeEventListener("change", handleChange);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   const translatedCarousel = t("explore.carousel");
@@ -154,9 +225,9 @@ const ExploreMarquee: React.FC<ExploreMarqueeProps> = ({
       ? (translatedCarousel as CarouselItem[])
       : fallbackCourses;
 
-  const baseSpeed = isMobile ? 40 : marqueeSpeed;
   const shouldReduceMotion = prefersReducedMotion || reduceMotionFallback;
   const isRTL = locale === "ar";
+  const marqueeSpeedValue = Math.max(15, marqueeSpeed);
 
   const handleViewAll = () => {
     if (onViewAllClick) {
@@ -168,112 +239,35 @@ const ExploreMarquee: React.FC<ExploreMarqueeProps> = ({
     }
   };
 
-  const [sliderRef, slider] = useKeenSlider<HTMLDivElement>({
-    loop: true,
-    renderMode: "performance",
-    mode: "free",
-    rubberband: false,
-    rtl: isRTL,
-    slides: {
-      origin: "auto",
-      perView: 3.25,
-      spacing: 4,
-    },
-    breakpoints: {
-      "(max-width: 1024px)": {
-        slides: { perView: 2.25, spacing: 4 },
-      },
-      "(max-width: 640px)": {
-        slides: { perView: 1.25, spacing: 4 },
-      },
-    },
-  });
-
-  // autoplay controls
-  const [isPaused, setIsPaused] = useState(false);
-
-  useEffect(() => {
-    if (!slider || !slider.current || shouldReduceMotion) return;
-
-    let rafId: number;
-    const container = slider.current.container;
-    const scrollSpeed = 0.5;
-
-    const animate = () => {
-      if (!isPaused) {
-        container.scrollLeft += scrollSpeed;
-        const firstSlide = container.querySelector(
-          ".keen-slider__slide"
-        ) as HTMLElement;
-        if (firstSlide) {
-          const slideWidth =
-            firstSlide.offsetWidth +
-            parseFloat(getComputedStyle(firstSlide).marginRight || "0");
-          if (
-            container.scrollLeft >=
-            container.scrollWidth - container.clientWidth - 1
-          ) {
-            container.scrollLeft = slideWidth;
-          }
-        }
-      }
-      rafId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => cancelAnimationFrame(rafId);
-  }, [slider, isPaused, shouldReduceMotion]);
-
   return (
     <section className="relative py-10 sm:py-14 lg:py-20 bg-white overflow-hidden">
-      {/* Heading container */}
-      <div className="max-w-7xl mx-auto px-4">
-        <div
-          className={cn(
-            "flex flex-col-reverse justify-between sm:flex-row sm:items-center gap-4 sm:gap-6 mb-6 sm:mb-8",
-            isRTL ? "sm:flex-row-reverse sm:text-right" : "sm:text-left"
-          )}
-        >
-          <Button
-            size="lg"
-            onClick={handleViewAll}
-            className={cn(
-              "self-start sm:self-auto",
-              isRTL ? "sm:ml-6" : "sm:mr-6"
-            )}
-            aria-label={t("explore.viewAll")}
-          >
-            {t("explore.viewAll")}
-          </Button>
-          <div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-purple-900">
-              {t("explore.title")}
-            </h2>
-            <p className="text-sm sm:text-base text-gray-600 mt-2">
-              {t("explore.subtitle")}
-            </p>
-          </div>
-        </div>
+      <div className="max-w-7xl mx-auto px-4 text-center mb-6 sm:mb-10">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-purple-900">
+          {t("explore.title")}
+        </h2>
+        <p className="text-sm sm:text-base text-gray-600 mt-2 mb-6 sm:mb-8">
+          {t("explore.subtitle")}
+        </p>
       </div>
 
       {/* Full-width marquee row */}
       <div className="relative w-full">
-        <div className="overflow-hidden py-2">
-          <div
-            ref={sliderRef}
-            className="keen-slider px-4 flex"
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-            onTouchStart={() => setIsPaused(true)}
-            onTouchEnd={() => setIsPaused(false)}
+        <MarqueeRow
+          courses={carouselItems}
+          byLabel={byLabel}
+          direction={isRTL ? "right" : "left"}
+          speed={marqueeSpeedValue}
+          reduceMotion={shouldReduceMotion}
+        />
+        <div className="text-center mt-6 sm:mt-10">
+          <Button
+            size="lg"
+            onClick={handleViewAll}
+            className="mx-auto"
+            aria-label={t("explore.viewAll")}
           >
-            {carouselItems.map((course, index) => (
-              <div key={`${course.id}-${index}`} className="keen-slider__slide">
-                <CourseCard course={course} byLabel={byLabel} />
-              </div>
-            ))}
-          </div>
+            {t("explore.viewAll")}
+          </Button>
         </div>
       </div>
     </section>

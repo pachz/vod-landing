@@ -50,7 +50,7 @@
     "cta": "View All Courses",
     "viewCourse": "View Course",
     "noVideosFound": "No videos found in this category",
-    "viewAll": "View All",
+    "viewAll": "Explore all",
     "by": "by",
     "carousel": [
       {
@@ -110,7 +110,7 @@
     ],
     "categories": {
       "confidence": "Confidence",
-      "career": "Career", 
+      "career": "Career",
       "wellness": "Wellness",
       "finance": "Finance",
       "habits": "Habits",
@@ -261,8 +261,7 @@
     "faq": "FAQ",
     "getStarted": "Get Started",
     "logoText": "Reham Diva"
-  }
-  ,
+  },
   "courses": {
     "allCoursesTitle": "All Courses",
     "allCoursesSubtitle": "Discover our comprehensive collection of courses designed to help you grow, learn, and achieve your goals.",
