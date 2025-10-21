@@ -104,7 +104,7 @@ export default function RehamDivaShowcase() {
           </button>
 
           {/* Foreground content */}
-          <div className="relative z-10 px-6 sm:px-10 lg:px-16 py-10 sm:py-14 lg:py-20 min-h-[420px] flex items-center">
+          <div className="relative z-10 px-6 sm:px-10 lg:px-16 py-24 sm:py-14 lg:py-20 min-h-[420px] flex items-center">
             <div className="max-w-2xl">
               <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.35)]">
                 {t("instructors.meetGuide")}
@@ -119,12 +119,6 @@ export default function RehamDivaShowcase() {
                 </p>
                 <p className="text-white/85 text-sm leading-relaxed italic">
                   &ldquo;{t("instructors.quote")}&rdquo;
-                </p>
-                <p className="text-white/85 text-sm leading-relaxed">
-                  {t("instructors.description1")}
-                </p>
-                <p className="text-white/85 text-sm leading-relaxed">
-                  {t("instructors.description2")}
                 </p>
               </div>
 
