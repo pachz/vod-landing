@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useTranslation } from '@/lib/useTranslation'
 import { 
   Play, 
@@ -50,48 +49,61 @@ export default function Features() {
   ]
   return (
     <section id="features" className="py-12 sm:py-16 lg:py-20 px-4 bg-white">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-4xl mx-auto text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mb-12 sm:mb-16"
+          className="mb-12 sm:mb-16"
         >
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-purple-800 mb-4 sm:mb-6">
             {t('features.title')}
           </h2>
-          <p className="text-lg sm:text-xl text-text-secondary max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl text-text-secondary">
             {t('features.subtitle')}
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-8 sm:mb-12">
-          {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              viewport={{ once: true }}
-            >
-              <Card className="h-full hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-0 shadow-lg">
-                <CardHeader className="text-center pb-3 sm:pb-4 p-4 sm:p-6">
-                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-pink-300/10 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                    <feature.icon className="w-6 h-6 sm:w-8 sm:h-8 text-pink-500" />
-                  </div>
-                  <CardTitle className="text-lg sm:text-xl text-purple-800">
-                    {feature.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="text-center p-4 sm:p-6 pt-0">
-                  <CardDescription className="text-sm sm:text-base text-text-secondary">
-                    {feature.description}
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+        <div className="flex flex-col md:flex-row gap-8 sm:gap-12 mb-8 sm:mb-12 justify-center">
+          <div className="flex flex-col gap-4 sm:gap-6 items-start">
+            {features.slice(0, 3).map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="flex items-center gap-3 sm:gap-4"
+              >
+                <div className="w-6 h-6 sm:w-7 sm:h-7 bg-pink-300/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <feature.icon className="w-4 h-4 sm:w-5 sm:h-5 text-pink-500" />
+                </div>
+                <h3 className="text-base sm:text-lg font-semibold text-purple-800">
+                  {feature.title}
+                </h3>
+              </motion.div>
+            ))}
+          </div>
+          <div className="flex flex-col gap-4 sm:gap-6 items-start">
+            {features.slice(3, 6).map((feature, index) => (
+              <motion.div
+                key={index + 3}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: (index + 3) * 0.1 }}
+                viewport={{ once: true }}
+                className="flex items-center gap-3 sm:gap-4"
+              >
+                <div className="w-6 h-6 sm:w-7 sm:h-7 bg-pink-300/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <feature.icon className="w-4 h-4 sm:w-5 sm:h-5 text-pink-500" />
+                </div>
+                <h3 className="text-base sm:text-lg font-semibold text-purple-800">
+                  {feature.title}
+                </h3>
+              </motion.div>
+            ))}
+          </div>
         </div>
 
         <motion.div
