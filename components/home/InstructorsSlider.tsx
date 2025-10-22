@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import { useTranslation } from "@/lib/useTranslation";
+import { cn } from "@/lib/utils";
 
 export default function RehamDivaShowcase() {
   const { t, locale } = useTranslation();
+  const isRTL = locale === "ar";
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -47,12 +49,12 @@ export default function RehamDivaShowcase() {
         viewport={{ once: true }}
         className="w-full  sm:object-cover"
       >
-        <Card className="relative w-full max-w-none shadow-2xl border-0 bg-transparent overflow-hidden rounded-none">
+        <Card className="relative w-full max-w-none shadow-2xl border-0 bg-transparent overflow-hidden rounded-none h-[420px] sm:h-[520px] md:h-[620px] lg:h-[780px]">
           {/* Background video */}
           <div className="absolute inset-0 z-0">
             <video
               ref={videoRef}
-              className="h-full w-full object-cover sm:object-right object-center"
+              className="w-full h-full object-cover object-center"
               muted
               playsInline
               autoPlay
@@ -63,7 +65,14 @@ export default function RehamDivaShowcase() {
             </video>
             {/* Dim overall + fade-left so video emphasis is right */}
             <div className="pointer-events-none absolute inset-0 bg-black/25" />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-l from-transparent via-black/50 to-black/80" />
+            <div
+              className={cn(
+                "pointer-events-none absolute inset-0 from-transparent via-black/50",
+                isRTL
+                  ? "bg-gradient-to-r to-black/80"
+                  : "bg-gradient-to-l to-black/80"
+              )}
+            />
             {!isLoaded && (
               <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-black/10 via-transparent to-black/10" />
             )}
@@ -77,7 +86,10 @@ export default function RehamDivaShowcase() {
               isPlaying ? "Pause background video" : "Play background video"
             }
             aria-pressed={!isPlaying}
-            className="absolute bottom-4 left-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/30 text-white backdrop-blur-md ring-1 ring-white/40 hover:bg-white/40 transition z-20"
+            className={cn(
+              "absolute bottom-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/30 text-white backdrop-blur-md ring-1 ring-white/40 hover:bg-white/40 transition z-20",
+              isRTL ? "left-4" : "right-4"
+            )}
           >
             {isPlaying ? (
               <svg
@@ -104,44 +116,64 @@ export default function RehamDivaShowcase() {
           </button>
 
           {/* Foreground content */}
-          <div className="relative z-10 px-6 sm:px-10 lg:px-16 py-24 sm:py-14 lg:py-20 min-h-[420px] flex items-center">
-            <div className="max-w-2xl">
-              <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.35)]">
-                {t("instructors.meetGuide")}
-              </h3>
-              <p className="text-white/90 text-lg sm:text-xl mt-3 sm:mt-4 max-w-xl">
-                {t("instructors.startJourney")}
-              </p>
+          <div className="relative z-10 h-full w-full px-6 sm:px-10 lg:px-16 py-6 sm:py-10 lg:py-16">
+            <div
+              className={cn(
+                "flex h-full w-full items-end",
+                isRTL ? "justify-end" : "justify-start"
+              )}
+            >
+              <div
+                className={cn(
+                  "max-w-2xl space-y-6",
+                  isRTL ? "ml-auto text-right" : "mr-auto text-left"
+                )}
+              >
+                <div className="space-y-4">
+                  <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.35)]">
+                    {t("instructors.meetGuide")}
+                  </h3>
+                  <p className="text-white/90 text-base sm:text-lg lg:text-xl leading-relaxed max-w-xl">
+                    {t("instructors.startJourney")}
+                  </p>
+                </div>
 
-              <div className="mt-8 space-y-4 text-white/95">
-                <p className="text-xl font-semibold">
-                  {t("instructors.rehamDiva")}
-                </p>
-                <p className="text-white/85 text-sm leading-relaxed italic">
-                  &ldquo;{t("instructors.quote")}&rdquo;
-                </p>
-              </div>
+                <div className="space-y-3 text-white/90">
+                  <p className="text-lg sm:text-xl font-semibold">
+                    {t("instructors.rehamDiva")}
+                  </p>
+                  <p className="text-white/85 text-sm sm:text-base leading-relaxed italic">
+                    &ldquo;{t("instructors.quote")}&rdquo;
+                  </p>
+                </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 mt-8">
-                <Button
-                  size="lg"
-                  className="bg-pink-500 hover:bg-pink-700 text-white px-8 py-4 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300"
+                <div
+                  className={cn(
+                    "grid grid-cols-2 gap-2 pt-2",
+                    isRTL ? "sm:flex-row-reverse" : "",
+                    "items-center justify-start"
+                  )}
                 >
-                  {t("instructors.startJourneyBtn")}
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-white/70 text-white hover:bg-white/10 px-8 py-4 text-lg font-medium transition-all duration-300"
-                  asChild
-                >
-                  <Link
-                    className="flex items-center"
-                    href={`/${locale}/courses`}
+                  <Button
+                    size="lg"
+                    className="bg-pink-500 hover:bg-pink-700 text-white px-2 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-medium shadow-lg hover:shadow-xl transition-all duration-300"
                   >
-                    {t("instructors.explorePrograms")}
-                  </Link>
-                </Button>
+                    {t("instructors.startJourneyBtn")}
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="border-white/70 text-white hover:bg-white/10 px-2 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-medium transition-all duration-300"
+                    asChild
+                  >
+                    <Link
+                      className="flex items-center"
+                      href={`/${locale}/courses`}
+                    >
+                      {t("instructors.explorePrograms")}
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
