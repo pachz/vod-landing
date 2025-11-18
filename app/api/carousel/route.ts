@@ -15,31 +15,58 @@ interface CarouselResponseItem {
   image: string;
 }
 
+function roundMinutesToNearestFive(minutes: number): number {
+  if (!Number.isFinite(minutes) || minutes <= 0) {
+    return 0;
+  }
+
+  const remainder = minutes % 5;
+  const rounded =
+    remainder >= 2 ? minutes + (5 - remainder) : minutes - remainder;
+
+  return Math.round(rounded);
+}
+
 function formatDuration(minutes: number, locale: SupportedLocale): string {
-  if (!minutes || Number.isNaN(minutes)) {
-    return locale === "ar" ? "0 دقيقة" : "0 min";
+  const safeMinutes = Math.max(0, Math.round(minutes));
+
+  if (safeMinutes === 0) {
+    return locale === "ar" ? "0د" : "0m";
   }
 
+  const hours = Math.floor(safeMinutes / 60);
+  const remainingMinutes = safeMinutes - hours * 60;
+
+  if (hours === 0) {
+    return locale === "ar"
+      ? `${remainingMinutes}د`
+      : `${remainingMinutes}m`;
+  }
+
+  const paddedMinutes = remainingMinutes.toString().padStart(2, "0");
   if (locale === "ar") {
-    return `${minutes} دقيقة`;
+    return `${hours}س ${paddedMinutes}د`;
   }
 
-  return `${minutes} min`;
+  return `${hours}h ${paddedMinutes}m`;
 }
 
 function mapToLocale(
   locale: SupportedLocale,
   items: Awaited<ReturnType<typeof getCarouselFeed>>
 ): CarouselResponseItem[] {
-  return items.map((item) => ({
-    id: item.id,
-    title: locale === "ar" && item.titleAr ? item.titleAr : item.title,
-    category:
-      locale === "ar" && item.categoryAr ? item.categoryAr : item.category,
-    durationMinutes: item.durationMinutes,
-    duration: formatDuration(item.durationMinutes, locale),
-    image: item.coverImage,
-  }));
+  return items.map((item) => {
+    const durationMinutes = roundMinutesToNearestFive(item.durationMinutes);
+    return {
+      id: item.id,
+      title: locale === "ar" && item.titleAr ? item.titleAr : item.title,
+      category:
+        locale === "ar" && item.categoryAr ? item.categoryAr : item.category,
+      durationMinutes,
+      duration: formatDuration(durationMinutes, locale),
+      image: item.coverImage,
+    };
+  });
 }
 
 export async function GET(request: Request) {
