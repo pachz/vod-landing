@@ -12,8 +12,8 @@ import { motion } from "framer-motion";
 
 // Component props interface
 export interface ExploreMarqueeProps {
-  videos: Video[];
-  categories: string[];
+  videos?: Video[];
+  categories?: string[];
   initialCategory?: string;
   onCategoryChange?: (category: string) => void;
   onViewAllClick?: () => void;
@@ -23,14 +23,17 @@ export interface ExploreMarqueeProps {
   onCourseClick?: (videoId: string) => void;
 }
 
-interface CarouselItem {
+interface CarouselApiItem {
   id: string;
   title: string;
+  category: string;
+  duration: string;
+  image: string;
+}
+
+interface CarouselItem extends CarouselApiItem {
   description?: string;
   instructor: string;
-  duration: string;
-  category: string;
-  image: string;
 }
 
 interface CourseCardProps {
@@ -176,6 +179,8 @@ const ExploreMarquee: React.FC<ExploreMarqueeProps> = ({
 }) => {
   const { t, locale } = useTranslation();
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [remoteCourses, setRemoteCourses] = useState<CarouselItem[]>([]);
+  const [isFetchingRemote, setIsFetchingRemote] = useState(false);
 
   // Check for reduced motion preference
   useEffect(() => {
@@ -191,6 +196,59 @@ const ExploreMarquee: React.FC<ExploreMarqueeProps> = ({
     mediaQuery.addEventListener("change", handleChange);
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
+
+  useEffect(() => {
+    let isActive = true;
+    const controller = new AbortController();
+
+    async function loadCarouselData() {
+      setIsFetchingRemote(true);
+      try {
+        const response = await fetch(`/api/carousel?locale=${locale}`, {
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error(`Request failed: ${response.status}`);
+        }
+
+        const payload = (await response.json()) as {
+          items?: CarouselApiItem[];
+        };
+
+        if (!isActive) return;
+
+        const normalizedItems =
+          payload.items?.map((item) => ({
+            id: item.id,
+            title: item.title,
+            instructor: "",
+            duration: item.duration,
+            category: item.category,
+            image: item.image,
+          })) ?? [];
+
+        setRemoteCourses(normalizedItems);
+      } catch (error) {
+        if (controller.signal.aborted) return;
+        console.error("[ExploreMarquee] Unable to fetch carousel data", error);
+        if (isActive) {
+          setRemoteCourses([]);
+        }
+      } finally {
+        if (isActive) {
+          setIsFetchingRemote(false);
+        }
+      }
+    }
+
+    loadCarouselData();
+
+    return () => {
+      isActive = false;
+      controller.abort();
+    };
+  }, [locale]);
 
   const translatedCarousel = t("explore.carousel");
   const translatedCategories = t("explore.categories") as
@@ -222,7 +280,9 @@ const ExploreMarquee: React.FC<ExploreMarqueeProps> = ({
   });
 
   const carouselItems: CarouselItem[] =
-    Array.isArray(translatedCarousel) && translatedCarousel.length > 0
+    remoteCourses.length > 0
+      ? remoteCourses
+      : Array.isArray(translatedCarousel) && translatedCarousel.length > 0
       ? (translatedCarousel as CarouselItem[])
       : fallbackCourses;
 
@@ -248,7 +308,10 @@ const ExploreMarquee: React.FC<ExploreMarqueeProps> = ({
       viewport={{ once: true }}
       className="text-center mb-12 sm:mb-16"
     >
-      <section className="relative py-10 sm:py-14 lg:py-20 bg-white overflow-hidden">
+      <section
+        className="relative py-10 sm:py-14 lg:py-20 bg-white overflow-hidden"
+        aria-busy={isFetchingRemote}
+      >
         <div className="max-w-7xl mx-auto px-4 text-center mb-6 sm:mb-10">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-purple-900">
             {t("explore.title")}

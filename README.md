@@ -66,6 +66,17 @@ npm run build
 npm run lint
 ```
 
+### Environment Variables
+
+Create an `.env.local` file with the backend base URL and landing secret:
+
+```
+BACKEND_API_URL=https://api.example.com
+LANDING_SECRET=super-secret-key
+```
+
+Carousel responses must include `id`, `slug`, `titleEn`, `titleAr`, `descriptionEn`, `descriptionAr`, `categoryNameEn`, `categoryNameAr`, `durationMinutes`, and `coverImageUrl`. Results are cached in memory for five minutes per server instance, and every request from the landing page sends the `LANDING_SECRET` header for authentication.
+
 ## 📁 Project Structure
 
 ```
@@ -81,9 +92,15 @@ npm run lint
 │   ├── InstructorsSlider.tsx # Instructor slider
 │   ├── FAQ.tsx              # FAQ accordion
 │   └── SiteFooter.tsx       # Footer component
+├── app/api/
+│   └── carousel/route.ts    # Backend proxy with caching
 ├── lib/
 │   ├── data.ts              # Sample data
 │   ├── i18n.ts              # Internationalization
+│   ├── server/
+│   │   ├── apiClient.ts     # Shared backend fetch helper
+│   │   ├── carousel.ts      # External API fetcher + cache
+│   │   └── memoryCache.ts   # Simple in-memory TTL cache
 │   └── utils.ts             # Utility functions
 ├── locales/
 │   └── en.json              # English translations
