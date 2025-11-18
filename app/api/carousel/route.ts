@@ -8,6 +8,7 @@ type SupportedLocale = "en" | "ar";
 
 interface CarouselResponseItem {
   id: string;
+  slug?: string;
   title: string;
   category: string;
   duration: string;
@@ -59,6 +60,7 @@ function mapToLocale(
     const durationMinutes = roundMinutesToNearestFive(item.durationMinutes);
     return {
       id: item.id,
+      slug: item.slug,
       title: locale === "ar" && item.titleAr ? item.titleAr : item.title,
       category:
         locale === "ar" && item.categoryAr ? item.categoryAr : item.category,

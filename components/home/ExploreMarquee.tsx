@@ -25,6 +25,7 @@ export interface ExploreMarqueeProps {
 
 interface CarouselApiItem {
   id: string;
+  slug?: string;
   title: string;
   category: string;
   duration: string;
@@ -40,12 +41,14 @@ interface CourseCardProps {
   course: CarouselItem;
   byLabel: string;
   className?: string;
+  onClick?: (course: CarouselItem) => void;
 }
 
 const CourseCard: React.FC<CourseCardProps> = ({
   course,
   byLabel,
   className,
+  onClick,
 }) => {
   return (
     <Card
@@ -53,6 +56,15 @@ const CourseCard: React.FC<CourseCardProps> = ({
         "relative w-[280px] sm:w-[360px] lg:w-[420px] h-[160px] sm:h-[190px] lg:h-[220px] overflow-hidden cursor-pointer transition-transform duration-300 ease-out group rounded-3xl",
         className
       )}
+      role="button"
+      tabIndex={0}
+      onClick={() => onClick?.(course)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onClick?.(course);
+        }
+      }}
     >
       <div className="relative h-full">
         <Image
@@ -91,6 +103,7 @@ interface MarqueeRowProps {
   direction: "left" | "right";
   speed: number;
   reduceMotion: boolean;
+  onCourseClick?: (course: CarouselItem) => void;
 }
 
 const MarqueeRow: React.FC<MarqueeRowProps> = ({
@@ -99,6 +112,7 @@ const MarqueeRow: React.FC<MarqueeRowProps> = ({
   direction,
   speed,
   reduceMotion,
+  onCourseClick,
 }) => {
   const rowRef = useRef<HTMLDivElement | null>(null);
   const [isPaused, setIsPaused] = useState(false);
@@ -136,7 +150,11 @@ const MarqueeRow: React.FC<MarqueeRowProps> = ({
             key={course.id}
             className="w-[260px] sm:w-[300px] lg:w-[360px] flex-shrink-0 mx-4"
           >
-            <CourseCard course={course} byLabel={byLabel} />
+            <CourseCard
+              course={course}
+              byLabel={byLabel}
+              onClick={onCourseClick}
+            />
           </div>
         ))}
       </div>
@@ -163,7 +181,11 @@ const MarqueeRow: React.FC<MarqueeRowProps> = ({
             key={`${course.id}-${index}`}
             className="w-[260px] sm:w-[300px] lg:w-[360px] flex-shrink-0 mx-6"
           >
-            <CourseCard course={course} byLabel={byLabel} />
+            <CourseCard
+              course={course}
+              byLabel={byLabel}
+              onClick={onCourseClick}
+            />
           </div>
         ))}
       </div>
@@ -176,6 +198,7 @@ const ExploreMarquee: React.FC<ExploreMarqueeProps> = ({
   reduceMotionFallback = false,
   viewAllRoute = "/videos",
   onViewAllClick,
+  onCourseClick,
 }) => {
   const { t, locale } = useTranslation();
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
@@ -221,6 +244,7 @@ const ExploreMarquee: React.FC<ExploreMarqueeProps> = ({
         const normalizedItems =
           payload.items?.map((item) => ({
             id: item.id,
+            slug: item.slug,
             title: item.title,
             instructor: "",
             duration: item.duration,
@@ -300,6 +324,18 @@ const ExploreMarquee: React.FC<ExploreMarqueeProps> = ({
     }
   };
 
+  const handleCourseSelect = (course: CarouselItem) => {
+    const fallbackSlug = course.slug ?? course.id;
+    if (onCourseClick) {
+      onCourseClick(fallbackSlug);
+      return;
+    }
+
+    if (typeof window !== "undefined") {
+      window.location.href = `/${locale}/course/${fallbackSlug}`;
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -329,6 +365,7 @@ const ExploreMarquee: React.FC<ExploreMarqueeProps> = ({
             direction={isRTL ? "right" : "left"}
             speed={marqueeSpeedValue}
             reduceMotion={shouldReduceMotion}
+            onCourseClick={handleCourseSelect}
           />
           <div className="text-center mt-6 sm:mt-10">
             <Button
