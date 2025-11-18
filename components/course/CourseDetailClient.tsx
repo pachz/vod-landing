@@ -526,7 +526,7 @@ function createMockCourseDetails(): CourseViewModel {
       lastUpdated: 'December 2024',
     },
     curriculum: [
-      { title: 'Welcome to Your Confidence Journey', duration: '8:45', isPreview: true },
+      { title: 'Welcome to Your Confidence Journey', duration: '8:45', isPreview: false },
       { title: 'Understanding Confidence vs. Arrogance', duration: '12:30', isPreview: false },
       { title: 'Your Personal Confidence Assessment', duration: '15:20', isPreview: false },
       { title: 'The Science of Self-Confidence', duration: '18:15', isPreview: false },
