@@ -5,14 +5,14 @@ type CacheEntry<T> = {
 
 type CacheStore = Map<string, CacheEntry<unknown>>;
 
-const GLOBAL_CACHE_KEY = "__vod_landing_memory_cache__";
-
 function getStore(): CacheStore {
-  const globalScope = globalThis as Record<string, CacheStore>;
-  if (!globalScope[GLOBAL_CACHE_KEY]) {
-    globalScope[GLOBAL_CACHE_KEY] = new Map();
+  const globalScope = globalThis as typeof globalThis & {
+    __vod_landing_memory_cache__?: CacheStore;
+  };
+  if (!globalScope.__vod_landing_memory_cache__) {
+    globalScope.__vod_landing_memory_cache__ = new Map();
   }
-  return globalScope[GLOBAL_CACHE_KEY];
+  return globalScope.__vod_landing_memory_cache__;
 }
 
 export function getCacheValue<T>(key: string): T | undefined {
@@ -52,4 +52,3 @@ export async function getOrSetCacheValue<T>(
   setCacheValue(key, freshValue, ttlMs);
   return freshValue;
 }
-
