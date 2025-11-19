@@ -29,6 +29,9 @@ export interface ExternalCourseResponse {
   durationMinutes?: number;
   trialVideoUrl?: string;
   lessons?: ExternalLesson[];
+  updatedAt?: string;
+  coach?: ExternalCoach;
+  pricing?: ExternalCoursePricing;
 }
 
 export interface CourseLessonRecord {
@@ -55,6 +58,53 @@ export interface CourseDetailRecord {
   durationMinutes: number;
   trialVideoUrl?: string;
   lessons: CourseLessonRecord[];
+  updatedAt?: string;
+  coach?: CourseCoachRecord;
+  pricing?: CoursePricingRecord;
+}
+
+export interface ExternalCoach {
+  nameEn?: string;
+  nameAr?: string;
+  expertiseEn?: string;
+  expertiseAr?: string;
+  descriptionEn?: string;
+  descriptionAr?: string;
+  profileImageUrl?: string;
+  profileThumbnailUrl?: string;
+  rating?: number;
+  lastUpdatedAt?: string | number;
+}
+
+export interface CourseCoachRecord {
+  nameEn?: string;
+  nameAr?: string;
+  expertiseEn?: string;
+  expertiseAr?: string;
+  descriptionEn?: string;
+  descriptionAr?: string;
+  profileImageUrl?: string;
+  profileThumbnailUrl?: string;
+  rating: number;
+  lastUpdatedAt?: string;
+}
+
+export interface ExternalCoursePricing {
+  priceAmount?: number;
+  priceCurrency?: string;
+  priceInterval?: string;
+  productName?: string;
+  selectedPriceId?: string;
+  selectedProductId?: string;
+}
+
+export interface CoursePricingRecord {
+  priceAmount?: number;
+  priceCurrency?: string;
+  priceInterval?: string;
+  productName?: string;
+  selectedPriceId?: string;
+  selectedProductId?: string;
 }
 
 function sanitizeString(value?: string | null): string | undefined {
@@ -71,6 +121,77 @@ function sanitizePositiveInteger(value?: number | null): number {
   }
   const rounded = Math.round(value);
   return Number.isFinite(rounded) && rounded > 0 ? rounded : 0;
+}
+
+function sanitizeIsoDate(value?: string | number | null): string | undefined {
+  if (value === null || value === undefined) {
+    return undefined;
+  }
+
+  let date: Date;
+
+  if (typeof value === "number") {
+    if (!Number.isFinite(value)) {
+      return undefined;
+    }
+    date = new Date(value);
+  } else if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (!trimmed) {
+      return undefined;
+    }
+    date = new Date(trimmed);
+  } else {
+    return undefined;
+  }
+
+  return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
+}
+
+function sanitizeRating(value?: number | null): number {
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    return 0;
+  }
+
+  const clamped = Math.min(Math.max(value, 0), 5);
+  return Math.round(clamped * 10) / 10;
+}
+
+function sanitizePriceAmount(value?: number | null): number | undefined {
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    return undefined;
+  }
+  const rounded = Math.round(value);
+  return rounded > 0 ? rounded : undefined;
+}
+
+function sanitizePriceInterval(value?: string | null): string | undefined {
+  const normalized = sanitizeString(value)?.toLowerCase();
+  if (!normalized) {
+    return undefined;
+  }
+
+  switch (normalized) {
+    case "day":
+    case "daily":
+      return "day";
+    case "week":
+    case "weekly":
+      return "week";
+    case "month":
+    case "monthly":
+      return "month";
+    case "year":
+    case "annual":
+    case "annually":
+      return "year";
+    case "one_time":
+    case "onetime":
+    case "one-time":
+      return "one_time";
+    default:
+      return undefined;
+  }
 }
 
 function normalizeLesson(lesson: ExternalLesson): CourseLessonRecord {
@@ -104,7 +225,42 @@ function normalizeCourseResponse(
     lessons: Array.isArray(payload.lessons)
       ? payload.lessons.map(normalizeLesson)
       : [],
+    updatedAt: sanitizeIsoDate(payload.updatedAt),
+    coach: payload.coach ? normalizeCoach(payload.coach) : undefined,
+    pricing: payload.pricing ? normalizePricing(payload.pricing) : undefined,
   };
+}
+
+function normalizeCoach(coach: ExternalCoach): CourseCoachRecord {
+  return {
+    nameEn: sanitizeString(coach.nameEn),
+    nameAr: sanitizeString(coach.nameAr),
+    expertiseEn: sanitizeString(coach.expertiseEn),
+    expertiseAr: sanitizeString(coach.expertiseAr),
+    descriptionEn: sanitizeString(coach.descriptionEn),
+    descriptionAr: sanitizeString(coach.descriptionAr),
+    profileImageUrl: sanitizeString(coach.profileImageUrl),
+    profileThumbnailUrl: sanitizeString(coach.profileThumbnailUrl),
+    rating: sanitizeRating(coach.rating),
+    lastUpdatedAt: sanitizeIsoDate(coach.lastUpdatedAt),
+  };
+}
+
+function normalizePricing(pricing: ExternalCoursePricing): CoursePricingRecord | undefined {
+  const normalized: CoursePricingRecord = {
+    priceAmount: sanitizePriceAmount(pricing.priceAmount),
+    priceCurrency: sanitizeString(pricing.priceCurrency)?.toUpperCase(),
+    priceInterval: sanitizePriceInterval(pricing.priceInterval),
+    productName: sanitizeString(pricing.productName),
+    selectedPriceId: sanitizeString(pricing.selectedPriceId),
+    selectedProductId: sanitizeString(pricing.selectedProductId),
+  };
+
+  const hasValue = Object.values(normalized).some(
+    (value) => value !== undefined && value !== ""
+  );
+
+  return hasValue ? normalized : undefined;
 }
 
 async function fetchCourseFromApi(

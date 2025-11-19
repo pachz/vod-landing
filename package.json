@@ -20,8 +20,11 @@
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18",
+    "react-markdown": "^9.0.1",
     "react-fast-marquee": "^1.6.5",
     "react-share": "^5.2.2",
+    "remark-breaks": "^4.0.0",
+    "remark-gfm": "^4.0.0",
     "tailwind-merge": "^2.2.0"
   },
   "devDependencies": {

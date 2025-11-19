@@ -3,6 +3,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import ReactMarkdown from 'react-markdown'
+import remarkBreaks from 'remark-breaks'
+import remarkGfm from 'remark-gfm'
 import { Button } from '@/components/ui/button'
 import { SiteFooter } from '@/components/layout'
 import { useDirection } from '@/providers/DirectionProvider'
@@ -31,44 +34,59 @@ type LessonViewModel = {
   isPreview: boolean
 }
 
+type CoursePricingViewModel = {
+  priceAmount?: number
+  priceCurrency?: string
+  priceInterval?: string
+  productName?: string
+  priceId?: string
+  productId?: string
+}
+
+type CourseCoachViewModel = {
+  name: string
+  title: string
+  bio: string
+  image: string
+  rating: number
+  lastUpdated?: string
+}
+
 type CourseViewModel = {
   id: string
   title: string
   fullDescription: string
+  shortDescription: string
   learningOutcomes: string[]
   metaData: {
     totalDuration: string
     lessonsCount: number
-    studentsCount: string
-    level: string
-    language: string
+    viewsCount: string
     lastUpdated: string
   }
   curriculum: LessonViewModel[]
-  instructor: {
-    name: string
-    title: string
-    bio: string
-    image: string
-    rating: number
-    studentsCount: string
-  }
+  pricing: CoursePricingViewModel
+  coach: CourseCoachViewModel
 }
 
 type ArabicContent = {
   title: string
   fullDescription: string
+  shortDescription: string
   learningOutcomes: string[]
   metaData: {
     totalDuration: string
     lessonsCount: number
-    studentsCount: string
-    level: string
-    language: string
+    viewsCount: string
     lastUpdated: string
   }
   curriculum: string[]
-  instructorName: string
+  coach: {
+    name: string
+    title: string
+    bio: string
+    lastUpdated?: string
+  }
 }
 
 const MOCK_COURSE = createMockCourseDetails()
@@ -86,6 +104,8 @@ export default function CourseDetailClient({ course, backHref }: CourseDetailCli
     () => buildArabicOverrides(course, courseContent),
     [course, courseContent]
   )
+  const shortDescriptionContent = isAr ? arabicContent.shortDescription : courseContent.shortDescription
+  const overviewContent = isAr ? arabicContent.fullDescription : courseContent.fullDescription
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -94,9 +114,20 @@ export default function CourseDetailClient({ course, backHref }: CourseDetailCli
   }, [])
 
   const displayTitle = isAr ? arabicContent.title : courseContent.title
-  const instructorDisplayName = isAr ? arabicContent.instructorName : courseContent.instructor.name
+  const coachDisplayName = isAr ? arabicContent.coach.name : courseContent.coach.name
+  const coachTitle = isAr ? arabicContent.coach.title : courseContent.coach.title
+  const coachBio = isAr ? arabicContent.coach.bio : courseContent.coach.bio
+  const coachLastUpdated = isAr ? arabicContent.coach.lastUpdated : courseContent.coach.lastUpdated
   const durationLabel = courseContent.metaData.totalDuration
   const lessonsCount = courseContent.metaData.lessonsCount
+  const pricingDisplay = useMemo(
+    () => getPricingDisplay(courseContent.pricing, isAr ? 'ar' : 'en'),
+    [courseContent.pricing, isAr]
+  )
+  const previewEmbedUrl = useMemo(
+    () => buildVimeoEmbedUrl(course.trialVideoUrl),
+    [course.trialVideoUrl]
+  )
 
   return (
     <div className="min-h-screen bg-neutral-bg" dir={isAr ? 'rtl' : 'ltr'}>
@@ -120,26 +151,20 @@ export default function CourseDetailClient({ course, backHref }: CourseDetailCli
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-purple-900 leading-tight mb-4">
                   {displayTitle}
                 </h1>
-                <p className="text-lg text-purple-700 leading-relaxed mb-6">
-                  {isAr ? arabicContent.fullDescription : courseContent.fullDescription}
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-xl font-semibold text-purple-900 mb-4">{isAr ? 'ما ستتعلمينه' : "What you'll learn"}</h3>
-                <ul className="space-y-2">
-                  {(isAr ? arabicContent.learningOutcomes : courseContent.learningOutcomes).map((outcome, index) => (
-                    <li key={index} className={isAr ? 'flex items-start space-x-reverse space-x-3' : 'flex items-start space-x-3'}>
-                      <div className="w-2 h-2 bg-pink-500 rounded-full mt-2 flex-shrink-0"></div>
-                      <span className="text-purple-700">{outcome}</span>
-                    </li>
-                  ))}
-                </ul>
+                {shortDescriptionContent && (
+                  <MarkdownContent
+                    content={shortDescriptionContent}
+                    isAr={isAr}
+                    variant="hero"
+                  />
+                )}
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 py-6 border-t border-b border-purple-100">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-900">{isAr ? arabicContent.metaData.totalDuration : courseContent.metaData.totalDuration}</div>
+                  <div className="text-2xl font-bold text-purple-900">
+                    {isAr ? arabicContent.metaData.totalDuration : courseContent.metaData.totalDuration}
+                  </div>
                   <div className="text-sm text-purple-600">{isAr ? 'المدة الإجمالية' : 'Total Duration'}</div>
                 </div>
                 <div className="text-center">
@@ -147,8 +172,10 @@ export default function CourseDetailClient({ course, backHref }: CourseDetailCli
                   <div className="text-sm text-purple-600">{isAr ? 'الدروس' : 'Lessons'}</div>
                 </div>
                 <div className="text-center sm:col-span-1 col-span-2">
-                  <div className="text-2xl font-bold text-purple-900">{courseContent.metaData.studentsCount}</div>
-                  <div className="text-sm text-purple-600">{isAr ? 'الطلاب' : 'Students'}</div>
+                  <div className="text-2xl font-bold text-purple-900">
+                    {isAr ? arabicContent.metaData.viewsCount : courseContent.metaData.viewsCount}
+                  </div>
+                  <div className="text-sm text-purple-600">{isAr ? 'المشاهدات' : 'Views'}</div>
                 </div>
               </div>
 
@@ -156,12 +183,12 @@ export default function CourseDetailClient({ course, backHref }: CourseDetailCli
                 <div className="mb-6">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <h3 className="text-xl font-semibold text-purple-900">{isAr ? 'شراء لمرة واحدة' : 'One-time Purchase'}</h3>
-                      <p className="text-sm text-purple-600">{isAr ? 'احصلي على وصول مدى الحياة لهذه الدورة' : 'Get lifetime access to this course'}</p>
+                      <h3 className="text-xl font-semibold text-purple-900">{pricingDisplay.title}</h3>
+                      <p className="text-sm text-purple-600">{pricingDisplay.description}</p>
                     </div>
                     <div className="text-right">
-                      <div className="text-3xl font-bold text-purple-900">{isAr ? '8.5 د.ك' : '8.5 KWD'}</div>
-                      <div className="text-sm text-purple-600">{isAr ? 'دفعة واحدة' : 'One-time payment'}</div>
+                      <div className="text-3xl font-bold text-purple-900">{pricingDisplay.amountLabel}</div>
+                      <div className="text-sm text-purple-600">{pricingDisplay.intervalLabel}</div>
                     </div>
                   </div>
                   <Button 
@@ -169,7 +196,7 @@ export default function CourseDetailClient({ course, backHref }: CourseDetailCli
                     onClick={() => console.log('Enroll', courseContent.id)}
                     className="w-full bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 text-lg"
                   >
-                    {isAr ? 'اشتراك الآن - 8.5 د.ك' : 'Enroll Now - 8.5 KWD'}
+                    {pricingDisplay.buttonLabel}
                   </Button>
                   <div className="flex flex-col items-center mt-3 text-sm text-purple-600">
                     <span style={{ color: '#665BFF' }}>{isAr ? 'دفع آمن' : 'Secure payment'}</span>
@@ -267,26 +294,39 @@ export default function CourseDetailClient({ course, backHref }: CourseDetailCli
             </div>
 
             <div className="space-y-6">
-              <div className="relative aspect-video bg-purple-100 rounded-xl overflow-hidden">
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-200 to-pink-200">
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-white/80 rounded-full flex items-center justify-center mb-4 mx-auto">
-                      <svg className="w-8 h-8 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z"/>
-                      </svg>
+              <div className="relative aspect-video bg-black rounded-xl overflow-hidden border border-purple-100">
+                {previewEmbedUrl ? (
+                  <iframe
+                    src={previewEmbedUrl}
+                    title={isAr ? 'فيديو المعاينة' : 'Course preview'}
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowFullScreen
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-200 to-pink-200">
+                    <div className="text-center px-6">
+                      <div className="w-16 h-16 bg-white/80 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <svg className="w-8 h-8 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z"/>
+                        </svg>
+                      </div>
+                      <p className="text-purple-700 font-medium">{isAr ? 'معاينة الدورة' : 'Course Preview'}</p>
+                      <p className="text-sm text-purple-600">
+                        {isAr ? 'فيديو المعاينة غير متوفر حالياً' : 'Preview video unavailable'}
+                      </p>
                     </div>
-                    <p className="text-purple-700 font-medium">{isAr ? 'معاينة الدورة' : 'Course Preview'}</p>
-                    <p className="text-sm text-purple-600">{isAr ? 'معاينة 2:30 متاحة' : '2:30 preview available'}</p>
                   </div>
-                </div>
+                )}
               </div>
 
               <div className="bg-white border border-purple-100 rounded-xl p-6">
                 <div className={isAr ? 'flex items-center space-x-reverse space-x-4 mb-4' : 'flex items-center space-x-4 mb-4'}>
-                  <Image src={courseContent.instructor.image} alt={courseContent.instructor.name} width={60} height={60} className="rounded-full object-cover" />
+                  <Image src={courseContent.coach.image} alt={courseContent.coach.name} width={60} height={60} className="rounded-full object-cover" />
                   <div>
-                    <h4 className="font-semibold text-purple-900">{instructorDisplayName}</h4>
-                    <p className="text-sm text-purple-600">{courseContent.instructor.title}</p>
+                    <h4 className="font-semibold text-purple-900">{coachDisplayName}</h4>
+                    <p className="text-sm text-purple-600">{coachTitle}</p>
                     <div className={isAr ? 'flex items-center space-x-reverse space-x-2 mt-1' : 'flex items-center space-x-2 mt-1'}>
                       <div className="flex text-yellow-400">
                         {[...Array(5)].map((_, i) => (
@@ -295,11 +335,17 @@ export default function CourseDetailClient({ course, backHref }: CourseDetailCli
                           </svg>
                         ))}
                       </div>
-                      <span className="text-sm text-purple-600">{courseContent.instructor.rating}</span>
+                      <span className="text-sm text-purple-600">{courseContent.coach.rating.toFixed(1)}</span>
                     </div>
                   </div>
                 </div>
-                <p className="text-sm text-purple-700">{courseContent.instructor.bio}</p>
+                <p className="text-sm text-purple-700">{coachBio}</p>
+                {coachLastUpdated && (
+                  <p className="text-xs text-purple-500 mt-3">
+                    {isAr ? 'آخر تحديث للمدربة:' : 'Coach profile updated:'}{' '}
+                    {coachLastUpdated}
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -331,33 +377,38 @@ export default function CourseDetailClient({ course, backHref }: CourseDetailCli
             {activeTab === 'overview' && (
               <div className="space-y-8">
                 <div>
-                  <h3 className="text-2xl font-semibold text-purple-900 mb-4">{isAr ? 'حول هذه الدورة' : 'About This Course'}</h3>
-                  <p className="text-purple-700 leading-relaxed">{isAr ? arabicContent.fullDescription : courseContent.fullDescription}</p>
-                </div>
-                <div>
-                  <h3 className="text-2xl font-semibold text-purple-900 mb-4">{isAr ? 'نتائج التعلم' : 'Learning Outcomes'}</h3>
-                  <ul className="space-y-3">
-                    {(isAr ? arabicContent.learningOutcomes : courseContent.learningOutcomes).map((outcome, index) => (
-                      <li key={index} className={isAr ? 'flex items-start space-x-reverse space-x-3' : 'flex items-start space-x-3'}>
-                        <div className="w-2 h-2 bg-pink-500 rounded-full mt-2 flex-shrink-0"></div>
-                        <span className="text-purple-700">{outcome}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <MarkdownContent
+                    content={overviewContent}
+                    isAr={isAr}
+                    variant="overview"
+                  />
                 </div>
                 <div>
                   <h3 className="text-2xl font-semibold text-purple-900 mb-4">{isAr ? 'تفاصيل الدورة' : 'Course Details'}</h3>
-                  <div className="grid sm:grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <div className="flex justify-between"><span className="text-purple-600">{isAr ? 'المستوى:' : 'Level:'}</span><span className="text-purple-900 font-medium">{isAr ? arabicContent.metaData.level : courseContent.metaData.level}</span></div>
-                      <div className="flex justify-between"><span className="text-purple-600">{isAr ? 'اللغة:' : 'Language:'}</span><span className="text-purple-900 font-medium">{isAr ? arabicContent.metaData.language : courseContent.metaData.language}</span></div>
-                      <div className="flex justify-between"><span className="text-purple-600">{isAr ? 'المدة:' : 'Duration:'}</span><span className="text-purple-900 font-medium">{isAr ? arabicContent.metaData.totalDuration : courseContent.metaData.totalDuration}</span></div>
-                    </div>
-                    <div className="space-y-4">
-                      <div className="flex justify-between"><span className="text-purple-600">{isAr ? 'الدروس:' : 'Lessons:'}</span><span className="text-purple-900 font-medium">{courseContent.metaData.lessonsCount}</span></div>
-                      <div className="flex justify-between"><span className="text-purple-600">{isAr ? 'الطلاب:' : 'Students:'}</span><span className="text-purple-900 font-medium">{courseContent.metaData.studentsCount}</span></div>
-                      <div className="flex justify-between"><span className="text-purple-600">{isAr ? 'آخر تحديث:' : 'Updated:'}</span><span className="text-purple-900 font-medium">{isAr ? arabicContent.metaData.lastUpdated : courseContent.metaData.lastUpdated}</span></div>
-                    </div>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    {[
+                      {
+                        label: isAr ? 'المدة' : 'Duration',
+                        value: isAr ? arabicContent.metaData.totalDuration : courseContent.metaData.totalDuration,
+                      },
+                      {
+                        label: isAr ? 'عدد الدروس' : 'Lessons',
+                        value: courseContent.metaData.lessonsCount.toString(),
+                      },
+                    {
+                      label: isAr ? 'المشاهدات' : 'Views',
+                      value: isAr ? arabicContent.metaData.viewsCount : courseContent.metaData.viewsCount,
+                      },
+                      {
+                        label: isAr ? 'آخر تحديث' : 'Updated',
+                        value: isAr ? arabicContent.metaData.lastUpdated : courseContent.metaData.lastUpdated,
+                      },
+                    ].map((item, index) => (
+                      <div key={`detail-${index}`} className="flex justify-between border border-purple-100 rounded-lg px-4 py-3">
+                        <span className="text-purple-600">{item.label}:</span>
+                        <span className="text-purple-900 font-medium">{item.value}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -425,10 +476,28 @@ function buildCourseViewModel(course: CourseDetailRecord): CourseViewModel {
         }))
       : cloneLessons(MOCK_COURSE.curriculum)
 
+  const lastUpdatedLabel =
+    formatUpdatedAtLabel(course.updatedAt, 'en') ?? '—'
+  const viewsLabel = getViewsLabel('en')
+  const pricing = buildPricingViewModel(course)
+
+  const coachRecord = course.coach
+  const coachLastUpdated =
+    coachRecord?.lastUpdatedAt
+      ? formatUpdatedAtLabel(coachRecord.lastUpdatedAt, 'en')
+      : undefined
+  const coachImage =
+    coachRecord?.profileImageUrl ||
+    coachRecord?.profileThumbnailUrl ||
+    MOCK_COURSE.coach.image
+  const coachRating =
+    coachRecord && coachRecord.rating > 0 ? coachRecord.rating : MOCK_COURSE.coach.rating
+
   return {
     id: course.id || MOCK_COURSE.id,
     title: course.titleEn?.trim() || MOCK_COURSE.title,
     fullDescription: course.descriptionEn?.trim() || MOCK_COURSE.fullDescription,
+    shortDescription: course.shortDescriptionEn?.trim() || MOCK_COURSE.shortDescription,
     learningOutcomes: [...MOCK_COURSE.learningOutcomes],
     metaData: {
       totalDuration:
@@ -436,15 +505,18 @@ function buildCourseViewModel(course: CourseDetailRecord): CourseViewModel {
           ? formatTotalDuration(course.durationMinutes, 'en')
           : MOCK_COURSE.metaData.totalDuration,
       lessonsCount: lessons.length,
-      studentsCount: MOCK_COURSE.metaData.studentsCount,
-      level: MOCK_COURSE.metaData.level,
-      language: MOCK_COURSE.metaData.language,
-      lastUpdated: MOCK_COURSE.metaData.lastUpdated,
+      viewsCount: viewsLabel,
+      lastUpdated: lastUpdatedLabel,
     },
     curriculum: lessons,
-    instructor: {
-      ...MOCK_COURSE.instructor,
-      name: course.instructor?.trim() || MOCK_COURSE.instructor.name,
+    pricing,
+    coach: {
+      name: coachRecord?.nameEn?.trim() || MOCK_COURSE.coach.name,
+      title: coachRecord?.expertiseEn?.trim() || MOCK_COURSE.coach.title,
+      bio: coachRecord?.descriptionEn?.trim() || MOCK_COURSE.coach.bio,
+      image: coachImage,
+      rating: coachRating,
+      lastUpdated: coachLastUpdated || MOCK_COURSE.coach.lastUpdated,
     },
   }
 }
@@ -455,9 +527,23 @@ function buildArabicOverrides(course: CourseDetailRecord, english: CourseViewMod
       ? course.lessons.map((lesson, index) => lesson.titleAr?.trim() || lesson.titleEn?.trim() || `الدرس ${index + 1}`)
       : [...ARABIC_STATIC.curriculum]
 
+  const lastUpdatedLabel =
+    formatUpdatedAtLabel(course.updatedAt, 'ar') ?? '—'
+  const viewsLabel = getViewsLabel('ar')
+
+  const coachRecord = course.coach
+  const coachLastUpdated =
+    coachRecord?.lastUpdatedAt
+      ? formatUpdatedAtLabel(coachRecord.lastUpdatedAt, 'ar')
+      : english.coach.lastUpdated
+
   return {
     title: course.titleAr?.trim() || ARABIC_STATIC.title,
     fullDescription: course.descriptionAr?.trim() || ARABIC_STATIC.fullDescription,
+    shortDescription:
+      course.shortDescriptionAr?.trim() ||
+      course.shortDescriptionEn?.trim() ||
+      ARABIC_STATIC.shortDescription,
     learningOutcomes: [...ARABIC_STATIC.learningOutcomes],
     metaData: {
       totalDuration:
@@ -465,13 +551,55 @@ function buildArabicOverrides(course: CourseDetailRecord, english: CourseViewMod
           ? formatTotalDuration(course.durationMinutes, 'ar')
           : ARABIC_STATIC.metaData.totalDuration,
       lessonsCount: english.metaData.lessonsCount,
-      studentsCount: english.metaData.studentsCount,
-      level: ARABIC_STATIC.metaData.level,
-      language: ARABIC_STATIC.metaData.language,
-      lastUpdated: ARABIC_STATIC.metaData.lastUpdated,
+      viewsCount: viewsLabel,
+      lastUpdated: lastUpdatedLabel,
     },
     curriculum: lessonNames,
-    instructorName: course.instructor?.trim() || ARABIC_STATIC.instructorName,
+    coach: {
+      name: coachRecord?.nameAr?.trim() || english.coach.name,
+      title: coachRecord?.expertiseAr?.trim() || english.coach.title,
+      bio: coachRecord?.descriptionAr?.trim() || english.coach.bio,
+      lastUpdated: coachLastUpdated,
+    },
+  }
+}
+
+function buildPricingViewModel(course: CourseDetailRecord): CoursePricingViewModel {
+  if (!course.pricing) {
+    return { ...MOCK_COURSE.pricing }
+  }
+
+  return {
+    priceAmount: course.pricing.priceAmount ?? MOCK_COURSE.pricing.priceAmount,
+    priceCurrency: course.pricing.priceCurrency ?? MOCK_COURSE.pricing.priceCurrency,
+    priceInterval: course.pricing.priceInterval ?? MOCK_COURSE.pricing.priceInterval,
+    productName: course.pricing.productName ?? MOCK_COURSE.pricing.productName,
+    priceId: course.pricing.selectedPriceId ?? MOCK_COURSE.pricing.priceId,
+    productId: course.pricing.selectedProductId ?? MOCK_COURSE.pricing.productId,
+  }
+}
+
+function buildVimeoEmbedUrl(url?: string | null): string | undefined {
+  if (!url) {
+    return undefined
+  }
+
+  try {
+    const parsed = new URL(url)
+    if (!parsed.hostname.includes('vimeo.com')) {
+      return undefined
+    }
+
+    const pathSegments = parsed.pathname.split('/').filter(Boolean)
+    const videoIdCandidate = [...pathSegments].reverse().find((segment) => /^\d+$/.test(segment))
+
+    if (!videoIdCandidate) {
+      return undefined
+    }
+
+    return `https://player.vimeo.com/video/${videoIdCandidate}?title=0&byline=0&portrait=0`
+  } catch {
+    return undefined
   }
 }
 
@@ -499,6 +627,100 @@ function formatLessonDurationLabel(minutes?: number): string {
   return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours}h`
 }
 
+function getViewsLabel(locale: 'en' | 'ar'): string {
+  return locale === 'ar' ? 'أقل من ١٠٠' : 'less than 100'
+}
+
+type PricingDisplay = {
+  title: string
+  description: string
+  amountLabel: string
+  intervalLabel: string
+  buttonLabel: string
+}
+
+const ZERO_DECIMAL_CURRENCIES = new Set([
+  'BIF',
+  'CLP',
+  'DJF',
+  'GNF',
+  'JPY',
+  'KMF',
+  'KRW',
+  'MGA',
+  'PYG',
+  'RWF',
+  'UGX',
+  'VND',
+  'VUV',
+  'XAF',
+  'XOF',
+  'XPF',
+])
+
+function getPricingDisplay(pricing: CoursePricingViewModel, locale: 'en' | 'ar'): PricingDisplay {
+  const amountLabel =
+    formatPricingAmount(pricing.priceAmount, pricing.priceCurrency, locale) ??
+    (locale === 'ar' ? '٨٫٥ د.ك' : '8.5 KWD')
+  const title = locale === 'ar' ? 'شراء لمرة واحدة' : 'One-time Purchase'
+  const description =
+    locale === 'ar'
+      ? 'احصلي على وصول مدى الحياة لهذه الدورة'
+      : 'Get lifetime access to this course'
+  const intervalLabel = locale === 'ar' ? 'دفعة واحدة' : 'One-time payment'
+  const buttonPrefix = locale === 'ar' ? 'اشتراك الآن' : 'Enroll Now'
+  const buttonLabel = `${buttonPrefix} - ${amountLabel}`
+
+  return {
+    title,
+    description,
+    amountLabel,
+    intervalLabel,
+    buttonLabel,
+  }
+}
+
+function formatPricingAmount(
+  amount?: number,
+  currency?: string,
+  locale: 'en' | 'ar' = 'en'
+): string | undefined {
+  if (!amount || amount <= 0 || !currency) {
+    return undefined
+  }
+
+  const normalizedCurrency = currency.toUpperCase()
+  const divisor = ZERO_DECIMAL_CURRENCIES.has(normalizedCurrency) ? 1 : 100
+  const normalizedAmount = amount / divisor
+
+  try {
+    return new Intl.NumberFormat(locale === 'ar' ? 'ar' : 'en', {
+      style: 'currency',
+      currency: normalizedCurrency,
+    }).format(normalizedAmount)
+  } catch {
+    return `${normalizedAmount.toFixed(2)} ${normalizedCurrency}`
+  }
+}
+
+function formatUpdatedAtLabel(updatedAt?: string, locale: 'en' | 'ar' = 'en'): string | undefined {
+  if (!updatedAt) {
+    return undefined
+  }
+
+  const parsedDate = new Date(updatedAt)
+  if (Number.isNaN(parsedDate.getTime())) {
+    return undefined
+  }
+
+  const formatter = new Intl.DateTimeFormat(locale === 'ar' ? 'ar' : 'en', {
+    year: 'numeric',
+    month: 'long',
+  })
+
+  return formatter.format(parsedDate)
+}
+
 function cloneLessons(lessons: LessonViewModel[]): LessonViewModel[] {
   return lessons.map((lesson) => ({ ...lesson }))
 }
@@ -509,6 +731,8 @@ function createMockCourseDetails(): CourseViewModel {
     title: 'Building Confidence from Within',
     fullDescription:
       "This comprehensive course is designed to help you build unshakeable confidence from within. Through a series of practical exercises, real-world examples, and proven techniques, you'll learn to embrace your authentic self and develop the inner strength needed to pursue your dreams and goals.",
+    shortDescription:
+      'A practical program that helps you gain confidence with actionable lessons, exercises, and real-life tools.',
     learningOutcomes: [
       'Develop a deep understanding of your authentic self',
       'Build unshakeable confidence in any situation',
@@ -520,9 +744,7 @@ function createMockCourseDetails(): CourseViewModel {
     metaData: {
       totalDuration: '2 hours 30 minutes',
       lessonsCount: 12,
-      studentsCount: '2,847',
-      level: 'Beginner',
-      language: 'English',
+      viewsCount: 'less than 100',
       lastUpdated: 'December 2024',
     },
     curriculum: [
@@ -539,13 +761,19 @@ function createMockCourseDetails(): CourseViewModel {
       { title: 'Building Confidence in Relationships', duration: '20:30', isPreview: false },
       { title: 'Creating Your Confidence Maintenance Plan', duration: '13:20', isPreview: false },
     ],
-    instructor: {
+    pricing: {
+      priceAmount: 850,
+      priceCurrency: 'KWD',
+      priceInterval: 'one_time',
+      productName: 'One-time Purchase',
+    },
+    coach: {
       name: 'Reham Diva',
       title: 'Confidence & Life Coach',
       bio: 'Reham is a certified life coach with over 8 years of experience helping women build unshakeable confidence. She has worked with thousands of clients to overcome self-doubt and achieve their personal and professional goals.',
       image: '/images/w1.png',
       rating: 4.9,
-      studentsCount: '15,000+',
+      lastUpdated: 'December 2024',
     },
   }
 }
@@ -555,6 +783,8 @@ function createArabicContent(): ArabicContent {
     title: 'برنامج أنوثة الديفا',
     fullDescription:
       'هذه الدورة الشاملة مصممة لمساعدتك على بناء ثقة لا تتزعزع من الداخل. من خلال سلسلة من التمارين العملية والأمثلة الواقعية والتقنيات المجربة، ستتعلمين كيفية احتضان ذاتك الحقيقية وتطوير القوة الداخلية اللازمة لتحقيق أحلامك وأهدافك.',
+    shortDescription:
+      'برنامج عملي يمنحك خطوات واضحة وتمارين واقعية لتقوية الثقة بالنفس.',
     learningOutcomes: [
       'تطوير فهم عميق لذاتك الحقيقية',
       'بناء ثقة لا تتزعزع في أي موقف',
@@ -566,9 +796,7 @@ function createArabicContent(): ArabicContent {
     metaData: {
       totalDuration: 'ساعتان و 30 دقيقة',
       lessonsCount: 12,
-      studentsCount: '2,847',
-      level: 'مبتدئ',
-      language: 'العربية',
+      viewsCount: 'أقل من ١٠٠',
       lastUpdated: 'ديسمبر 2024',
     },
     curriculum: [
@@ -585,11 +813,66 @@ function createArabicContent(): ArabicContent {
       'بناء الثقة في العلاقات',
       'إنشاء خطة صيانة الثقة',
     ],
-    instructorName: 'رهام دیفا',
+    coach: {
+      name: 'رهام دیفا',
+      title: 'مدربة ثقة بالنفس',
+      bio: 'رهام هي مدربة حياة معتمدة لديها أكثر من 8 سنوات من الخبرة في مساعدة النساء على بناء ثقة لا تتزعزع.',
+      lastUpdated: 'ديسمبر 2024',
+    },
   }
 }
 
 function cnIcon(isAr: boolean, ltr: string, rtl: string) {
   return isAr ? rtl : ltr
+}
+
+type MarkdownContentProps = {
+  content?: string
+  isAr: boolean
+  variant: 'hero' | 'overview'
+}
+
+function MarkdownContent({ content, isAr, variant }: MarkdownContentProps) {
+  if (!content || !content.trim()) {
+    return null
+  }
+
+  const headingClass = 'text-xl font-semibold text-purple-900'
+  const paragraphClass =
+    variant === 'hero'
+      ? 'text-base text-purple-700 leading-relaxed whitespace-pre-line'
+      : 'text-purple-700 leading-relaxed whitespace-pre-line'
+
+  const containerClass =
+    variant === 'hero'
+      ? 'space-y-3 text-purple-700 leading-relaxed mb-6'
+      : 'space-y-3 text-purple-700 leading-relaxed'
+
+  return (
+    <div className={containerClass}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm, remarkBreaks]}
+        components={{
+          h1: ({ node, ...props }) => <h3 className={headingClass} {...props} />,
+          h2: ({ node, ...props }) => <h3 className={headingClass} {...props} />,
+          h3: ({ node, ...props }) => <h3 className={headingClass} {...props} />,
+          h4: ({ node, ...props }) => <h4 className={headingClass} {...props} />,
+          p: ({ node, ...props }) => <p className={paragraphClass} {...props} />,
+          ul: ({ node, ...props }) => <ul className="space-y-2" {...props} />,
+          li: ({ node, children, ...props }) => (
+            <li
+              className={isAr ? 'flex items-start space-x-reverse space-x-3' : 'flex items-start space-x-3'}
+              {...props}
+            >
+              <div className="w-2 h-2 bg-pink-500 rounded-full mt-2 flex-shrink-0" />
+              <span className="text-purple-700">{children}</span>
+            </li>
+          ),
+        }}
+      >
+        {content}
+      </ReactMarkdown>
+    </div>
+  )
 }
 
