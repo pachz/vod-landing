@@ -23,16 +23,24 @@ export interface Video {
   categoryLabel?: string
 }
 
+type SubscriptionPlanSummary = {
+  name: string
+  intervalLabel: string
+  priceDisplay: string
+}
+
 export interface VideoCardProps {
   video: Video
   className?: string
   onCourseClick?: (videoId: string) => void
+  subscriptionPlan?: SubscriptionPlanSummary
 }
 
-export const VideoCard: React.FC<VideoCardProps> = ({ 
-  video, 
-  className, 
-  onCourseClick
+export const VideoCard: React.FC<VideoCardProps> = ({
+  video,
+  className,
+  onCourseClick,
+  subscriptionPlan,
 }) => {
   const [isHovered, setIsHovered] = useState(false)
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
@@ -70,6 +78,11 @@ export const VideoCard: React.FC<VideoCardProps> = ({
       window.location.href = `${basePath}/course/${video.id}`
     }
   }
+
+  const subscriptionPriceDisplay =
+    subscriptionPlan?.priceDisplay || (locale === 'ar' ? '٨٫٥ د.ك/شهريًا' : '8.5 KWD/month')
+  const subscriptionNameDisplay =
+    subscriptionPlan?.name || (locale === 'ar' ? 'جميع الدورات' : 'All courses')
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -187,8 +200,12 @@ export const VideoCard: React.FC<VideoCardProps> = ({
         {/* Subscription and CTA */}
         <div className="flex flex-col gap-3 mt-auto">
           <div className="flex-1 min-w-0">
-            <div className="text-sm text-purple-600 font-medium">{locale === 'ar' ? 'ضمن الاشتراك' : 'Included in subscription'}</div>
-            <div className="text-sm text-purple-700 font-semibold">{locale === 'ar' ? '8.5 د.ك/شهريًا • جميع الدورات' : '8.5 KWD/month • All courses'}</div>
+            <div className="text-sm text-purple-600 font-medium">
+              {locale === 'ar' ? 'ضمن الاشتراك' : 'Included in subscription'}
+            </div>
+            <div className="text-sm text-purple-700 font-semibold">
+              {subscriptionPriceDisplay} • {subscriptionNameDisplay}
+            </div>
           </div>
           <button
             onClick={handleCourseClick}

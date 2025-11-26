@@ -35,6 +35,25 @@ type NormalizedCourse = Video & {
   categoryKey: string
 }
 
+type SubscriptionPlan = {
+  productId: string
+  priceId?: string
+  name: string
+  amountCents: number
+  amount: number
+  currency: string
+  interval: string
+  intervalLabel: string
+  priceDisplay: string
+}
+
+type SubscriptionApiResponse = {
+  locale: string
+  plan: SubscriptionPlan
+  cachedAt: number
+  ttlMs: number
+}
+
 export default function LangCoursesPage() {
   const { t } = useTranslation()
   const { locale } = useDirection()
@@ -46,6 +65,7 @@ export default function LangCoursesPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [visibleCount, setVisibleCount] = useState(DEFAULT_VISIBLE)
+  const [subscriptionPlan, setSubscriptionPlan] = useState<SubscriptionPlan | null>(null)
   const requestIdRef = useRef(0)
 
   const fetchCourses = useCallback(async () => {
@@ -61,6 +81,20 @@ export default function LangCoursesPage() {
         throw new Error('Failed to load courses')
       }
       const payload = (await response.json()) as CoursesApiResponse
+      let planPayload: SubscriptionPlan | null = null
+      try {
+        const subscriptionResponse = await fetch(`/api/subscription?locale=${locale}`, {
+          cache: 'no-store'
+        })
+        if (subscriptionResponse.ok) {
+          const subscriptionJson = (await subscriptionResponse.json()) as SubscriptionApiResponse
+          planPayload = subscriptionJson.plan
+        } else {
+          console.warn('[courses page] Subscription API returned non-ok status', subscriptionResponse.status)
+        }
+      } catch (subscriptionError) {
+        console.warn('[courses page] Failed to fetch subscription plan', subscriptionError)
+      }
       if (requestIdRef.current !== requestId) {
         return
       }
@@ -83,12 +117,14 @@ export default function LangCoursesPage() {
         }
       })
       setCourses(normalized)
+      setSubscriptionPlan(planPayload)
     } catch (err) {
       console.error('[courses page] Failed to load courses', err)
       if (requestIdRef.current !== requestId) {
         return
       }
       setCourses([])
+      setSubscriptionPlan(null)
       setError(loadErrorLabel)
     } finally {
       if (requestIdRef.current === requestId) {
@@ -205,6 +241,15 @@ export default function LangCoursesPage() {
                     <VideoCard
                       key={course.id}
                       video={course}
+                      subscriptionPlan={
+                        subscriptionPlan
+                          ? {
+                              name: subscriptionPlan.name,
+                              intervalLabel: subscriptionPlan.intervalLabel,
+                              priceDisplay: subscriptionPlan.priceDisplay
+                            }
+                          : undefined
+                      }
                       onCourseClick={(videoId) => {
                         if (typeof window !== 'undefined') {
                           window.location.href = `/${locale}/course/${videoId}`
