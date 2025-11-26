@@ -13,10 +13,13 @@ export default async function LangCourseDetailPage({ params }: CourseDetailPageP
     notFound()
   }
 
+  const panelUrl = process.env.BACKEND_PANEL_URL
+
   return (
     <CourseDetailClient
       course={course}
       backHref={`/${params.lang}/courses`}
+      panelUrl={panelUrl}
     />
   )
 }

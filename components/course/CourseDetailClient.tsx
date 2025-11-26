@@ -26,6 +26,7 @@ import {
 interface CourseDetailClientProps {
   course: CourseDetailRecord
   backHref: string
+  panelUrl?: string
 }
 
 type LessonViewModel = {
@@ -92,7 +93,7 @@ type ArabicContent = {
 const MOCK_COURSE = createMockCourseDetails()
 const ARABIC_STATIC = createArabicContent()
 
-export default function CourseDetailClient({ course, backHref }: CourseDetailClientProps) {
+export default function CourseDetailClient({ course, backHref, panelUrl: panelUrlProp }: CourseDetailClientProps) {
   const { locale } = useDirection()
   const isAr = locale === 'ar'
   const [activeTab, setActiveTab] = useState<'overview' | 'curriculum'>('overview')
@@ -128,6 +129,24 @@ export default function CourseDetailClient({ course, backHref }: CourseDetailCli
     () => buildVimeoEmbedUrl(course.trialVideoUrl),
     [course.trialVideoUrl]
   )
+  const enrollUrl = useMemo(() => {
+    // Try prop first, then NEXT_PUBLIC_ env var (for client-side), then fallback
+    const panelUrl = panelUrlProp || process.env.NEXT_PUBLIC_BACKEND_PANEL_URL
+    if (!panelUrl) {
+      console.warn('BACKEND_PANEL_URL environment variable is not set')
+      return `https://panel.vod.borj.dev/courses/preview/${courseContent.id}`
+    }
+    
+    try {
+      const url = new URL(panelUrl)
+      const baseUrl = `${url.protocol}//${url.host}`
+      return `${baseUrl}/courses/preview/${courseContent.id}`
+    } catch {
+      // If BACKEND_PANEL_URL is just a hostname without protocol, add https://
+      const cleanUrl = panelUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')
+      return `https://${cleanUrl}/courses/preview/${courseContent.id}`
+    }
+  }, [courseContent.id, panelUrlProp])
 
   return (
     <div className="min-h-screen bg-neutral-bg" dir={isAr ? 'rtl' : 'ltr'}>
@@ -193,7 +212,7 @@ export default function CourseDetailClient({ course, backHref }: CourseDetailCli
                   </div>
                   <Button 
                     size="lg" 
-                    onClick={() => console.log('Enroll', courseContent.id)}
+                    onClick={() => window.location.href = enrollUrl}
                     className="w-full bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 text-lg"
                   >
                     {pricingDisplay.buttonLabel}
