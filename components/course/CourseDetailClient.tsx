@@ -30,6 +30,7 @@ interface CourseDetailClientProps {
 }
 
 type LessonViewModel = {
+  id?: string
   title: string
   duration: string
   isPreview: boolean
@@ -145,6 +146,34 @@ export default function CourseDetailClient({ course, backHref, panelUrl: panelUr
       // If BACKEND_PANEL_URL is just a hostname without protocol, add https://
       const cleanUrl = panelUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')
       return `https://${cleanUrl}/courses/preview/${courseContent.id}`
+    }
+  }, [courseContent.id, panelUrlProp])
+
+  const getLessonPreviewUrl = useMemo(() => {
+    // Try prop first, then NEXT_PUBLIC_ env var (for client-side), then fallback
+    const panelUrl = panelUrlProp || process.env.NEXT_PUBLIC_BACKEND_PANEL_URL
+    let baseUrl: string
+    
+    if (!panelUrl) {
+      console.warn('BACKEND_PANEL_URL environment variable is not set')
+      baseUrl = 'https://panel.vod.borj.dev'
+    } else {
+      try {
+        const url = new URL(panelUrl)
+        baseUrl = `${url.protocol}//${url.host}`
+      } catch {
+        // If BACKEND_PANEL_URL is just a hostname without protocol, add https://
+        const cleanUrl = panelUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')
+        baseUrl = `https://${cleanUrl}`
+      }
+    }
+    
+    return (lessonId?: string) => {
+      if (!lessonId || lessonId.trim() === '') {
+        return `${baseUrl}/courses/preview/${courseContent.id}`
+      }
+      const encodedLessonId = encodeURIComponent(lessonId.trim())
+      return `${baseUrl}/courses/preview/${courseContent.id}?lesson=${encodedLessonId}`
     }
   }, [courseContent.id, panelUrlProp])
 
@@ -465,11 +494,26 @@ export default function CourseDetailClient({ course, backHref, panelUrl: panelUr
                       </div>
                       <div className={isAr ? 'flex items-center space-x-reverse space-x-3' : 'flex items-center space-x-3'}>
                         <span className="text-sm font-medium text-purple-600 bg-purple-50 px-3 py-1 rounded-full">{lesson.duration}</span>
-                        <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                          <svg className="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M8 5v14l11-7z"/>
-                          </svg>
-                        </div>
+                        {lesson.id && lesson.id.trim() !== '' ? (
+                          <a
+                            href={getLessonPreviewUrl(lesson.id)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center hover:bg-purple-200 transition-colors cursor-pointer"
+                            aria-label={isAr ? `تشغيل ${arabicContent.curriculum[index] ?? lesson.title ?? `الدرس ${index + 1}`}` : `Play ${lesson.title ?? `Lesson ${index + 1}`}`}
+                            data-lesson-id={lesson.id}
+                          >
+                            <svg className="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z"/>
+                            </svg>
+                          </a>
+                        ) : (
+                          <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center opacity-50 cursor-not-allowed">
+                            <svg className="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z"/>
+                            </svg>
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -489,6 +533,7 @@ function buildCourseViewModel(course: CourseDetailRecord): CourseViewModel {
   const lessons =
     course.lessons && course.lessons.length > 0
       ? course.lessons.map((lesson, index) => ({
+          id: lesson.id,
           title: lesson.titleEn || `Lesson ${index + 1}`,
           duration: formatLessonDurationLabel(lesson.durationMinutes),
           isPreview: false,

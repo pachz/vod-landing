@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
-import { getCarouselFeed } from "@/lib/server/carousel";
+import {
+  type CarouselRecord,
+  getCarouselFeed,
+} from "@/lib/server/carousel";
+import { getCourseBySlug } from "@/lib/server/course";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -71,6 +75,42 @@ function mapToLocale(
   });
 }
 
+function extractUniqueSlugs(items: CarouselRecord[]): string[] {
+  const unique = new Set<string>();
+  for (const item of items) {
+    const slug = item.slug?.trim();
+    if (slug) {
+      unique.add(slug);
+    }
+  }
+  return Array.from(unique);
+}
+
+async function cacheCourseDetails(slugs: string[]): Promise<void> {
+  await Promise.allSettled(
+    slugs.map(async (slug) => {
+      try {
+        await getCourseBySlug(slug);
+      } catch {
+        // Individual failures are already logged by getCourseBySlug.
+      }
+    })
+  );
+}
+
+function warmCourseDetailsInBackground(items: CarouselRecord[]): void {
+  const slugs = extractUniqueSlugs(items);
+  if (slugs.length === 0) {
+    return;
+  }
+
+  setTimeout(() => {
+    cacheCourseDetails(slugs).catch((error) => {
+      console.error("[carousel API] Failed to warm detail cache", error);
+    });
+  }, 0);
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const localeParam = searchParams.get("locale");
@@ -79,6 +119,7 @@ export async function GET(request: Request) {
 
   try {
     const rawItems = await getCarouselFeed();
+    warmCourseDetailsInBackground(rawItems);
     const items = mapToLocale(locale, rawItems);
     return NextResponse.json({
       locale,
