@@ -20,6 +20,7 @@ export interface Video {
   tags: string[]
   isFeatured: boolean
   isMostPopular?: boolean
+  categoryLabel?: string
 }
 
 export interface VideoCardProps {
@@ -57,14 +58,16 @@ export const VideoCard: React.FC<VideoCardProps> = ({
   const displayDescription = video.description || ''
   const displayTime = video.totalTime || ''
   const displayStudents = (video.totalStudents ?? 0)
-  const displayTag = (video.tags && video.tags[0]) || ''
+  const tagKey = (video.tags && video.tags[0]) || ''
+  const displayTag = video.categoryLabel || ''
 
   const handleCourseClick = (e: React.MouseEvent) => {
     e.preventDefault()
     if (onCourseClick) {
       onCourseClick(video.id)
     } else if (typeof window !== 'undefined') {
-      window.location.href = `/courses/${video.id}`
+      const basePath = locale ? `/${locale}` : ''
+      window.location.href = `${basePath}/course/${video.id}`
     }
   }
 
@@ -144,7 +147,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({
         {/* Category Tag */}
         <div className="mb-3">
           <span className="text-xs bg-purple-500 text-white px-3 py-1 rounded-full font-semibold">
-            {displayTag ? t(`explore.categories.${displayTag}`) : ''}
+            {displayTag || (tagKey ? t(`explore.categories.${tagKey}`) : '')}
           </span>
         </div>
 

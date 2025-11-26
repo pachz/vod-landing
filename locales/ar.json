@@ -264,6 +264,12 @@
     "viewCourse": "عرض الدورة",
     "noCoursesFound": "لا توجد نتائج.",
     "all": "الكل",
+    "loading": "جاري تحميل الدورات...",
+    "loadError": "تعذّر تحميل الدورات الآن.",
+    "retry": "إعادة المحاولة",
+    "loadMore": "تحميل المزيد",
+    "showing": "يتم عرض",
+    "of": "من",
     "categories": {
       "confidence": "الثقة",
       "career": "المهنة",

@@ -264,6 +264,12 @@
     "viewCourse": "View Course",
     "noCoursesFound": "No courses found.",
     "all": "All",
+    "loading": "Loading courses...",
+    "loadError": "Unable to load courses right now.",
+    "retry": "Try again",
+    "loadMore": "Load more",
+    "showing": "Showing",
+    "of": "of",
     "categories": {
       "confidence": "Confidence",
       "career": "Career",
