@@ -16,6 +16,23 @@ const navigationItems = [
   { nameKey: 'navbar.faq', href: '#faq' },
 ]
 
+const getPanelUrl = () => {
+  const panelUrl = process.env.NEXT_PUBLIC_BACKEND_PANEL_URL || process.env.BACKEND_PANEL_URL
+
+  if (!panelUrl || panelUrl.trim() === '') {
+    console.warn('BACKEND_PANEL_URL environment variable is not set')
+    return 'https://panel.vod.borj.dev'
+  }
+
+  try {
+    const { href } = new URL(panelUrl)
+    return href.replace(/\/$/, '')
+  } catch {
+    const cleanUrl = panelUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')
+    return `https://${cleanUrl}`
+  }
+}
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -77,6 +94,12 @@ export default function Navbar() {
       window.location.href = `${baseUrl}${href}`
     }
     setIsOpen(false) // Close mobile menu after clicking
+  }
+
+  const handleGetStartedClick = () => {
+    if (typeof window === 'undefined') return
+    window.location.href = getPanelUrl()
+    setIsOpen(false)
   }
 
   // Check if we're on a course page
@@ -145,7 +168,7 @@ export default function Navbar() {
           {/* CTA Button */}
           <div className="hidden md:block flex-shrink-0">
             <Button
-              onClick={() => scrollToSection('#home')}
+              onClick={handleGetStartedClick}
               className="bg-pink-500 hover:bg-pink-700 text-white text-sm sm:text-base"
             >
               {getNavbarText('navbar.getStarted')}
@@ -193,7 +216,7 @@ export default function Navbar() {
                 <LanguageSwitcher />
               </div>
               <Button
-                onClick={() => scrollToSection('#home')}
+                onClick={handleGetStartedClick}
                 className="w-full bg-pink-500 hover:bg-pink-700 text-white text-sm sm:text-base"
               >
                 {getNavbarText('navbar.getStarted')}

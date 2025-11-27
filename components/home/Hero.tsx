@@ -4,13 +4,28 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useTranslation } from "@/lib/useTranslation";
+
+const getPanelUrl = () => {
+  const panelUrl =
+    process.env.NEXT_PUBLIC_BACKEND_PANEL_URL || process.env.BACKEND_PANEL_URL;
+
+  if (!panelUrl || panelUrl.trim() === "") {
+    console.warn("BACKEND_PANEL_URL environment variable is not set");
+    return "https://panel.vod.borj.dev";
+  }
+
+  try {
+    const { href } = new URL(panelUrl);
+    return href.replace(/\/$/, "");
+  } catch {
+    const cleanUrl = panelUrl.replace(/^https?:\/\//, "").replace(/\/$/, "");
+    return `https://${cleanUrl}`;
+  }
+};
 
 export default function Hero() {
   const { t, locale } = useTranslation();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [email, setEmail] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -59,14 +74,9 @@ export default function Hero() {
     }
   };
 
-  const handleEmailSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      // Handle email submission here
-      console.log("Email submitted:", email);
-      setIsModalOpen(false);
-      setEmail("");
-    }
+  const handleSubscribeClick = () => {
+    if (typeof window === "undefined") return;
+    window.location.href = getPanelUrl();
   };
 
   return (
@@ -129,7 +139,7 @@ export default function Hero() {
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4 max-w-xl">
               <Button
                 size="lg"
-                onClick={() => setIsModalOpen(true)}
+                onClick={handleSubscribeClick}
                 className="bg-pink-500 hover:bg-pink-700 text-white w-full sm:w-auto"
               >
                 {t("hero.subscribeNow")}
@@ -140,7 +150,10 @@ export default function Hero() {
                 className="border-purple-700 text-purple-700 hover:bg-purple-700 hover:text-white w-full sm:w-auto "
                 asChild
               >
-                <Link className="flex items-center" href={`/${locale}/courses`}>
+                <Link
+                  className="flex w-full items-center justify-center"
+                  href={`/${locale}/courses`}
+                >
                   {t("hero.exploreAll")}
                 </Link>
               </Button>
@@ -220,42 +233,6 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Email Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-md w-full mx-4 animate-in fade-in-0 zoom-in-95 duration-200">
-            <h3 className="text-xl sm:text-2xl font-bold text-purple-900 mb-2">
-              {t("hero.stayInspired")}
-            </h3>
-            <p className="text-sm sm:text-base text-purple-700 mb-6">
-              {t("hero.getNotified")}
-            </p>
-            <form onSubmit={handleEmailSubmit} className="space-y-4">
-              <Input
-                type="email"
-                placeholder={t("hero.enterEmail")}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full text-base sm:text-sm"
-              />
-              <div className="flex flex-col sm:flex-row gap-3 sm:space-x-3 sm:gap-0">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsModalOpen(false)}
-                  className="flex-1 w-full sm:w-auto"
-                >
-                  {t("hero.cancel")}
-                </Button>
-                <Button type="submit" className="flex-1 w-full sm:w-auto">
-                  {t("hero.submitContinue")}
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </section>
   );
 }
