@@ -251,34 +251,6 @@ export default function CourseDetailClient({ course, backHref, panelUrl: panelUr
                     <Image src="/images/stripe.png" alt="Stripe" width={150} height={35} className="mb-2" />
                   </div>
                 </div>
-                <div className="pt-4 border-top border-purple-100">
-                  <div className={isAr ? 'grid grid-cols-2 gap-x-8 gap-y-4 text-right' : 'grid grid-cols-2 gap-x-8 gap-y-4'}>
-                    <div className="flex items-center text-sm text-purple-700">
-                      <svg className={isAr ? 'w-4 h-4 text-green-500 ml-3 flex-shrink-0' : 'w-4 h-4 text-green-500 mr-3 flex-shrink-0'} fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                      {isAr ? 'ضمان استرداد الأموال لمدة 30 يوماً' : '30-day money-back guarantee'}
-                    </div>
-                    <div className="flex items-center text-sm text-purple-700">
-                      <svg className={isAr ? 'w-4 h-4 text-green-500 ml-3 flex-shrink-0' : 'w-4 h-4 text-green-500 mr-3 flex-shrink-0'} fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                      {isAr ? 'وصول مدى الحياة لهذه الدورة' : 'Lifetime access to this course'}
-                    </div>
-                    <div className="flex items-center text-sm text-purple-700">
-                      <svg className={isAr ? 'w-4 h-4 text-green-500 ml-3 flex-shrink-0' : 'w-4 h-4 text-green-500 mr-3 flex-shrink-0'} fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                      {isAr ? 'الوصول على الهاتف والكمبيوتر' : 'Access on mobile & desktop'}
-                    </div>
-                    <div className="flex items-center text-sm text-purple-700">
-                      <svg className={isAr ? 'w-4 h-4 text-green-500 ml-3 flex-shrink-0' : 'w-4 h-4 text-green-500 mr-3 flex-shrink-0'} fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                      {isAr ? 'شهادة إتمام' : 'Certificate of completion'}
-                    </div>
-                  </div>
-                </div>
               </div>
 
               <div className="mt-4">
@@ -733,7 +705,7 @@ function getPricingDisplay(pricing: CoursePricingViewModel, locale: 'en' | 'ar')
       : 'Get lifetime access to this course'
   const intervalLabel = locale === 'ar' ? 'دفعة واحدة' : 'One-time payment'
   const buttonPrefix = locale === 'ar' ? 'اشتراك الآن' : 'Enroll Now'
-  const buttonLabel = `${buttonPrefix} - ${amountLabel}`
+  const buttonLabel = buttonPrefix
 
   return {
     title,
