@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import { useTranslation } from "@/lib/useTranslation";
 import { cn } from "@/lib/utils";
+import { getPanelUrl } from "@/lib/panelUrl";
 
 export default function RehamDivaShowcase() {
   const { t, locale } = useTranslation();
@@ -39,6 +40,11 @@ export default function RehamDivaShowcase() {
     if (!v) return;
     if (v.paused) v.play();
     else v.pause();
+  };
+
+  const handleStartJourneyClick = () => {
+    if (typeof window === "undefined") return;
+    window.location.href = getPanelUrl();
   };
   return (
     <div className="w-full">
@@ -157,6 +163,7 @@ export default function RehamDivaShowcase() {
                   <Button
                     size="lg"
                     className="bg-pink-500 hover:bg-pink-700 text-white px-2 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-medium shadow-lg hover:shadow-xl transition-all duration-300"
+                    onClick={handleStartJourneyClick}
                   >
                     {t("instructors.startJourneyBtn")}
                   </Button>

@@ -5,24 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/useTranslation";
-
-const getPanelUrl = () => {
-  const panelUrl =
-    process.env.NEXT_PUBLIC_BACKEND_PANEL_URL || process.env.BACKEND_PANEL_URL;
-
-  if (!panelUrl || panelUrl.trim() === "") {
-    console.warn("BACKEND_PANEL_URL environment variable is not set");
-    return "https://panel.vod.borj.dev";
-  }
-
-  try {
-    const { href } = new URL(panelUrl);
-    return href.replace(/\/$/, "");
-  } catch {
-    const cleanUrl = panelUrl.replace(/^https?:\/\//, "").replace(/\/$/, "");
-    return `https://${cleanUrl}`;
-  }
-};
+import { getPanelUrl } from "@/lib/panelUrl";
 
 export default function Hero() {
   const { t, locale } = useTranslation();
@@ -74,10 +57,7 @@ export default function Hero() {
     }
   };
 
-  const handleSubscribeClick = () => {
-    if (typeof window === "undefined") return;
-    window.location.href = getPanelUrl();
-  };
+  const panelUrl = getPanelUrl();
 
   return (
     <section
@@ -139,10 +119,15 @@ export default function Hero() {
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4 max-w-xl">
               <Button
                 size="lg"
-                onClick={handleSubscribeClick}
                 className="bg-pink-500 hover:bg-pink-700 text-white w-full sm:w-auto"
+                asChild
               >
-                {t("hero.subscribeNow")}
+                <Link
+                  className="flex w-full items-center justify-center"
+                  href={`/${locale}/courses`}
+                >
+                  {t("hero.exploreAll")}
+                </Link>
               </Button>
               <Button
                 variant="outline"
@@ -152,9 +137,9 @@ export default function Hero() {
               >
                 <Link
                   className="flex w-full items-center justify-center"
-                  href={`/${locale}/courses`}
+                  href={panelUrl}
                 >
-                  {t("hero.exploreAll")}
+                  {t("hero.subscribeNow")}
                 </Link>
               </Button>
             </div>

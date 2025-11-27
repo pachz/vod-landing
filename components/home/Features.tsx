@@ -1,8 +1,10 @@
 'use client'
 
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { useTranslation } from '@/lib/useTranslation'
+import { getPanelUrl } from '@/lib/panelUrl'
 import { 
   Play, 
   Headphones, 
@@ -13,7 +15,7 @@ import {
 } from 'lucide-react'
 
 export default function Features() {
-  const { t } = useTranslation()
+  const { t, locale } = useTranslation()
 
   const features = [
     {
@@ -113,11 +115,15 @@ export default function Features() {
           viewport={{ once: true }}
           className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center"
         >
-          <Button size="lg" className="bg-pink-500 hover:bg-pink-700 text-white w-full sm:w-auto">
-            {t('features.cta.primary')}
+          <Button size="lg" className="bg-pink-500 hover:bg-pink-700 text-white w-full sm:w-auto" asChild>
+            <Link className="flex w-full items-center justify-center" href={`/${locale}/courses`}>
+              {t('features.cta.primary')}
+            </Link>
           </Button>
-          <Button size="lg" variant="outline" className="border-purple-800 text-purple-800 hover:bg-purple-800 hover:text-white w-full sm:w-auto">
-            {t('features.cta.secondary')}
+          <Button size="lg" variant="outline" className="border-purple-800 text-purple-800 hover:bg-purple-800 hover:text-white w-full sm:w-auto" asChild>
+            <Link className="flex w-full items-center justify-center" href={getPanelUrl()}>
+              {t('features.cta.secondary')}
+            </Link>
           </Button>
         </motion.div>
       </div>
