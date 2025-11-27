@@ -228,7 +228,7 @@ export default function CourseDetailClient({ course, backHref, panelUrl: panelUr
               </div>
 
               <div className="bg-white border border-purple-200 rounded-xl p-6 shadow-sm">
-                <div className="mb-6">
+                <div className="mb-0">
                   <div className="flex items-center justify-between mb-4">
                     <div>
                       <h3 className="text-xl font-semibold text-purple-900">{pricingDisplay.title}</h3>
