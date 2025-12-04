@@ -65,7 +65,7 @@ export default function Hero() {
       className="relative flex items-center justify-center px-4 pb-12 sm:pb-16 pt-24 sm:pt-28 lg:pt-32 min-h-[calc(100vh-4rem)] overflow-hidden"
     >
       {/* Premium Background */}
-      <div className="absolute inset-0 bg-[#F9FAFB]">
+      <div className="absolute inset-0 bg-white">
         {/* Subtle purple gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-purple-800/6 via-transparent to-transparent"></div>
 
@@ -217,7 +217,6 @@ export default function Hero() {
           </div>
         </div>
       </div>
-
     </section>
   );
 }

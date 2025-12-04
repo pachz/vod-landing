@@ -208,45 +208,45 @@ export default function CourseDetailClient({ course, backHref, panelUrl: panelUr
                 )}
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 py-6 border-t border-b border-purple-100">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 py-4 sm:py-6 border-t border-b border-purple-100">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-900">
+                  <div className="text-xl sm:text-2xl font-bold text-purple-900">
                     {isAr ? arabicContent.metaData.totalDuration : courseContent.metaData.totalDuration}
                   </div>
-                  <div className="text-sm text-purple-600">{isAr ? 'المدة الإجمالية' : 'Total Duration'}</div>
+                  <div className="text-xs sm:text-sm text-purple-600">{isAr ? 'المدة الإجمالية' : 'Total Duration'}</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-900">{courseContent.metaData.lessonsCount}</div>
-                  <div className="text-sm text-purple-600">{isAr ? 'الدروس' : 'Lessons'}</div>
+                  <div className="text-xl sm:text-2xl font-bold text-purple-900">{courseContent.metaData.lessonsCount}</div>
+                  <div className="text-xs sm:text-sm text-purple-600">{isAr ? 'الدروس' : 'Lessons'}</div>
                 </div>
                 <div className="text-center sm:col-span-1 col-span-2">
-                  <div className="text-2xl font-bold text-purple-900">
+                  <div className="text-xl sm:text-2xl font-bold text-purple-900">
                     {isAr ? arabicContent.metaData.viewsCount : courseContent.metaData.viewsCount}
                   </div>
-                  <div className="text-sm text-purple-600">{isAr ? 'المشاهدات' : 'Views'}</div>
+                  <div className="text-xs sm:text-sm text-purple-600">{isAr ? 'المشاهدات' : 'Views'}</div>
                 </div>
               </div>
 
-              <div className="bg-white border border-purple-200 rounded-xl p-6 shadow-sm">
+              <div className="bg-white border border-purple-200 rounded-xl p-4 sm:p-6 shadow-sm">
                 <div className="mb-0">
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between mb-3 sm:mb-4">
                     <div>
-                      <h3 className="text-xl font-semibold text-purple-900">{pricingDisplay.title}</h3>
-                      <p className="text-sm text-purple-600">{pricingDisplay.description}</p>
+                      <h3 className="text-lg sm:text-xl font-semibold text-purple-900">{pricingDisplay.title}</h3>
+                      <p className="text-xs sm:text-sm text-purple-600">{pricingDisplay.description}</p>
                     </div>
                     <div className="text-right">
-                      <div className="text-3xl font-bold text-purple-900">{pricingDisplay.amountLabel}</div>
-                      <div className="text-sm text-purple-600">{pricingDisplay.intervalLabel}</div>
+                      <div className="text-2xl sm:text-3xl font-bold text-purple-900">{pricingDisplay.amountLabel}</div>
+                      <div className="text-xs sm:text-sm text-purple-600">{pricingDisplay.intervalLabel}</div>
                     </div>
                   </div>
                   <Button 
                     size="lg" 
                     onClick={() => window.location.href = enrollUrl}
-                    className="w-full bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 text-lg"
+                    className="w-full bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2.5 text-base sm:text-lg"
                   >
                     {pricingDisplay.buttonLabel}
                   </Button>
-                  <div className="flex flex-col items-center mt-3 text-sm text-purple-600">
+                  <div className="flex flex-col items-center mt-3 text-xs sm:text-sm text-purple-600">
                     <span style={{ color: '#665BFF' }}>{isAr ? 'دفع آمن' : 'Secure payment'}</span>
                     <Image src="/images/stripe.png" alt="Stripe" width={150} height={35} className="mb-2" />
                   </div>
@@ -911,4 +911,3 @@ function MarkdownContent({ content, isAr, variant }: MarkdownContentProps) {
     </div>
   )
 }
-

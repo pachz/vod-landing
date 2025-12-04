@@ -1,54 +1,47 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import { motion } from 'framer-motion'
-import { Button } from '@/components/ui/button'
-import { useTranslation } from '@/lib/useTranslation'
-import { getPanelUrl } from '@/lib/panelUrl'
-import { 
-  Play, 
-  Headphones, 
-  Download, 
-  Monitor, 
-  Star, 
-  Users 
-} from 'lucide-react'
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/lib/useTranslation";
+import { getPanelUrl } from "@/lib/panelUrl";
+import { Play, Headphones, Download, Monitor, Star, Users } from "lucide-react";
 
 export default function Features() {
-  const { t, locale } = useTranslation()
+  const { t, locale } = useTranslation();
 
   const features = [
     {
       icon: Play,
-      title: t('features.cards.courses.title'),
-      description: t('features.cards.courses.description'),
+      title: t("features.cards.courses.title"),
+      description: t("features.cards.courses.description"),
     },
     {
       icon: Headphones,
-      title: t('features.cards.audio.title'),
-      description: t('features.cards.audio.description'),
+      title: t("features.cards.audio.title"),
+      description: t("features.cards.audio.description"),
     },
     {
       icon: Download,
-      title: t('features.cards.offline.title'),
-      description: t('features.cards.offline.description'),
+      title: t("features.cards.offline.title"),
+      description: t("features.cards.offline.description"),
     },
     {
       icon: Monitor,
-      title: t('features.cards.devices.title'),
-      description: t('features.cards.devices.description'),
+      title: t("features.cards.devices.title"),
+      description: t("features.cards.devices.description"),
     },
     {
       icon: Star,
-      title: t('features.cards.content.title'),
-      description: t('features.cards.content.description'),
+      title: t("features.cards.content.title"),
+      description: t("features.cards.content.description"),
     },
     {
       icon: Users,
-      title: t('features.cards.community.title'),
-      description: t('features.cards.community.description'),
+      title: t("features.cards.community.title"),
+      description: t("features.cards.community.description"),
     },
-  ]
+  ];
   return (
     <section id="features" className="py-12 sm:py-16 lg:py-20 px-4 bg-white">
       <div className="max-w-4xl mx-auto text-center">
@@ -60,10 +53,10 @@ export default function Features() {
           className="mb-12 sm:mb-16"
         >
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-purple-800 mb-4 sm:mb-6">
-            {t('features.title')}
+            {t("features.title")}
           </h2>
           <p className="text-lg sm:text-xl text-text-secondary">
-            {t('features.subtitle')}
+            {t("features.subtitle")}
           </p>
         </motion.div>
 
@@ -115,18 +108,33 @@ export default function Features() {
           viewport={{ once: true }}
           className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center"
         >
-          <Button size="lg" className="bg-pink-500 hover:bg-pink-700 text-white w-full sm:w-auto" asChild>
-            <Link className="flex w-full items-center justify-center" href={`/${locale}/courses`}>
-              {t('features.cta.primary')}
+          <Button
+            size="lg"
+            className="bg-pink-500 hover:bg-pink-700 text-white w-full sm:w-auto"
+            asChild
+          >
+            <Link
+              className="flex w-full items-center justify-center"
+              href={`/${locale}/courses`}
+            >
+              {t("features.cta.primary")}
             </Link>
           </Button>
-          <Button size="lg" variant="outline" className="border-purple-800 text-purple-800 hover:bg-purple-800 hover:text-white w-full sm:w-auto" asChild>
-            <Link className="flex w-full items-center justify-center" href={getPanelUrl()}>
-              {t('features.cta.secondary')}
+          <Button
+            size="lg"
+            variant="outline"
+            className="border-purple-800 text-purple-800 hover:bg-purple-800 hover:text-white w-full sm:w-auto"
+            asChild
+          >
+            <Link
+              className="flex w-full items-center justify-center"
+              href={getPanelUrl()}
+            >
+              {t("features.cta.secondary")}
             </Link>
           </Button>
         </motion.div>
       </div>
     </section>
-  )
+  );
 }

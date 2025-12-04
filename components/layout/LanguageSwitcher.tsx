@@ -20,10 +20,11 @@ const languages = [
 
 export default function LanguageSwitcher() {
   const [isOpen, setIsOpen] = useState(false)
-  const { locale, setLocale } = useDirection()
+  const { locale, setLocale, direction } = useDirection()
   const router = useRouter()
   const pathname = usePathname()
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const isRTL = direction === 'rtl'
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -88,7 +89,11 @@ export default function LanguageSwitcher() {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute top-12 right-0 bg-white rounded-lg shadow-lg border border-gray-200 py-2 min-w-[140px] z-50">
+        <div
+          className={`absolute top-12 bg-white rounded-lg shadow-lg border border-gray-200 py-2 min-w-[160px] z-50 ${
+            isRTL ? 'left-0 right-auto origin-top-left' : 'right-0 left-auto origin-top-right'
+          }`}
+        >
           {languages.map((language) => (
             <button
               key={language.code}
