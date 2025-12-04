@@ -24,14 +24,14 @@ const config: Config = {
           300: '#A569BD',
         },
         neutral: {
-          bg: '#F5F7FA',
+          bg: '#F8FAFD',
         },
         text: {
           primary: '#111827',
           secondary: '#4B5563',
         },
         dark: {
-          bg: '#0F1115',
+          bg: '#07080A',
         }
       },
       fontFamily: {

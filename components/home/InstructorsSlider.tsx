@@ -91,12 +91,13 @@ export default function RehamDivaShowcase() {
             aria-label={
               isPlaying ? "Pause background video" : "Play background video"
             }
-            aria-pressed={!isPlaying}
-            className={cn(
-              "absolute bottom-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/30 text-white backdrop-blur-md ring-1 ring-white/40 hover:bg-white/40 transition z-20",
-              isRTL ? "left-4" : "right-4"
-            )}
-          >
+          aria-pressed={!isPlaying}
+          className={cn(
+            "absolute inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/30 text-white backdrop-blur-md ring-1 ring-white/40 hover:bg-white/40 transition z-20",
+            "top-3 sm:top-auto sm:bottom-4",
+            isRTL ? "right-4" : "right-4"
+          )}
+        >
             {isPlaying ? (
               <svg
                 width="18"

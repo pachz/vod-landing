@@ -1,14 +1,19 @@
-'use client'
+"use client";
 
-import { motion } from 'framer-motion'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import { useTranslation } from '@/lib/useTranslation'
+import { motion } from "framer-motion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { useTranslation } from "@/lib/useTranslation";
 
 export default function FAQ() {
-  const { t } = useTranslation()
-  
+  const { t } = useTranslation();
+
   return (
-    <section id="faq" className="py-12 sm:py-16 lg:py-20 px-4 bg-neutral-bg">
+    <section id="faq" className="py-12 sm:py-16 lg:py-20 px-4 bg-white">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -18,7 +23,7 @@ export default function FAQ() {
           className="text-center mb-12 sm:mb-16"
         >
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-purple-800 mb-4 sm:mb-6">
-            {t('faq.title')}
+            {t("faq.title")}
           </h2>
         </motion.div>
 
@@ -28,8 +33,12 @@ export default function FAQ() {
           transition={{ duration: 0.6, delay: 0.2 }}
           viewport={{ once: true }}
         >
-          <Accordion type="single" collapsible className="space-y-3 sm:space-y-4">
-            {t('faq.items').map((faq: any, index: number) => (
+          <Accordion
+            type="single"
+            collapsible
+            className="space-y-3 sm:space-y-4"
+          >
+            {t("faq.items").map((faq: any, index: number) => (
               <motion.div
                 key={faq.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -37,8 +46,8 @@ export default function FAQ() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <AccordionItem 
-                  value={faq.id} 
+                <AccordionItem
+                  value={faq.id}
                   className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-md"
                 >
                   <AccordionTrigger className="px-4 sm:px-6 py-3 sm:py-4 text-left font-semibold text-purple-800 hover:text-pink-500 transition-all duration-300 text-sm sm:text-base group">
@@ -62,5 +71,5 @@ export default function FAQ() {
         </motion.div>
       </div>
     </section>
-  )
+  );
 }
