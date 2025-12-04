@@ -227,6 +227,95 @@ export default function CourseDetailClient({
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-purple-900 leading-tight mb-4">
                   {displayTitle}
                 </h1>
+                <div className="space-y-6">
+                  <div className="relative aspect-video bg-black rounded-xl overflow-hidden border border-purple-100">
+                    {previewEmbedUrl ? (
+                      <iframe
+                        src={previewEmbedUrl}
+                        title={isAr ? "فيديو المعاينة" : "Course preview"}
+                        allow="autoplay; fullscreen; picture-in-picture"
+                        allowFullScreen
+                        loading="lazy"
+                        className="absolute inset-0 h-full w-full"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-200 to-pink-200">
+                        <div className="text-center px-6">
+                          <div className="w-16 h-16 bg-white/80 rounded-full flex items-center justify-center mb-4 mx-auto">
+                            <svg
+                              className="w-8 h-8 text-purple-600"
+                              fill="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M8 5v14l11-7z" />
+                            </svg>
+                          </div>
+                          <p className="text-purple-700 font-medium">
+                            {isAr ? "معاينة الدورة" : "Course Preview"}
+                          </p>
+                          <p className="text-sm text-purple-600">
+                            {isAr
+                              ? "فيديو المعاينة غير متوفر حالياً"
+                              : "Preview video unavailable"}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="bg-white border border-purple-100 rounded-xl p-6">
+                    <div
+                      className={
+                        isAr
+                          ? "flex items-center space-x-reverse space-x-4 mb-4"
+                          : "flex items-center space-x-4 mb-4"
+                      }
+                    >
+                      <Image
+                        src={courseContent.coach.image}
+                        alt={courseContent.coach.name}
+                        width={60}
+                        height={60}
+                        className="rounded-full object-cover"
+                      />
+                      <div>
+                        <h4 className="font-semibold text-purple-900">
+                          {coachDisplayName}
+                        </h4>
+                        <p className="text-sm text-purple-600">{coachTitle}</p>
+                        <div
+                          className={
+                            isAr
+                              ? "flex items-center space-x-reverse space-x-2 mt-1"
+                              : "flex items-center space-x-2 mt-1"
+                          }
+                        >
+                          <div className="flex text-yellow-400">
+                            {[...Array(5)].map((_, i) => (
+                              <svg
+                                key={i}
+                                className="w-4 h-4 fill-current"
+                                viewBox="0 0 24 24"
+                              >
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                              </svg>
+                            ))}
+                          </div>
+                          <span className="text-sm text-purple-600">
+                            {courseContent.coach.rating.toFixed(1)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <p className="text-sm text-purple-700">{coachBio}</p>
+                    {coachLastUpdated && (
+                      <p className="text-xs text-purple-500 mt-3">
+                        {isAr ? "آخر تحديث للمدربة:" : "Coach profile updated:"}{" "}
+                        {coachLastUpdated}
+                      </p>
+                    )}
+                  </div>
+                </div>
                 {shortDescriptionContent && (
                   <MarkdownContent
                     content={shortDescriptionContent}
@@ -393,96 +482,6 @@ export default function CourseDetailClient({
                       </div>
                     )}
                   </div>
-                )}
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <div className="relative aspect-video bg-black rounded-xl overflow-hidden border border-purple-100">
-                {previewEmbedUrl ? (
-                  <iframe
-                    src={previewEmbedUrl}
-                    title={isAr ? "فيديو المعاينة" : "Course preview"}
-                    allow="autoplay; fullscreen; picture-in-picture"
-                    allowFullScreen
-                    loading="lazy"
-                    className="absolute inset-0 h-full w-full"
-                  />
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-200 to-pink-200">
-                    <div className="text-center px-6">
-                      <div className="w-16 h-16 bg-white/80 rounded-full flex items-center justify-center mb-4 mx-auto">
-                        <svg
-                          className="w-8 h-8 text-purple-600"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M8 5v14l11-7z" />
-                        </svg>
-                      </div>
-                      <p className="text-purple-700 font-medium">
-                        {isAr ? "معاينة الدورة" : "Course Preview"}
-                      </p>
-                      <p className="text-sm text-purple-600">
-                        {isAr
-                          ? "فيديو المعاينة غير متوفر حالياً"
-                          : "Preview video unavailable"}
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="bg-white border border-purple-100 rounded-xl p-6">
-                <div
-                  className={
-                    isAr
-                      ? "flex items-center space-x-reverse space-x-4 mb-4"
-                      : "flex items-center space-x-4 mb-4"
-                  }
-                >
-                  <Image
-                    src={courseContent.coach.image}
-                    alt={courseContent.coach.name}
-                    width={60}
-                    height={60}
-                    className="rounded-full object-cover"
-                  />
-                  <div>
-                    <h4 className="font-semibold text-purple-900">
-                      {coachDisplayName}
-                    </h4>
-                    <p className="text-sm text-purple-600">{coachTitle}</p>
-                    <div
-                      className={
-                        isAr
-                          ? "flex items-center space-x-reverse space-x-2 mt-1"
-                          : "flex items-center space-x-2 mt-1"
-                      }
-                    >
-                      <div className="flex text-yellow-400">
-                        {[...Array(5)].map((_, i) => (
-                          <svg
-                            key={i}
-                            className="w-4 h-4 fill-current"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                          </svg>
-                        ))}
-                      </div>
-                      <span className="text-sm text-purple-600">
-                        {courseContent.coach.rating.toFixed(1)}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <p className="text-sm text-purple-700">{coachBio}</p>
-                {coachLastUpdated && (
-                  <p className="text-xs text-purple-500 mt-3">
-                    {isAr ? "آخر تحديث للمدربة:" : "Coach profile updated:"}{" "}
-                    {coachLastUpdated}
-                  </p>
                 )}
               </div>
             </div>
@@ -935,7 +934,7 @@ function getPricingDisplay(
       ? "احصلي على وصول مدى الحياة لهذه الدورة"
       : "Get lifetime access to this course";
   const intervalLabel = locale === "ar" ? "دفعة واحدة" : "One-time payment";
-  const buttonPrefix = locale === "ar" ? "اشتراك الآن" : "Enroll Now";
+  const buttonPrefix = locale === "ar" ? "اشتراك الآن" : "Start Now";
   const buttonLabel = buttonPrefix;
 
   return {
