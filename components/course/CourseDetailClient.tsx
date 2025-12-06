@@ -936,12 +936,26 @@ function getPricingDisplay(
   const amountLabel =
     formatPricingAmount(pricing.priceAmount, pricing.priceCurrency, locale) ??
     (locale === "ar" ? "٨٫٥ د.ك" : "8.5 KWD");
-  const title = locale === "ar" ? "شراء لمرة واحدة" : "One-time Purchase";
-  const description =
-    locale === "ar"
-      ? "احصلي على وصول مدى الحياة لهذه الدورة"
-      : "Get lifetime access to this course";
-  const intervalLabel = locale === "ar" ? "دفعة واحدة" : "One-time payment";
+  
+  const isMonthly = pricing.priceInterval === "month";
+  const isOneTime = !pricing.priceInterval || pricing.priceInterval === "one_time";
+  
+  const title = isMonthly
+    ? (locale === "ar" ? "اشتراك شهري" : "Monthly Subscription")
+    : (locale === "ar" ? "شراء لمرة واحدة" : "One-time Purchase");
+  
+  const description = isMonthly
+    ? (locale === "ar"
+        ? "اشتركي شهرياً واحصلي على وصول كامل لهذه الدورة"
+        : "Subscribe monthly and get full access to this course")
+    : (locale === "ar"
+        ? "احصلي على وصول مدى الحياة لهذه الدورة"
+        : "Get lifetime access to this course");
+  
+  const intervalLabel = isMonthly
+    ? (locale === "ar" ? "شهرياً" : "Per month")
+    : (locale === "ar" ? "دفعة واحدة" : "One-time payment");
+  
   const buttonPrefix = locale === "ar" ? "اشتراك الآن" : "Start Now";
   const buttonLabel = buttonPrefix;
 
