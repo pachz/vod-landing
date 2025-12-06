@@ -148,22 +148,27 @@ export default function CourseDetailClient({
   );
   const enrollUrl = useMemo(() => {
     // Try prop first, then NEXT_PUBLIC_ env var (for client-side), then fallback
-    const panelUrl = panelUrlProp || process.env.NEXT_PUBLIC_BACKEND_PANEL_URL;
+    const panelUrl = panelUrlProp || process.env.NEXT_PUBLIC_BACKEND_PANEL_URL
+    let baseUrl: string
+    
     if (!panelUrl) {
-      console.warn("BACKEND_PANEL_URL environment variable is not set");
-      return `https://panel.vod.borj.dev/courses/preview/${courseContent.id}`;
+      console.warn('BACKEND_PANEL_URL environment variable is not set')
+      baseUrl = 'https://panel.vod.borj.dev'
+    } else {
+      try {
+        const url = new URL(panelUrl)
+        baseUrl = `${url.protocol}//${url.host}`
+      } catch {
+        // If BACKEND_PANEL_URL is just a hostname without protocol, add https://
+        const cleanUrl = panelUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')
+        baseUrl = `https://${cleanUrl}`
+      }
     }
-
-    try {
-      const url = new URL(panelUrl);
-      const baseUrl = `${url.protocol}//${url.host}`;
-      return `${baseUrl}/courses/preview/${courseContent.id}`;
-    } catch {
-      // If BACKEND_PANEL_URL is just a hostname without protocol, add https://
-      const cleanUrl = panelUrl.replace(/^https?:\/\//, "").replace(/\/$/, "");
-      return `https://${cleanUrl}/courses/preview/${courseContent.id}`;
-    }
-  }, [courseContent.id, panelUrlProp]);
+    
+    const url = `${baseUrl}/courses/preview/${courseContent.id}`
+    // Append ?lang=ar if Arabic
+    return isAr ? `${url}?lang=ar` : url
+  }, [courseContent.id, panelUrlProp, isAr])
 
   const getLessonPreviewUrl = useMemo(() => {
     // Try prop first, then NEXT_PUBLIC_ env var (for client-side), then fallback
@@ -187,13 +192,16 @@ export default function CourseDetailClient({
     }
 
     return (lessonId?: string) => {
-      if (!lessonId || lessonId.trim() === "") {
-        return `${baseUrl}/courses/preview/${courseContent.id}`;
+      const langParam = isAr ? '?lang=ar' : ''
+      if (!lessonId || lessonId.trim() === '') {
+        const url = `${baseUrl}/courses/preview/${courseContent.id}`
+        return isAr ? `${url}?lang=ar` : url
       }
-      const encodedLessonId = encodeURIComponent(lessonId.trim());
-      return `${baseUrl}/courses/preview/${courseContent.id}?lesson=${encodedLessonId}`;
-    };
-  }, [courseContent.id, panelUrlProp]);
+      const encodedLessonId = encodeURIComponent(lessonId.trim())
+      const url = `${baseUrl}/courses/preview/${courseContent.id}?lesson=${encodedLessonId}`
+      return isAr ? `${url}&lang=ar` : url
+    }
+  }, [courseContent.id, panelUrlProp, isAr])
 
   return (
     <div className="min-h-screen bg-neutral-bg" dir={isAr ? "rtl" : "ltr"}>

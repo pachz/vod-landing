@@ -128,7 +128,7 @@ export default function Features() {
           >
             <Link
               className="flex w-full items-center justify-center"
-              href={getPanelUrl()}
+              href={getPanelUrl(locale)}
             >
               {t("features.cta.secondary")}
             </Link>
