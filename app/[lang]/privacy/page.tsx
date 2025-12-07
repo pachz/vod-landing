@@ -14,7 +14,7 @@ export default function PrivacyPage() {
             <section>
               <h2 className="text-2xl font-semibold mb-4">1. Introduction</h2>
               <p className="text-text-secondary leading-relaxed">
-                Reham Diva ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains 
+                Reham Diva (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is committed to protecting your privacy. This Privacy Policy explains 
                 how we collect, use, disclose, and safeguard your information when you visit our website and use our services.
               </p>
             </section>
@@ -94,7 +94,7 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold mb-4">8. Children's Privacy</h2>
+              <h2 className="text-2xl font-semibold mb-4">8. Children&apos;s Privacy</h2>
               <p className="text-text-secondary leading-relaxed">
                 Our services are not intended for individuals under the age of 18. We do not knowingly collect personal 
                 information from children. If you are a parent or guardian and believe your child has provided us with 
@@ -106,7 +106,7 @@ export default function PrivacyPage() {
               <h2 className="text-2xl font-semibold mb-4">9. Changes to This Privacy Policy</h2>
               <p className="text-text-secondary leading-relaxed">
                 We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new 
-                Privacy Policy on this page and updating the "Last updated" date. You are advised to review this Privacy 
+                Privacy Policy on this page and updating the &quot;Last updated&quot; date. You are advised to review this Privacy 
                 Policy periodically for any changes.
               </p>
             </section>
