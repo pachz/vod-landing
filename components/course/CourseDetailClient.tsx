@@ -148,27 +148,29 @@ export default function CourseDetailClient({
   );
   const enrollUrl = useMemo(() => {
     // Try prop first, then NEXT_PUBLIC_ env var (for client-side), then fallback
-    const panelUrl = panelUrlProp || process.env.NEXT_PUBLIC_BACKEND_PANEL_URL
-    let baseUrl: string
-    
+    const panelUrl = panelUrlProp || process.env.NEXT_PUBLIC_BACKEND_PANEL_URL;
+    let baseUrl: string;
+
     if (!panelUrl) {
-      console.warn('BACKEND_PANEL_URL environment variable is not set')
-      baseUrl = 'https://panel.vod.borj.dev'
+      console.warn("BACKEND_PANEL_URL environment variable is not set");
+      baseUrl = "https://panel.vod.borj.dev";
     } else {
       try {
-        const url = new URL(panelUrl)
-        baseUrl = `${url.protocol}//${url.host}`
+        const url = new URL(panelUrl);
+        baseUrl = `${url.protocol}//${url.host}`;
       } catch {
         // If BACKEND_PANEL_URL is just a hostname without protocol, add https://
-        const cleanUrl = panelUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')
-        baseUrl = `https://${cleanUrl}`
+        const cleanUrl = panelUrl
+          .replace(/^https?:\/\//, "")
+          .replace(/\/$/, "");
+        baseUrl = `https://${cleanUrl}`;
       }
     }
-    
-    const url = `${baseUrl}/courses/preview/${courseContent.id}`
+
+    const url = `${baseUrl}/courses/preview/${courseContent.id}`;
     // Append ?lang=ar if Arabic
-    return isAr ? `${url}?lang=ar` : url
-  }, [courseContent.id, panelUrlProp, isAr])
+    return isAr ? `${url}?lang=ar` : url;
+  }, [courseContent.id, panelUrlProp, isAr]);
 
   const getLessonPreviewUrl = useMemo(() => {
     // Try prop first, then NEXT_PUBLIC_ env var (for client-side), then fallback
@@ -203,6 +205,43 @@ export default function CourseDetailClient({
     }
   }, [courseContent.id, panelUrlProp, isAr])
 
+  const previewSection = (
+    <div className="relative aspect-video bg-black rounded-xl overflow-hidden border border-purple-100">
+      {previewEmbedUrl ? (
+        <iframe
+          src={previewEmbedUrl}
+          title={isAr ? "فيديو المعاينة" : "Course preview"}
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowFullScreen
+          loading="lazy"
+          className="absolute inset-0 h-full w-full"
+        />
+      ) : (
+        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-200 to-pink-200">
+          <div className="text-center px-6">
+            <div className="w-16 h-16 bg-white/80 rounded-full flex items-center justify-center mb-4 mx-auto">
+              <svg
+                className="w-8 h-8 text-purple-600"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </div>
+            <p className="text-purple-700 font-medium">
+              {isAr ? "معاينة الدورة" : "Course Preview"}
+            </p>
+            <p className="text-sm text-purple-600">
+              {isAr
+                ? "فيديو المعاينة غير متوفر حالياً"
+                : "Preview video unavailable"}
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-neutral-bg" dir={isAr ? "rtl" : "ltr"}>
       <section className="bg-white pt-16">
@@ -235,103 +274,18 @@ export default function CourseDetailClient({
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-purple-900 leading-tight mb-4">
                   {displayTitle}
                 </h1>
-                <div className="space-y-6">
-                  <div className="relative aspect-video bg-black rounded-xl overflow-hidden border border-purple-100">
-                    {previewEmbedUrl ? (
-                      <iframe
-                        src={previewEmbedUrl}
-                        title={isAr ? "فيديو المعاينة" : "Course preview"}
-                        allow="autoplay; fullscreen; picture-in-picture"
-                        allowFullScreen
-                        loading="lazy"
-                        className="absolute inset-0 h-full w-full"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-200 to-pink-200">
-                        <div className="text-center px-6">
-                          <div className="w-16 h-16 bg-white/80 rounded-full flex items-center justify-center mb-4 mx-auto">
-                            <svg
-                              className="w-8 h-8 text-purple-600"
-                              fill="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path d="M8 5v14l11-7z" />
-                            </svg>
-                          </div>
-                          <p className="text-purple-700 font-medium">
-                            {isAr ? "معاينة الدورة" : "Course Preview"}
-                          </p>
-                          <p className="text-sm text-purple-600">
-                            {isAr
-                              ? "فيديو المعاينة غير متوفر حالياً"
-                              : "Preview video unavailable"}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="bg-white border border-purple-100 rounded-xl p-6">
-                    <div
-                      className={
-                        isAr
-                          ? "flex items-center space-x-reverse space-x-4 mb-4"
-                          : "flex items-center space-x-4 mb-4"
-                      }
-                    >
-                      <Image
-                        src={courseContent.coach.image}
-                        alt={courseContent.coach.name}
-                        width={60}
-                        height={60}
-                        className="rounded-full object-cover"
-                      />
-                      <div>
-                        <h4 className="font-semibold text-purple-900">
-                          {coachDisplayName}
-                        </h4>
-                        <p className="text-sm text-purple-600">{coachTitle}</p>
-                        <div
-                          className={
-                            isAr
-                              ? "flex items-center space-x-reverse space-x-2 mt-1"
-                              : "flex items-center space-x-2 mt-1"
-                          }
-                        >
-                          <div className="flex text-yellow-400">
-                            {[...Array(5)].map((_, i) => (
-                              <svg
-                                key={i}
-                                className="w-4 h-4 fill-current"
-                                viewBox="0 0 24 24"
-                              >
-                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                              </svg>
-                            ))}
-                          </div>
-                          <span className="text-sm text-purple-600">
-                            {courseContent.coach.rating.toFixed(1)}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <p className="text-sm text-purple-700">{coachBio}</p>
-                    {coachLastUpdated && (
-                      <p className="text-xs text-purple-500 mt-3">
-                        {isAr ? "آخر تحديث للمدربة:" : "Coach profile updated:"}{" "}
-                        {coachLastUpdated}
-                      </p>
-                    )}
-                  </div>
-                </div>
-                {shortDescriptionContent && (
-                  <MarkdownContent
-                    content={shortDescriptionContent}
-                    isAr={isAr}
-                    variant="hero"
-                  />
-                )}
               </div>
+
+              {/* Mobile: show preview right after title, before content */}
+              <div className="lg:hidden">{previewSection}</div>
+
+              {shortDescriptionContent && (
+                <MarkdownContent
+                  content={shortDescriptionContent}
+                  isAr={isAr}
+                  variant="hero"
+                />
+              )}
 
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 py-4 sm:py-6 border-t border-b border-purple-100">
                 <div className="text-center">
@@ -490,6 +444,64 @@ export default function CourseDetailClient({
                       </div>
                     )}
                   </div>
+                )}
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              {/* Desktop: preview in right column */}
+              <div className="hidden lg:block">{previewSection}</div>
+
+              <div className="bg-white border border-purple-100 rounded-xl p-6">
+                <div
+                  className={
+                    isAr
+                      ? "flex items-center space-x-reverse space-x-4 mb-4"
+                      : "flex items-center space-x-4 mb-4"
+                  }
+                >
+                  <Image
+                    src={courseContent.coach.image}
+                    alt={courseContent.coach.name}
+                    width={60}
+                    height={60}
+                    className="rounded-full object-cover"
+                  />
+                  <div>
+                    <h4 className="font-semibold text-purple-900">
+                      {coachDisplayName}
+                    </h4>
+                    <p className="text-sm text-purple-600">{coachTitle}</p>
+                    <div
+                      className={
+                        isAr
+                          ? "flex items-center space-x-reverse space-x-2 mt-1"
+                          : "flex items-center space-x-2 mt-1"
+                      }
+                    >
+                      <div className="flex text-yellow-400">
+                        {[...Array(5)].map((_, i) => (
+                          <svg
+                            key={i}
+                            className="w-4 h-4 fill-current"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                          </svg>
+                        ))}
+                      </div>
+                      <span className="text-sm text-purple-600">
+                        {courseContent.coach.rating.toFixed(1)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-sm text-purple-700">{coachBio}</p>
+                {coachLastUpdated && (
+                  <p className="text-xs text-purple-500 mt-3">
+                    {isAr ? "آخر تحديث للمدربة:" : "Coach profile updated:"}{" "}
+                    {coachLastUpdated}
+                  </p>
                 )}
               </div>
             </div>
@@ -936,27 +948,35 @@ function getPricingDisplay(
   const amountLabel =
     formatPricingAmount(pricing.priceAmount, pricing.priceCurrency, locale) ??
     (locale === "ar" ? "٨٫٥ د.ك" : "8.5 KWD");
-  
+
   const isMonthly = pricing.priceInterval === "month";
-  const isOneTime = !pricing.priceInterval || pricing.priceInterval === "one_time";
-  
+  const isOneTime =
+    !pricing.priceInterval || pricing.priceInterval === "one_time";
+
   const title = isMonthly
-    ? (locale === "ar" ? "اشتراك شهري" : "Monthly Subscription")
-    : (locale === "ar" ? "شراء لمرة واحدة" : "One-time Purchase");
-  
+    ? locale === "ar"
+      ? "اشتراك شهري"
+      : "Monthly Subscription"
+    : locale === "ar"
+    ? "شراء لمرة واحدة"
+    : "One-time Purchase";
+
   const description = isMonthly
-    ? (locale === "ar"
-        ? "اشتركي شهرياً واحصلي على وصول كامل لهذه الدورة"
-        : "Subscribe monthly and get full access to this course")
-    : (locale === "ar"
-        ? "احصلي على وصول مدى الحياة لهذه الدورة"
-        : "Get lifetime access to this course");
-  
+    ? locale === "ar"
+      ? "اشتركي شهرياً واحصلي على وصول كامل لهذه الدورة"
+      : "Subscribe monthly and get full access to this course"
+    : locale === "ar"
+    ? "احصلي على وصول مدى الحياة لهذه الدورة"
+    : "Get lifetime access to this course";
+
   const intervalLabel = isMonthly
-    ? (locale === "ar" ? "شهرياً" : "Per month")
-    : (locale === "ar" ? "دفعة واحدة" : "One-time payment");
-  
-  const buttonPrefix = locale === "ar" ? "اشتراك الآن" : "Start Now";
+    ? locale === "ar"
+      ? "شهرياً"
+      : "Per month"
+    : locale === "ar"
+    ? "دفعة واحدة"
+    : "One-time payment";
+  const buttonPrefix = locale === "ar" ? "اشتراك الآن" : "Enroll Now";
   const buttonLabel = buttonPrefix;
 
   return {
