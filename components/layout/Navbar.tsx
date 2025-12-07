@@ -84,10 +84,10 @@ export default function Navbar() {
   };
 
   const handleGetStartedClick = () => {
-    if (typeof window === "undefined") return;
-    window.location.href = getPanelUrl();
-    setIsOpen(false);
-  };
+    if (typeof window === 'undefined') return
+    window.location.href = getPanelUrl(locale)
+    setIsOpen(false)
+  }
 
   // Check if we're on a course page
   const isCoursePage =

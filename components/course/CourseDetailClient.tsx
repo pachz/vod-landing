@@ -194,13 +194,16 @@ export default function CourseDetailClient({
     }
 
     return (lessonId?: string) => {
-      if (!lessonId || lessonId.trim() === "") {
-        return `${baseUrl}/courses/preview/${courseContent.id}`;
+      const langParam = isAr ? '?lang=ar' : ''
+      if (!lessonId || lessonId.trim() === '') {
+        const url = `${baseUrl}/courses/preview/${courseContent.id}`
+        return isAr ? `${url}?lang=ar` : url
       }
-      const encodedLessonId = encodeURIComponent(lessonId.trim());
-      return `${baseUrl}/courses/preview/${courseContent.id}?lesson=${encodedLessonId}`;
-    };
-  }, [courseContent.id, panelUrlProp]);
+      const encodedLessonId = encodeURIComponent(lessonId.trim())
+      const url = `${baseUrl}/courses/preview/${courseContent.id}?lesson=${encodedLessonId}`
+      return isAr ? `${url}&lang=ar` : url
+    }
+  }, [courseContent.id, panelUrlProp, isAr])
 
   const previewSection = (
     <div className="relative aspect-video bg-black rounded-xl overflow-hidden border border-purple-100">

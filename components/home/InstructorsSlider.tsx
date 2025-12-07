@@ -44,7 +44,7 @@ export default function RehamDivaShowcase() {
 
   const handleStartJourneyClick = () => {
     if (typeof window === "undefined") return;
-    window.location.href = getPanelUrl();
+    window.location.href = getPanelUrl(locale);
   };
   return (
     <div className="w-full">

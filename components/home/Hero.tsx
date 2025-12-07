@@ -57,7 +57,7 @@ export default function Hero() {
     }
   };
 
-  const panelUrl = getPanelUrl();
+  const panelUrl = getPanelUrl(locale);
 
   return (
     <section
