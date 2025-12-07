@@ -194,16 +194,16 @@ export default function CourseDetailClient({
     }
 
     return (lessonId?: string) => {
-      const langParam = isAr ? '?lang=ar' : ''
-      if (!lessonId || lessonId.trim() === '') {
-        const url = `${baseUrl}/courses/preview/${courseContent.id}`
-        return isAr ? `${url}?lang=ar` : url
+      const langParam = isAr ? "?lang=ar" : "";
+      if (!lessonId || lessonId.trim() === "") {
+        const url = `${baseUrl}/courses/preview/${courseContent.id}`;
+        return isAr ? `${url}?lang=ar` : url;
       }
-      const encodedLessonId = encodeURIComponent(lessonId.trim())
-      const url = `${baseUrl}/courses/preview/${courseContent.id}?lesson=${encodedLessonId}`
-      return isAr ? `${url}&lang=ar` : url
-    }
-  }, [courseContent.id, panelUrlProp, isAr])
+      const encodedLessonId = encodeURIComponent(lessonId.trim());
+      const url = `${baseUrl}/courses/preview/${courseContent.id}?lesson=${encodedLessonId}`;
+      return isAr ? `${url}&lang=ar` : url;
+    };
+  }, [courseContent.id, panelUrlProp, isAr]);
 
   const previewSection = (
     <div className="relative aspect-video bg-black rounded-xl overflow-hidden border border-purple-100">
@@ -976,7 +976,7 @@ function getPricingDisplay(
     : locale === "ar"
     ? "دفعة واحدة"
     : "One-time payment";
-  const buttonPrefix = locale === "ar" ? "اشتراك الآن" : "Enroll Now";
+  const buttonPrefix = locale === "ar" ? "ابدا الآن" : "Start Now";
   const buttonLabel = buttonPrefix;
 
   return {
