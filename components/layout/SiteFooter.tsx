@@ -24,7 +24,7 @@ const socialLinks = [
 export default function SiteFooter() {
   const [email, setEmail] = useState('')
   const [isSubscribed, setIsSubscribed] = useState(false)
-  const { direction } = useDirection()
+  const { direction, locale } = useDirection()
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault()
@@ -105,8 +105,8 @@ export default function SiteFooter() {
             <h4 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">{t('footer.sections.support')}</h4>
             <ul className="space-y-2">
               <li><a href="#" className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">{t('footer.support.faq')}</a></li>
-              <li><a href="#" className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">{t('footer.support.terms')}</a></li>
-              <li><a href="#" className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">{t('footer.support.privacy')}</a></li>
+              <li><a href={`/${locale}/terms`} className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">{t('footer.support.terms')}</a></li>
+              <li><a href={`/${locale}/privacy`} className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">{t('footer.support.privacy')}</a></li>
             </ul>
           </motion.div>
 
