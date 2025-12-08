@@ -888,7 +888,7 @@ function formatTotalDuration(minutes: number, locale: "en" | "ar"): string {
   if (hours === 0) {
     return locale === "ar"
       ? `${remainingMinutes} دقيقة`
-      : `${remainingMinutes} minutes`;
+      : `${remainingMinutes}m`;
   }
 
   if (locale === "ar") {
@@ -898,8 +898,8 @@ function formatTotalDuration(minutes: number, locale: "en" | "ar"): string {
   }
 
   return remainingMinutes > 0
-    ? `${hours} hours ${remainingMinutes} minutes`
-    : `${hours} hours`;
+    ? `${hours}h ${remainingMinutes}m`
+    : `${hours}h`;
 }
 
 function formatLessonDurationLabel(minutes?: number): string {
