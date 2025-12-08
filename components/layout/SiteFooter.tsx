@@ -24,8 +24,43 @@ const socialLinks = [
   { icon: MessageCircle, href: 'https://wa.me/+96550406406', label: 'WhatsApp' },
 ]
 
+const footerNavigationItems = [
+  { labelKey: 'footer.navigation.home', href: '#home' },
+  { labelKey: 'footer.navigation.courses', href: '/courses', isPage: true }
+]
+
+const footerSupportItems = [
+  { labelKey: 'footer.support.faq', href: '#faq' },
+  { labelKey: 'footer.support.terms', href: '/terms', isPage: true },
+  { labelKey: 'footer.support.privacy', href: '/privacy', isPage: true }
+]
+
 export default function SiteFooter() {
   const { direction, locale } = useDirection()
+
+  const handleFooterNavigation = (item: { href: string; isPage?: boolean }) => {
+    if (typeof window === 'undefined') return
+
+    const basePath = locale === 'ar' ? '/ar' : locale === 'en' ? '/en' : ''
+    const isLandingPage = ['/', '/ar', '/en'].includes(window.location.pathname)
+
+    if (item.isPage) {
+      const normalizedPath = item.href.startsWith('/') ? item.href : `/${item.href}`
+      const base = basePath || ''
+      window.location.href = `${base}${normalizedPath}`
+      return
+    }
+
+    if (isLandingPage) {
+      const element = document.querySelector(item.href)
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    } else {
+      const base = basePath || '/'
+      window.location.href = `${base}${item.href}`
+    }
+  }
 
   return (
     <footer className="bg-purple-800 text-white">
@@ -81,18 +116,21 @@ export default function SiteFooter() {
           >
             <h4 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">{t('footer.sections.navigation')}</h4>
             <ul className="space-y-2">
+              {footerNavigationItems.map((item) => (
+                <li key={item.labelKey}>
+                  <button
+                    onClick={() => handleFooterNavigation(item)}
+                    className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors"
+                  >
+                    {t(item.labelKey)}
+                  </button>
+                </li>
+              ))}
               <li>
-                <Link href={`/${locale}`} className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">
-                  {t('footer.navigation.home')}
-                </Link>
-              </li>
-              <li>
-                <Link href={`/${locale}/courses`} className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">
-                  {t('footer.navigation.courses')}
-                </Link>
-              </li>
-              <li>
-                <a href={getPanelUrl(locale)} className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">
+                <a
+                  href={getPanelUrl(locale)}
+                  className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors"
+                >
                   {t('footer.navigation.signIn')}
                 </a>
               </li>
@@ -109,9 +147,16 @@ export default function SiteFooter() {
           >
             <h4 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">{t('footer.sections.support')}</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">{t('footer.support.faq')}</a></li>
-              <li><a href={`/${locale}/terms`} className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">{t('footer.support.terms')}</a></li>
-              <li><a href={`/${locale}/privacy`} className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">{t('footer.support.privacy')}</a></li>
+              {footerSupportItems.map((item) => (
+                <li key={item.labelKey}>
+                  <button
+                    onClick={() => handleFooterNavigation(item)}
+                    className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors"
+                  >
+                    {t(item.labelKey)}
+                  </button>
+                </li>
+              ))}
             </ul>
           </motion.div>
 
