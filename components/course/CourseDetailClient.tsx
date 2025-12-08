@@ -976,7 +976,7 @@ function getPricingDisplay(
     : locale === "ar"
     ? "دفعة واحدة"
     : "One-time payment";
-  const buttonPrefix = locale === "ar" ? "اشتراك الآن" : "Enroll Now";
+  const buttonPrefix = locale === "ar" ? "ابدأ الآن" : "Start Now";
   const buttonLabel = buttonPrefix;
 
   return {
