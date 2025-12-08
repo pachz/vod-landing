@@ -7,17 +7,21 @@ import { t } from '@/lib/i18n'
 import { useDirection } from '@/providers/DirectionProvider'
 import { getPanelUrl } from '@/lib/panelUrl'
 import { 
+  Facebook,
   Instagram, 
+  Twitter,
   Youtube, 
-  Linkedin, 
-  Music 
+  Send,
+  MessageCircle
 } from 'lucide-react'
 
 const socialLinks = [
-  { icon: Instagram, href: '#', label: 'Instagram' },
-  { icon: Youtube, href: '#', label: 'YouTube' },
-  { icon: Linkedin, href: '#', label: 'LinkedIn' },
-  { icon: Music, href: '#', label: 'TikTok' },
+  { icon: Facebook, href: 'https://www.facebook.com/rehamalrashidipage', label: 'Facebook' },
+  { icon: Instagram, href: 'https://www.instagram.com/rehamhouse', label: 'Instagram' },
+  { icon: Twitter, href: 'https://x.com/rehamalrashidi', label: 'X (Twitter)' },
+  { icon: Youtube, href: 'https://www.youtube.com/user/rehamalrashidi', label: 'YouTube' },
+  { icon: Send, href: 'https://t.me/rehamalrashidi', label: 'Telegram' },
+  { icon: MessageCircle, href: 'https://wa.me/+96550406406', label: 'WhatsApp' },
 ]
 
 export default function SiteFooter() {
@@ -52,6 +56,8 @@ export default function SiteFooter() {
                     <motion.a
                       key={social.label}
                       href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="w-9 h-9 sm:w-10 sm:h-10 bg-pink-500/10 hover:bg-pink-500/20 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.95 }}
