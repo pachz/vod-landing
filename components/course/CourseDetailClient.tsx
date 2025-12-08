@@ -287,9 +287,9 @@ export default function CourseDetailClient({
                 />
               )}
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 py-4 sm:py-6 border-t border-b border-purple-100">
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 py-4 sm:py-6 border-t border-b border-purple-100">
                 <div className="text-center">
-                  <div className="text-xl sm:text-2xl font-bold text-purple-900">
+                  <div className="text-lg sm:text-2xl font-bold text-purple-900">
                     {isAr
                       ? arabicContent.metaData.totalDuration
                       : courseContent.metaData.totalDuration}
@@ -299,15 +299,15 @@ export default function CourseDetailClient({
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-xl sm:text-2xl font-bold text-purple-900">
+                  <div className="text-lg sm:text-2xl font-bold text-purple-900">
                     {courseContent.metaData.lessonsCount}
                   </div>
                   <div className="text-xs sm:text-sm text-purple-600">
                     {isAr ? "الدروس" : "Lessons"}
                   </div>
                 </div>
-                <div className="text-center sm:col-span-1 col-span-2">
-                  <div className="text-xl sm:text-2xl font-bold text-purple-900">
+                <div className="text-center">
+                  <div className="text-lg sm:text-2xl font-bold text-purple-900">
                     {isAr
                       ? arabicContent.metaData.viewsCount
                       : courseContent.metaData.viewsCount}
@@ -911,7 +911,7 @@ function formatLessonDurationLabel(minutes?: number): string {
 }
 
 function getViewsLabel(locale: "en" | "ar"): string {
-  return locale === "ar" ? "أقل من ١٠٠" : "less than 100";
+  return locale === "ar" ? "أقل من ١٠٠" : "<100";
 }
 
 type PricingDisplay = {
@@ -1055,7 +1055,7 @@ function createMockCourseDetails(): CourseViewModel {
     metaData: {
       totalDuration: "2 hours 30 minutes",
       lessonsCount: 12,
-      viewsCount: "less than 100",
+      viewsCount: "<100",
       lastUpdated: "December 2024",
     },
     curriculum: [
