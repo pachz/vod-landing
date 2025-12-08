@@ -1,12 +1,11 @@
 'use client'
 
-import { useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { t } from '@/lib/i18n'
 import { useDirection } from '@/providers/DirectionProvider'
+import { getPanelUrl } from '@/lib/panelUrl'
 import { 
   Instagram, 
   Youtube, 
@@ -22,24 +21,12 @@ const socialLinks = [
 ]
 
 export default function SiteFooter() {
-  const [email, setEmail] = useState('')
-  const [isSubscribed, setIsSubscribed] = useState(false)
   const { direction, locale } = useDirection()
-
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (email) {
-      setIsSubscribed(true)
-      setEmail('')
-      // Reset success message after 3 seconds
-      setTimeout(() => setIsSubscribed(false), 3000)
-    }
-  }
 
   return (
     <footer className="bg-purple-800 text-white">
       <div className="max-w-7xl mx-auto px-4 py-12 sm:py-16">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-6 sm:gap-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {/* Brand & Mission */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -88,9 +75,21 @@ export default function SiteFooter() {
           >
             <h4 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">{t('footer.sections.navigation')}</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">{t('footer.navigation.courses')}</a></li>
-              <li><a href="#" className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">{t('footer.navigation.about')}</a></li>
-              <li><a href="#" className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">{t('footer.navigation.contact')}</a></li>
+              <li>
+                <Link href={`/${locale}`} className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">
+                  {t('footer.navigation.home')}
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${locale}/courses`} className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">
+                  {t('footer.navigation.courses')}
+                </Link>
+              </li>
+              <li>
+                <a href={getPanelUrl(locale)} className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors">
+                  {t('footer.navigation.signIn')}
+                </a>
+              </li>
             </ul>
           </motion.div>
 
@@ -110,44 +109,13 @@ export default function SiteFooter() {
             </ul>
           </motion.div>
 
-          {/* Newsletter */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            viewport={{ once: true }}
-            className="sm:col-span-2 lg:col-span-1"
-          >
-            <h4 className={`text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-center ${direction === 'rtl' ? 'sm:text-right' : 'sm:text-left'}`}>{t('footer.sections.newsletter')}</h4>
-            <p className={`text-gray-300 text-xs sm:text-sm mb-3 sm:mb-4 text-center ${direction === 'rtl' ? 'sm:text-right' : 'sm:text-left'}`}>
-              {t('footer.newsletter.title')}
-            </p>
-            <form onSubmit={handleSubscribe} className="space-y-3">
-              <Input
-                type="email"
-                placeholder={t('footer.newsletter.placeholder')}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className={`bg-white/10 border-gray-600 text-white placeholder:text-gray-400 focus:border-pink-500 text-sm sm:text-base ${direction === 'rtl' ? 'text-right' : 'text-left'}`}
-                required
-              />
-              <Button 
-                type="submit" 
-                size="sm" 
-                className="w-full bg-pink-500 hover:bg-pink-700 text-white text-sm sm:text-base"
-                disabled={isSubscribed}
-              >
-                {isSubscribed ? t('footer.newsletter.subscribed') : t('footer.newsletter.subscribe')}
-              </Button>
-            </form>
-          </motion.div>
         </div>
 
         {/* Bottom Line */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
           viewport={{ once: true }}
           className="border-t border-gray-700 mt-8 sm:mt-12 pt-6 sm:pt-8 text-center text-gray-400"
         >

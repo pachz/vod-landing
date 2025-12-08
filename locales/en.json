@@ -223,10 +223,9 @@
   "footer": {
     "mission": "Empowering women through motivational video courses and stories.",
     "navigation": {
+      "home": "Home",
       "courses": "Courses",
-      "about": "About",
-      "blog": "Blog",
-      "contact": "Contact"
+      "signIn": "Sign In"
     },
     "support": {
       "faq": "FAQ",
