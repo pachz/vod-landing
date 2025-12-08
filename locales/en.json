@@ -250,8 +250,7 @@
   },
   "navbar": {
     "home": "Home",
-    "features": "Features",
-    "instructors": "Instructors",
+    "courses": "Courses",
     "testimonials": "Testimonials",
     "faq": "FAQ",
     "getStarted": "Get Started",

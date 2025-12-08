@@ -11,8 +11,7 @@ import { getPanelUrl } from "@/lib/panelUrl";
 
 const navigationItems = [
   { nameKey: "navbar.home", href: "#home" },
-  { nameKey: "navbar.features", href: "#features" },
-  { nameKey: "navbar.instructors", href: "#instructor" },
+  { nameKey: "navbar.courses", href: "/courses", isPage: true },
   { nameKey: "navbar.testimonials", href: "#testimonials" },
   { nameKey: "navbar.faq", href: "#faq" },
 ];
@@ -33,8 +32,7 @@ export default function Navbar() {
     if (locale === "ar" || isArabicRoute) {
       const arTranslations: Record<string, string> = {
         "navbar.home": "الرئيسية",
-        "navbar.features": "الميزات",
-        "navbar.instructors": "المدربات",
+        "navbar.courses": "الدورات",
         "navbar.testimonials": "الشهادات",
         "navbar.faq": "الأسئلة الشائعة",
         "navbar.getStarted": "ابدئي الآن",
@@ -57,10 +55,18 @@ export default function Navbar() {
   }, []);
 
   // Smooth scroll to section or redirect to landing page
-  const scrollToSection = (href: string) => {
+  const handleNavigation = (item: { href: string; isPage?: boolean }) => {
     if (typeof window === "undefined") return;
 
-    // Check if we're on the landing page
+    // If it's a page link, navigate directly
+    if (item.isPage) {
+      const baseUrl = locale === "ar" ? "/ar" : locale === "en" ? "/en" : "/";
+      window.location.href = `${baseUrl}${item.href}`;
+      setIsOpen(false);
+      return;
+    }
+
+    // Otherwise, handle section scrolling
     const isLandingPage =
       window.location.pathname === "/" ||
       window.location.pathname === "/ar" ||
@@ -68,7 +74,7 @@ export default function Navbar() {
 
     if (isLandingPage) {
       // On landing page, scroll to section
-      const element = document.querySelector(href);
+      const element = document.querySelector(item.href);
       if (element) {
         element.scrollIntoView({
           behavior: "smooth",
@@ -78,7 +84,7 @@ export default function Navbar() {
     } else {
       // Not on landing page, redirect to landing page with section
       const baseUrl = locale === "ar" ? "/ar" : locale === "en" ? "/en" : "/";
-      window.location.href = `${baseUrl}${href}`;
+      window.location.href = `${baseUrl}${item.href}`;
     }
     setIsOpen(false); // Close mobile menu after clicking
   };
@@ -133,7 +139,7 @@ export default function Navbar() {
             {/* Logo */}
             <div className="flex-shrink-0">
               <button
-                onClick={() => scrollToSection("#home")}
+                onClick={() => handleNavigation({ href: "#home" })}
                 className="flex items-center transition-opacity duration-200 hover:opacity-80"
               >
                 <Image
@@ -164,7 +170,7 @@ export default function Navbar() {
                 {navigationItems.map((item) => (
                   <button
                     key={item.nameKey}
-                    onClick={() => scrollToSection(item.href)}
+                    onClick={() => handleNavigation(item)}
                     className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:text-pink-500 ${
                       scrolled
                         ? "text-purple-800 hover:bg-pink-100"
@@ -200,7 +206,7 @@ export default function Navbar() {
             {navigationItems.map((item) => (
               <button
                 key={item.nameKey}
-                onClick={() => scrollToSection(item.href)}
+                onClick={() => handleNavigation(item)}
                 className={`block px-3 py-2 rounded-md text-sm sm:text-base font-medium text-purple-800 hover:text-pink-500 hover:bg-pink-100 transition-colors duration-200 w-full ${
                   direction === "rtl" ? "text-right" : "text-left"
                 }`}
