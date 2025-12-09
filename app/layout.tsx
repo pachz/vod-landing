@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, Almarai } from 'next/font/google'
 import './globals.css'
 import { cookies } from 'next/headers'
+import { AnalyticsProvider } from '@/providers/PostHogProvider'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const almarai = Almarai({ 
@@ -27,7 +28,9 @@ export default function RootLayout({
   return (
     <html lang={locale} dir={dir}>
       <body className={`${inter.variable} ${almarai.variable} font-sans antialiased`}>
-        {children}
+        <AnalyticsProvider>
+          {children}
+        </AnalyticsProvider>
       </body>
     </html>
   )

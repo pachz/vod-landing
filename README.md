@@ -68,11 +68,13 @@ npm run lint
 
 ### Environment Variables
 
-Create an `.env.local` file with the backend base URL and landing secret:
+Create an `.env.local` file with the backend base URL, landing secret, and (optionally) PostHog analytics keys:
 
 ```
 BACKEND_API_URL=https://api.example.com
 LANDING_SECRET=super-secret-key
+NEXT_PUBLIC_POSTHOG_KEY=phc_xxxxx        # optional, required for analytics
+NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com # optional override
 ```
 
 Carousel responses must include `id`, `slug`, `titleEn`, `titleAr`, `descriptionEn`, `descriptionAr`, `categoryNameEn`, `categoryNameAr`, `durationMinutes`, and `coverImageUrl`. Results are cached in memory for five minutes per server instance, and every request from the landing page sends the `LANDING_SECRET` header for authentication.
@@ -105,7 +107,8 @@ Carousel responses must include `id`, `slug`, `titleEn`, `titleAr`, `description
 ├── locales/
 │   └── en.json              # English translations
 ├── providers/
-│   └── DirectionProvider.tsx # RTL/LTR direction provider
+│   ├── DirectionProvider.tsx # RTL/LTR direction provider
+│   └── PostHogProvider.tsx   # Analytics bootstrap + pageviews
 └── public/
     └── images/              # Placeholder images
 ```
