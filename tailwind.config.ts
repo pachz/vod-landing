@@ -32,6 +32,9 @@ const config: Config = {
         },
         dark: {
           bg: '#07080A',
+        },
+        fuschia: {
+          DEFAULT: '#F3006D',
         }
       },
       fontFamily: {

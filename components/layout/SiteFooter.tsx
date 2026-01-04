@@ -63,7 +63,7 @@ export default function SiteFooter() {
   }
 
   return (
-    <footer className="bg-purple-800 text-white">
+    <footer className="bg-fuschia text-white">
       <div className="max-w-7xl mx-auto px-4 py-12 sm:py-16">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {/* Brand & Mission */}
@@ -76,7 +76,7 @@ export default function SiteFooter() {
           >
             <div className={`mb-6 sm:mb-8 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 ${direction === 'rtl' ? 'sm:space-x-reverse sm:space-x-6' : 'sm:space-x-6'}`}>
               <Image 
-                src="/images/RehamDivaLogoWithText.png" 
+                src="/images/RehamDivaLogoWithText-White.png" 
                 alt="Reham Diva" 
                 width={200}
                 height={112}
@@ -84,8 +84,8 @@ export default function SiteFooter() {
                 sizes="(max-width: 640px) 80px, (max-width: 1024px) 96px, 112px"
               />
               <div className={`flex flex-col text-center ${direction === 'rtl' ? 'sm:text-right' : 'sm:text-left'} px-4 sm:px-0`}>
-                <h4 className="text-base sm:text-lg font-semibold text-pink-500 mb-2 sm:mb-3">{t('footer.branding.tagline')}</h4>
-                <p className="text-xs sm:text-sm text-gray-300 mb-4 sm:mb-6 leading-relaxed">{t('footer.mission')}</p>
+                <h4 className="text-base sm:text-lg font-semibold text-white mb-2 sm:mb-3">{t('footer.branding.tagline')}</h4>
+                <p className="text-xs sm:text-sm text-white/90 mb-4 sm:mb-6 leading-relaxed">{t('footer.mission')}</p>
                 <div className={`flex justify-center ${direction === 'rtl' ? 'sm:justify-end' : 'sm:justify-start'} gap-3 sm:gap-4`}>
                   {(direction === 'rtl' ? [...socialLinks].reverse() : socialLinks).map((social, index) => (
                     <motion.a
@@ -93,12 +93,12 @@ export default function SiteFooter() {
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-9 h-9 sm:w-10 sm:h-10 bg-pink-500/10 hover:bg-pink-500/20 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
+                      className="w-9 h-9 sm:w-10 sm:h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.95 }}
                       aria-label={social.label}
                     >
-                      <social.icon className="w-4 h-4 sm:w-5 sm:h-5 text-pink-500" />
+                      <social.icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                     </motion.a>
                   ))}
                 </div>
@@ -120,7 +120,7 @@ export default function SiteFooter() {
                 <li key={item.labelKey}>
                   <button
                     onClick={() => handleFooterNavigation(item)}
-                    className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors"
+                    className="text-sm sm:text-base text-white/90 hover:text-white transition-colors"
                   >
                     {t(item.labelKey)}
                   </button>
@@ -129,7 +129,7 @@ export default function SiteFooter() {
               <li>
                 <a
                   href={getPanelUrl(locale)}
-                  className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors"
+                  className="text-sm sm:text-base text-white/90 hover:text-white transition-colors"
                 >
                   {t('footer.navigation.signIn')}
                 </a>
@@ -151,7 +151,7 @@ export default function SiteFooter() {
                 <li key={item.labelKey}>
                   <button
                     onClick={() => handleFooterNavigation(item)}
-                    className="text-sm sm:text-base text-gray-300 hover:text-pink-500 transition-colors"
+                    className="text-sm sm:text-base text-white/90 hover:text-white transition-colors"
                   >
                     {t(item.labelKey)}
                   </button>
@@ -168,7 +168,7 @@ export default function SiteFooter() {
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
           viewport={{ once: true }}
-          className="border-t border-gray-700 mt-8 sm:mt-12 pt-6 sm:pt-8 text-center text-gray-400"
+          className="border-t border-white/20 mt-8 sm:mt-12 pt-6 sm:pt-8 text-center text-white/80"
         >
           <p className="text-xs sm:text-sm">{t('footer.copyright')}</p>
         </motion.div>
