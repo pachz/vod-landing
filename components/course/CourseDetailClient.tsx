@@ -955,19 +955,19 @@ function getPricingDisplay(
 
   const title = isMonthly
     ? locale === "ar"
-      ? "اشتراك شهري"
-      : "Monthly Subscription"
+      ? "اشتراك شهري - جميع الدورات"
+      : "Monthly Subscription - All Courses"
     : locale === "ar"
-    ? "شراء لمرة واحدة"
-    : "One-time Purchase";
+    ? "شراء لمرة واحدة - جميع الدورات"
+    : "One-time Purchase - All Courses";
 
   const description = isMonthly
     ? locale === "ar"
-      ? "اشتركي شهرياً واحصلي على وصول كامل لهذه الدورة"
-      : "Subscribe monthly and get full access to this course"
+      ? "اشتركي شهرياً واحصلي على وصول كامل لجميع الدورات"
+      : "Subscribe monthly and get full access to all courses"
     : locale === "ar"
-    ? "احصلي على وصول مدى الحياة لهذه الدورة"
-    : "Get lifetime access to this course";
+    ? "احصلي على وصول مدى الحياة لجميع الدورات"
+    : "Get lifetime access to all courses";
 
   const intervalLabel = isMonthly
     ? locale === "ar"
@@ -976,7 +976,7 @@ function getPricingDisplay(
     : locale === "ar"
     ? "دفعة واحدة"
     : "One-time payment";
-  const buttonPrefix = locale === "ar" ? "ابدأ الآن" : "Start Now";
+  const buttonPrefix = locale === "ar" ? "اشتراك في جميع الدورات" : "Subscribe to All Courses";
   const buttonLabel = buttonPrefix;
 
   return {

@@ -285,12 +285,12 @@ export default function LangCourseDetailPage({
                   <div className="flex items-center justify-between mb-4">
                     <div>
                       <h3 className="text-xl font-semibold text-purple-900">
-                        {isAr ? "شراء لمرة واحدة" : "One-time Purchase"}
+                        {isAr ? "شراء لمرة واحدة - جميع الدورات" : "One-time Purchase - All Courses"}
                       </h3>
                       <p className="text-sm text-purple-600">
                         {isAr
-                          ? "احصلي على وصول مدى الحياة لهذه الدورة"
-                          : "Get lifetime access to this course"}
+                          ? "احصلي على وصول مدى الحياة لجميع الدورات"
+                          : "Get lifetime access to all courses"}
                       </p>
                     </div>
                     <div className="text-right">
@@ -307,7 +307,7 @@ export default function LangCourseDetailPage({
                     onClick={() => console.log("Enroll", course.id)}
                     className="w-full bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 text-lg"
                   >
-                    {isAr ? "اشتراك الآن - 8.5 د.ك" : "Start Now - 8.5 KWD"}
+                    {isAr ? "اشتراك في جميع الدورات - 8.5 د.ك" : "Subscribe to All Courses - 8.5 KWD"}
                   </Button>
                   <div className="flex flex-col items-center mt-3 text-sm text-purple-600">
                     <span style={{ color: "#665BFF" }}>
@@ -367,8 +367,8 @@ export default function LangCourseDetailPage({
                         />
                       </svg>
                       {isAr
-                        ? "وصول مدى الحياة لهذه الدورة"
-                        : "Lifetime access to this course"}
+                        ? "وصول مدى الحياة لجميع الدورات"
+                        : "Lifetime access to all courses"}
                     </div>
                     <div className="flex items-center text-sm text-purple-700">
                       <svg
