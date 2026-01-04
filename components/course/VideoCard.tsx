@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { Card } from '@/components/ui/card'
-import { cn } from '@/lib/utils'
+import { cn, markdownToPlainText } from '@/lib/utils'
 import { useDirection } from '@/providers/DirectionProvider'
 import { useTranslation } from '@/lib/useTranslation'
  
@@ -63,7 +63,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 
   // Use provided values directly; only minimal fallbacks
   const displayTitle = video.title || ''
-  const displayDescription = video.description || ''
+  const displayDescription = markdownToPlainText(video.description || '')
   const displayTime = video.totalTime || ''
   const tagKey = (video.tags && video.tags[0]) || ''
   const displayTag = video.categoryLabel || ''
