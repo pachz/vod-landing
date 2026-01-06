@@ -21,11 +21,11 @@ export default function Features() {
       title: t("features.cards.audio.title"),
       description: t("features.cards.audio.description"),
     },
-    {
-      icon: Download,
-      title: t("features.cards.offline.title"),
-      description: t("features.cards.offline.description"),
-    },
+    // {
+    //   icon: Download,
+    //   title: t("features.cards.offline.title"),
+    //   description: t("features.cards.offline.description"),
+    // },
     {
       icon: Monitor,
       title: t("features.cards.devices.title"),
