@@ -83,7 +83,7 @@ export default function CoursesHero({
         {/* Category Chips - positioned at bottom */}
         <div className="mt-auto pb-4">
           <div className="flex flex-wrap justify-center gap-2 px-2">
-            {['All', ...categories.slice(0, 4)].map((category) => {
+            {['All', ...categories].map((category) => {
               const getCategoryDisplayName = (cat: string) => {
                 if (cat === 'All') {
                   return translatedCategories?.all || (isArabic ? 'الكل' : 'All')
