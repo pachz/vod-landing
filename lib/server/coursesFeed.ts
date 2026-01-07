@@ -5,7 +5,7 @@ import { getOrSetCacheValue } from "@/lib/server/memoryCache";
 
 const COURSES_ENDPOINT = "/courses";
 const COURSES_CACHE_KEY = "courses-feed";
-const COURSES_CACHE_TTL_MS = 10 * 1000;
+const COURSES_CACHE_TTL_MS = 30 * 1000;
 
 interface ExternalCoursesApiResponse {
   courses?: ExternalCourseListItem[];
