@@ -163,7 +163,7 @@ export default function RehamDivaShowcase() {
                 >
                   <Button
                     size="lg"
-                    className="bg-pink-500 hover:bg-pink-700 text-white px-2 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-medium shadow-lg hover:shadow-xl transition-all duration-300"
+                    className="bg-[rgb(236,72,153)] hover:bg-[rgb(190,24,93)] text-white px-2 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-medium shadow-lg hover:shadow-xl transition-all duration-300"
                     onClick={handleStartJourneyClick}
                   >
                     {t("instructors.startJourneyBtn")}

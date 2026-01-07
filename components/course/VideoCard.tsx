@@ -204,8 +204,8 @@ export const VideoCard: React.FC<VideoCardProps> = ({
             onClick={handleCourseClick}
             onKeyDown={handleKeyDown}
             className={cn(
-              'w-full px-6 py-2 bg-pink-500 text-white text-sm font-semibold rounded-lg text-center',
-              'hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2',
+              'w-full px-6 py-2 bg-[rgb(236,72,153)] text-white text-sm font-semibold rounded-lg text-center',
+              'hover:bg-[rgb(219,39,119)] focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2',
               'transition-colors duration-200',
               !prefersReducedMotion && 'hover:shadow-md'
             )}

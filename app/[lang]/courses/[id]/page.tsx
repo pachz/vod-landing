@@ -305,7 +305,7 @@ export default function LangCourseDetailPage({
                   <Button
                     size="lg"
                     onClick={() => console.log("Enroll", course.id)}
-                    className="w-full bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 text-lg"
+                    className="w-full bg-[rgb(236,72,153)] hover:bg-[rgb(219,39,119)] text-white font-semibold py-3 text-lg"
                   >
                     {isAr ? "اشتراك في جميع الدورات - 8.5 د.ك" : "Subscribe to All Courses - 8.5 KWD"}
                   </Button>

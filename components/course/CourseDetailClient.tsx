@@ -341,7 +341,7 @@ export default function CourseDetailClient({
                   <Button
                     size="lg"
                     onClick={() => (window.location.href = enrollUrl)}
-                    className="w-full bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2.5 text-base sm:text-lg"
+                    className="w-full bg-[rgb(236,72,153)] hover:bg-[rgb(219,39,119)] text-white font-semibold py-2.5 text-base sm:text-lg"
                   >
                     {pricingDisplay.buttonLabel}
                   </Button>

@@ -119,7 +119,7 @@ export default function Hero() {
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4 max-w-xl">
               <Button
                 size="lg"
-                className="bg-pink-500 hover:bg-pink-700 text-white w-full sm:w-auto"
+                className="bg-[rgb(236,72,153)] hover:bg-[rgb(190,24,93)] text-white w-full sm:w-auto"
                 asChild
               >
                 <Link

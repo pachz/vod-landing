@@ -269,7 +269,7 @@ export default function LangCoursesPage() {
                   <div className="text-center mt-10">
                     <button
                       onClick={() => setVisibleCount((prev) => prev + LOAD_MORE_STEP)}
-                      className="px-8 py-3 rounded-full bg-pink-500 text-white font-semibold text-sm hover:bg-pink-600 transition-colors"
+                      className="px-8 py-3 rounded-full bg-[rgb(236,72,153)] text-white font-semibold text-sm hover:bg-[rgb(219,39,119)] transition-colors"
                     >
                       {t('courses.loadMore')}
                     </button>

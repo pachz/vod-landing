@@ -110,7 +110,7 @@ export default function Features() {
         >
           <Button
             size="lg"
-            className="bg-pink-500 hover:bg-pink-700 text-white w-full sm:w-auto"
+            className="bg-[rgb(236,72,153)] hover:bg-[rgb(190,24,93)] text-white w-full sm:w-auto"
             asChild
           >
             <Link

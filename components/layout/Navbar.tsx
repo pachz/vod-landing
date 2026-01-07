@@ -190,7 +190,7 @@ export default function Navbar() {
             <div className="hidden md:block flex-shrink-0">
               <Button
                 onClick={handleGetStartedClick}
-                className="bg-pink-500 hover:bg-pink-700 text-white text-sm sm:text-base"
+                className="bg-[rgb(236,72,153)] hover:bg-[rgb(190,24,93)] text-white text-sm sm:text-base"
               >
                 {getNavbarText("navbar.getStarted")}
               </Button>
@@ -217,7 +217,7 @@ export default function Navbar() {
             <div className="pt-3 sm:pt-4 space-y-3">
               <Button
                 onClick={handleGetStartedClick}
-                className="w-full bg-pink-500 hover:bg-pink-700 text-white text-sm sm:text-base"
+                className="w-full bg-[rgb(236,72,153)] hover:bg-[rgb(190,24,93)] text-white text-sm sm:text-base"
               >
                 {getNavbarText("navbar.getStarted")}
               </Button>
