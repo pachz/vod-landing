@@ -169,6 +169,7 @@ export default function LangCoursesPage() {
   }, [query, selectedCategory])
 
   // Category list: primary categories + additional categories from API + any label that appears on a card (e.g. cat4)
+  // Deduplicated by normalized label so "Mission & Personal Plan" and "Q&A" appear only once
   const categoryEntries = useMemo(() => {
     const map = new Map<string, string>()
     courses.forEach((course) => {
@@ -185,7 +186,6 @@ export default function LangCoursesPage() {
         map.set(cat.id, cat.name || cat.id)
       }
     })
-    // Include every additional category label that appears on any course (e.g. cat4)
     courses.forEach((course) => {
       ;(course.additionalCategoryLabels ?? []).forEach((label) => {
         const key = normalizeCategoryKey(label)
@@ -194,10 +194,18 @@ export default function LangCoursesPage() {
         }
       })
     })
-    return Array.from(map.entries()).map(([key, label]) => ({
+    const entries = Array.from(map.entries()).map(([key, label]) => ({
       key,
       label: label || key
     }))
+    // Keep first occurrence per normalized label to avoid duplicate filter buttons
+    const seenNormalizedLabels = new Set<string>()
+    return entries.filter(({ label }) => {
+      const norm = normalizeCategoryKey(label)
+      if (seenNormalizedLabels.has(norm)) return false
+      seenNormalizedLabels.add(norm)
+      return true
+    })
   }, [courses, additionalCategories])
 
   const categoryKeys = useMemo(
@@ -230,6 +238,8 @@ export default function LangCoursesPage() {
     if (selectedCategory === 'All') {
       return base
     }
+    const selectedLabel = categoryEntries.find((e) => e.key === selectedCategory)?.label ?? selectedCategory
+    const selectedNorm = normalizeCategoryKey(selectedLabel)
     return base.filter((course) => {
       if (primaryCategoryKeys.includes(selectedCategory)) {
         return (course.categoryKey || 'general').toLowerCase() === selectedCategory
@@ -237,13 +247,14 @@ export default function LangCoursesPage() {
       if ((course.additionalCategoryIds || []).includes(selectedCategory)) {
         return true
       }
-      // Match by additional category label (e.g. "cat4" from additionalCategoryLabels)
-      const selectedNorm = normalizeCategoryKey(selectedCategory)
+      if (normalizeCategoryKey(course.categoryLabel ?? '') === selectedNorm) {
+        return true
+      }
       return (course.additionalCategoryLabels ?? []).some(
         (l) => normalizeCategoryKey(l) === selectedNorm
       )
     })
-  }, [courses, query, selectedCategory, primaryCategoryKeys, additionalCategories])
+  }, [courses, query, selectedCategory, primaryCategoryKeys, additionalCategories, categoryEntries])
 
   const visibleCourses = useMemo(
     () => filteredCourses.slice(0, visibleCount),
