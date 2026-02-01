@@ -274,6 +274,26 @@ export default function CourseDetailClient({
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-purple-900 leading-tight mb-4">
                   {displayTitle}
                 </h1>
+                {/* Category and additional categories */}
+                <div className="flex flex-wrap gap-2">
+                  {course.categoryNameEn != null || course.categoryNameAr != null ? (
+                    <span className="inline-flex items-center rounded-full bg-purple-100 px-3 py-1 text-sm font-medium text-purple-800">
+                      {isAr && course.categoryNameAr
+                        ? course.categoryNameAr
+                        : course.categoryNameEn ?? course.categoryNameAr}
+                    </span>
+                  ) : null}
+                  {Array.isArray(course.additionalCategories) &&
+                    course.additionalCategories.length > 0 &&
+                    course.additionalCategories.map((cat) => (
+                      <span
+                        key={cat.id}
+                        className="inline-flex items-center rounded-full bg-pink-100 px-3 py-1 text-sm font-medium text-pink-800"
+                      >
+                        {isAr && cat.nameAr ? cat.nameAr : cat.nameEn}
+                      </span>
+                    ))}
+                </div>
               </div>
 
               {/* Mobile: show preview right after title, before content */}

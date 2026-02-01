@@ -6,6 +6,11 @@ export const dynamic = "force-dynamic";
 
 type SupportedLocale = "en" | "ar";
 
+interface AdditionalCategoryResponse {
+  id: string;
+  name: string;
+}
+
 interface CoursesResponseItem {
   id: string;
   slug: string;
@@ -20,6 +25,13 @@ interface CoursesResponseItem {
   categoryKey: string;
   categoryLabel?: string;
   tags: string[];
+  additionalCategoryIds: string[];
+  /** Resolved display names for additional categories (for listing cards) */
+  additionalCategoryLabels: string[];
+}
+
+function normalizeIdForMatch(id: string): string {
+  return (id ?? "").trim().toLowerCase();
 }
 
 function roundMinutesToNearestFive(minutes: number): number {
@@ -64,7 +76,8 @@ function toCategoryKey(value?: string): string {
 
 function mapToLocale(
   locale: SupportedLocale,
-  courses: CourseFeedRecord[]
+  courses: CourseFeedRecord[],
+  additionalCategoriesForLocale: AdditionalCategoryResponse[]
 ): CoursesResponseItem[] {
   return courses.map((course) => {
     const durationMinutes = roundMinutesToNearestFive(course.durationMinutes);
@@ -75,6 +88,22 @@ function mapToLocale(
     const categoryKey = toCategoryKey(
       course.categoryNameEn || course.categoryNameAr
     );
+    const ids = course.additionalCategoryIds ?? [];
+    const perCourse = course.additionalCategories ?? [];
+    const additionalCategoryLabels =
+      perCourse.length > 0
+        ? perCourse.map((c) =>
+            locale === "ar" && c.nameAr ? c.nameAr : c.nameEn || ""
+          ).filter(Boolean)
+        : ids
+            .map((id) => {
+              const norm = normalizeIdForMatch(id);
+              const cat = additionalCategoriesForLocale.find(
+                (c) => normalizeIdForMatch(c.id) === norm
+              );
+              return cat?.name ?? null;
+            })
+            .filter((name): name is string => Boolean(name));
     return {
       id: course.slug || course.id,
       slug: course.slug || course.id,
@@ -99,8 +128,21 @@ function mapToLocale(
       categoryKey,
       categoryLabel,
       tags: [categoryKey],
+      additionalCategoryIds: ids,
+      additionalCategoryLabels,
     };
   });
+}
+
+function mapAdditionalCategoriesToLocale(
+  locale: SupportedLocale,
+  additionalCategories: { id: string; nameEn: string; nameAr: string }[]
+): AdditionalCategoryResponse[] {
+  return additionalCategories.map((c) => ({
+    id: c.id,
+    name:
+      locale === "ar" && c.nameAr ? c.nameAr : c.nameEn || "",
+  }));
 }
 
 export async function GET(request: Request) {
@@ -110,11 +152,16 @@ export async function GET(request: Request) {
     localeParam === "ar" || localeParam === "en" ? localeParam : "en";
 
   try {
-    const records = await getCourseFeed();
-    const items = mapToLocale(locale, records);
+    const { courses, additionalCategories } = await getCourseFeed();
+    const additionalCategoriesForLocale = mapAdditionalCategoriesToLocale(
+      locale,
+      additionalCategories
+    );
+    const items = mapToLocale(locale, courses, additionalCategoriesForLocale);
     return NextResponse.json({
       locale,
       items,
+      additionalCategories: additionalCategoriesForLocale,
       cachedAt: Date.now(),
       ttlMs: 5 * 60 * 1000,
     });

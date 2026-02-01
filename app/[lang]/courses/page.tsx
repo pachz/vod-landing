@@ -9,9 +9,19 @@ import { useDirection } from '@/providers/DirectionProvider'
 const DEFAULT_VISIBLE = 12
 const LOAD_MORE_STEP = 8
 
+function normalizeCategoryKey(s: string): string {
+  return (s ?? '').trim().toLowerCase()
+}
+
+type AdditionalCategoryResponse = {
+  id: string
+  name: string
+}
+
 type CoursesApiResponse = {
   locale: string
   items: ApiCourseItem[]
+  additionalCategories?: AdditionalCategoryResponse[]
 }
 
 type ApiCourseItem = {
@@ -28,11 +38,16 @@ type ApiCourseItem = {
   categoryKey: string
   categoryLabel?: string
   tags: string[]
+  additionalCategoryIds?: string[]
+  /** Resolved labels for additional categories (from API) */
+  additionalCategoryLabels?: string[]
 }
 
 type NormalizedCourse = Video & {
   slug?: string
   categoryKey: string
+  additionalCategoryIds: string[]
+  additionalCategoryLabels: string[]
 }
 
 type SubscriptionPlan = {
@@ -66,6 +81,7 @@ export default function LangCoursesPage() {
   const [error, setError] = useState<string | null>(null)
   const [visibleCount, setVisibleCount] = useState(DEFAULT_VISIBLE)
   const [subscriptionPlan, setSubscriptionPlan] = useState<SubscriptionPlan | null>(null)
+  const [additionalCategories, setAdditionalCategories] = useState<AdditionalCategoryResponse[]>([])
   const requestIdRef = useRef(0)
 
   const fetchCourses = useCallback(async () => {
@@ -98,8 +114,14 @@ export default function LangCoursesPage() {
       if (requestIdRef.current !== requestId) {
         return
       }
+      const payloadAdditionalCats = Array.isArray(payload.additionalCategories) ? payload.additionalCategories : []
       const normalized: NormalizedCourse[] = payload.items.map((item) => {
         const normalizedKey = (item.categoryKey ?? 'general').toLowerCase()
+        const additionalIds = Array.isArray(item.additionalCategoryIds) ? item.additionalCategoryIds : []
+        const apiLabels = Array.isArray(item.additionalCategoryLabels) ? item.additionalCategoryLabels : []
+        const fallbackLabels = additionalIds
+          .map((id) => payloadAdditionalCats.find((c) => c.id.trim().toLowerCase() === id.trim().toLowerCase())?.name)
+          .filter((name): name is string => Boolean(name))
         return {
           id: item.slug || item.id,
           slug: item.slug,
@@ -113,10 +135,13 @@ export default function LangCoursesPage() {
           tags: item.tags?.length ? item.tags : [normalizedKey],
           isFeatured: false,
           categoryKey: normalizedKey,
-          categoryLabel: item.categoryLabel || item.categoryKey || normalizedKey
+          categoryLabel: item.categoryLabel || item.categoryKey || normalizedKey,
+          additionalCategoryIds: additionalIds,
+          additionalCategoryLabels: apiLabels.length > 0 ? apiLabels : fallbackLabels
         }
       })
       setCourses(normalized)
+      setAdditionalCategories(payloadAdditionalCats)
       setSubscriptionPlan(planPayload)
     } catch (err) {
       console.error('[courses page] Failed to load courses', err)
@@ -124,6 +149,7 @@ export default function LangCoursesPage() {
         return
       }
       setCourses([])
+      setAdditionalCategories([])
       setSubscriptionPlan(null)
       setError(loadErrorLabel)
     } finally {
@@ -142,20 +168,37 @@ export default function LangCoursesPage() {
     setVisibleCount(DEFAULT_VISIBLE)
   }, [query, selectedCategory])
 
+  // Category list: primary categories + additional categories from API + any label that appears on a card (e.g. cat4)
   const categoryEntries = useMemo(() => {
     const map = new Map<string, string>()
     courses.forEach((course) => {
       const key = course.categoryKey || 'general'
-      const normalizedKey = key.toLowerCase()
-      if (!map.has(normalizedKey) || !map.get(normalizedKey)) {
+      const normalizedKey = normalizeCategoryKey(key)
+      if (!map.has(normalizedKey)) {
         map.set(normalizedKey, course.categoryLabel || key)
+      } else if (course.categoryLabel) {
+        map.set(normalizedKey, course.categoryLabel)
       }
+    })
+    additionalCategories.forEach((cat) => {
+      if (cat.id && !map.has(cat.id)) {
+        map.set(cat.id, cat.name || cat.id)
+      }
+    })
+    // Include every additional category label that appears on any course (e.g. cat4)
+    courses.forEach((course) => {
+      ;(course.additionalCategoryLabels ?? []).forEach((label) => {
+        const key = normalizeCategoryKey(label)
+        if (key && !map.has(key)) {
+          map.set(key, label)
+        }
+      })
     })
     return Array.from(map.entries()).map(([key, label]) => ({
       key,
       label: label || key
     }))
-  }, [courses])
+  }, [courses, additionalCategories])
 
   const categoryKeys = useMemo(
     () => categoryEntries.map((entry) => entry.key),
@@ -168,18 +211,39 @@ export default function LangCoursesPage() {
     }
   }, [categoryKeys, selectedCategory])
 
+  const primaryCategoryKeys = useMemo(
+    () => Array.from(new Set(courses.map((c) => (c.categoryKey || 'general').toLowerCase()))),
+    [courses]
+  )
+
   const filteredCourses = useMemo(() => {
     const q = query.trim().toLowerCase()
     const base = courses.filter((course) => {
       if (!q) return true
-      const haystack = `${course.title} ${course.instructor} ${course.categoryKey}`.toLowerCase()
-      return haystack.includes(q)
+      const haystack = `${course.title} ${course.instructor} ${course.categoryKey} ${course.categoryLabel || ''}`.toLowerCase()
+      const additionalNames = (course.additionalCategoryIds || [])
+        .map((id) => additionalCategories.find((c) => c.id === id)?.name ?? '')
+        .join(' ')
+      const labelNames = (course.additionalCategoryLabels ?? []).join(' ')
+      return haystack.includes(q) || additionalNames.toLowerCase().includes(q) || labelNames.toLowerCase().includes(q)
     })
     if (selectedCategory === 'All') {
       return base
     }
-    return base.filter((course) => course.categoryKey === selectedCategory)
-  }, [courses, query, selectedCategory])
+    return base.filter((course) => {
+      if (primaryCategoryKeys.includes(selectedCategory)) {
+        return (course.categoryKey || 'general').toLowerCase() === selectedCategory
+      }
+      if ((course.additionalCategoryIds || []).includes(selectedCategory)) {
+        return true
+      }
+      // Match by additional category label (e.g. "cat4" from additionalCategoryLabels)
+      const selectedNorm = normalizeCategoryKey(selectedCategory)
+      return (course.additionalCategoryLabels ?? []).some(
+        (l) => normalizeCategoryKey(l) === selectedNorm
+      )
+    })
+  }, [courses, query, selectedCategory, primaryCategoryKeys, additionalCategories])
 
   const visibleCourses = useMemo(
     () => filteredCourses.slice(0, visibleCount),
@@ -240,7 +304,7 @@ export default function LangCoursesPage() {
                   {visibleCourses.map((course) => (
                     <VideoCard
                       key={course.id}
-                      video={course}
+                      video={{ ...course, additionalCategoryLabels: course.additionalCategoryLabels }}
                       subscriptionPlan={
                         subscriptionPlan
                           ? {

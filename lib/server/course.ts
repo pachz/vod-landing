@@ -12,6 +12,12 @@ export interface ExternalLesson {
   durationMinutes?: number;
 }
 
+export interface AdditionalCategoryDetail {
+  id: string;
+  nameEn: string;
+  nameAr: string;
+}
+
 export interface ExternalCourseResponse {
   id: string;
   slug: string;
@@ -25,6 +31,8 @@ export interface ExternalCourseResponse {
   thumbnailImageUrl?: string;
   categoryNameEn?: string;
   categoryNameAr?: string;
+  additionalCategoryIds?: (string | null)[] | null;
+  additionalCategories?: { id: string; nameEn: string; nameAr: string }[] | null;
   instructor?: string;
   durationMinutes?: number;
   trialVideoUrl?: string;
@@ -54,6 +62,8 @@ export interface CourseDetailRecord {
   thumbnailImageUrl?: string;
   categoryNameEn?: string;
   categoryNameAr?: string;
+  additionalCategoryIds: string[];
+  additionalCategories: AdditionalCategoryDetail[];
   instructor?: string;
   durationMinutes: number;
   trialVideoUrl?: string;
@@ -63,17 +73,21 @@ export interface CourseDetailRecord {
   pricing?: CoursePricingRecord;
 }
 
+/** Backend coach shape: _id, _creationTime, nameEn, nameAr, expertiseEn, expertiseAr, descriptionEn, descriptionAr, rating, profileImageUrl, profileThumbnailUrl, courseCount, lastUpdatedAt */
 export interface ExternalCoach {
+  _id?: string;
+  _creationTime?: number;
   nameEn?: string;
   nameAr?: string;
   expertiseEn?: string;
   expertiseAr?: string;
   descriptionEn?: string;
   descriptionAr?: string;
-  profileImageUrl?: string;
-  profileThumbnailUrl?: string;
   rating?: number;
-  lastUpdatedAt?: string | number;
+  profileImageUrl?: string | null;
+  profileThumbnailUrl?: string | null;
+  courseCount?: number | null;
+  lastUpdatedAt?: number | string;
 }
 
 export interface CourseCoachRecord {
@@ -86,6 +100,7 @@ export interface CourseCoachRecord {
   profileImageUrl?: string;
   profileThumbnailUrl?: string;
   rating: number;
+  courseCount?: number;
   lastUpdatedAt?: string;
 }
 
@@ -203,6 +218,31 @@ function normalizeLesson(lesson: ExternalLesson): CourseLessonRecord {
   };
 }
 
+function sanitizeCategoryIds(value?: (string | null)[] | null): string[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter((v): v is string => typeof v === "string" && v.trim().length > 0)
+    .map((v) => v.trim());
+}
+
+function normalizeAdditionalCategories(
+  raw?: { id: string; nameEn: string; nameAr: string }[] | null
+): AdditionalCategoryDetail[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .filter(
+      (c) =>
+        typeof c?.id === "string" &&
+        typeof c?.nameEn === "string" &&
+        typeof c?.nameAr === "string"
+    )
+    .map((c) => ({
+      id: String(c.id).trim(),
+      nameEn: String(c.nameEn).trim(),
+      nameAr: String(c.nameAr).trim(),
+    }));
+}
+
 function normalizeCourseResponse(
   payload: ExternalCourseResponse
 ): CourseDetailRecord {
@@ -219,6 +259,10 @@ function normalizeCourseResponse(
     thumbnailImageUrl: sanitizeString(payload.thumbnailImageUrl),
     categoryNameEn: sanitizeString(payload.categoryNameEn),
     categoryNameAr: sanitizeString(payload.categoryNameAr),
+    additionalCategoryIds: sanitizeCategoryIds(payload.additionalCategoryIds),
+    additionalCategories: normalizeAdditionalCategories(
+      payload.additionalCategories
+    ),
     instructor: sanitizeString(payload.instructor),
     durationMinutes: sanitizePositiveInteger(payload.durationMinutes),
     trialVideoUrl: sanitizeString(payload.trialVideoUrl),
@@ -231,18 +275,26 @@ function normalizeCourseResponse(
   };
 }
 
+function sanitizeOptionalNumber(value?: number | null): number | undefined {
+  if (value === null || value === undefined) return undefined;
+  if (typeof value !== "number" || !Number.isFinite(value)) return undefined;
+  const n = Math.round(value);
+  return n >= 0 ? n : undefined;
+}
+
 function normalizeCoach(coach: ExternalCoach): CourseCoachRecord {
   return {
-    nameEn: sanitizeString(coach.nameEn),
-    nameAr: sanitizeString(coach.nameAr),
-    expertiseEn: sanitizeString(coach.expertiseEn),
-    expertiseAr: sanitizeString(coach.expertiseAr),
-    descriptionEn: sanitizeString(coach.descriptionEn),
-    descriptionAr: sanitizeString(coach.descriptionAr),
-    profileImageUrl: sanitizeString(coach.profileImageUrl),
-    profileThumbnailUrl: sanitizeString(coach.profileThumbnailUrl),
+    nameEn: sanitizeString(coach.nameEn ?? undefined),
+    nameAr: sanitizeString(coach.nameAr ?? undefined),
+    expertiseEn: sanitizeString(coach.expertiseEn ?? undefined),
+    expertiseAr: sanitizeString(coach.expertiseAr ?? undefined),
+    descriptionEn: sanitizeString(coach.descriptionEn ?? undefined),
+    descriptionAr: sanitizeString(coach.descriptionAr ?? undefined),
+    profileImageUrl: sanitizeString(coach.profileImageUrl ?? undefined),
+    profileThumbnailUrl: sanitizeString(coach.profileThumbnailUrl ?? undefined),
     rating: sanitizeRating(coach.rating),
-    lastUpdatedAt: sanitizeIsoDate(coach.lastUpdatedAt),
+    courseCount: sanitizeOptionalNumber(coach.courseCount) ?? undefined,
+    lastUpdatedAt: sanitizeIsoDate(coach.lastUpdatedAt ?? undefined),
   };
 }
 
