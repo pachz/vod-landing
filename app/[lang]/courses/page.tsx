@@ -76,6 +76,7 @@ export default function LangCoursesPage() {
   const retryLabel = t('courses.retry')
   const [query, setQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<'All' | string>('All')
+  const [selectedCoach, setSelectedCoach] = useState<'All' | string>('All')
   const [courses, setCourses] = useState<NormalizedCourse[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -166,7 +167,7 @@ export default function LangCoursesPage() {
 
   useEffect(() => {
     setVisibleCount(DEFAULT_VISIBLE)
-  }, [query, selectedCategory])
+  }, [query, selectedCategory, selectedCoach])
 
   // Category list: primary categories + additional categories from API + any label that appears on a card (e.g. cat4)
   // Deduplicated by normalized label so "Mission & Personal Plan" and "Q&A" appear only once
@@ -213,6 +214,18 @@ export default function LangCoursesPage() {
     [categoryEntries]
   )
 
+  const coachOptions = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          courses
+            .map((course) => course.instructor?.trim())
+            .filter((name): name is string => Boolean(name))
+        )
+      ),
+    [courses]
+  )
+
   useEffect(() => {
     if (selectedCategory !== 'All' && !categoryKeys.includes(selectedCategory)) {
       setSelectedCategory('All')
@@ -235,12 +248,20 @@ export default function LangCoursesPage() {
       const labelNames = (course.additionalCategoryLabels ?? []).join(' ')
       return haystack.includes(q) || additionalNames.toLowerCase().includes(q) || labelNames.toLowerCase().includes(q)
     })
+    const coachFiltered =
+      selectedCoach === 'All'
+        ? base
+        : base.filter(
+            (course) =>
+              course.instructor?.trim().toLowerCase() ===
+              selectedCoach.trim().toLowerCase()
+          )
     if (selectedCategory === 'All') {
-      return base
+      return coachFiltered
     }
     const selectedLabel = categoryEntries.find((e) => e.key === selectedCategory)?.label ?? selectedCategory
     const selectedNorm = normalizeCategoryKey(selectedLabel)
-    return base.filter((course) => {
+    return coachFiltered.filter((course) => {
       if (primaryCategoryKeys.includes(selectedCategory)) {
         return (course.categoryKey || 'general').toLowerCase() === selectedCategory
       }
@@ -250,11 +271,9 @@ export default function LangCoursesPage() {
       if (normalizeCategoryKey(course.categoryLabel ?? '') === selectedNorm) {
         return true
       }
-      return (course.additionalCategoryLabels ?? []).some(
-        (l) => normalizeCategoryKey(l) === selectedNorm
-      )
+      return (course.additionalCategoryLabels ?? []).some((l) => normalizeCategoryKey(l) === selectedNorm)
     })
-  }, [courses, query, selectedCategory, primaryCategoryKeys, additionalCategories, categoryEntries])
+  }, [courses, query, selectedCategory, selectedCoach, primaryCategoryKeys, additionalCategories, categoryEntries])
 
   const visibleCourses = useMemo(
     () => filteredCourses.slice(0, visibleCount),
@@ -275,6 +294,9 @@ export default function LangCoursesPage() {
           categories={categoryKeys}
           selectedCategory={selectedCategory}
           onSelectCategory={(c) => setSelectedCategory(c)}
+          coaches={coachOptions}
+          selectedCoach={selectedCoach}
+          onSelectCoach={(coach) => setSelectedCoach(coach)}
           locale={locale}
           translatedCategories={{
             all: t('courses.all'),

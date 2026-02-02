@@ -12,6 +12,10 @@ export interface CoursesHeroProps {
   categories: string[]
   selectedCategory: string
   onSelectCategory: (category: string) => void
+  // Optional coach filter dropdown
+  coaches?: string[]
+  selectedCoach?: string
+  onSelectCoach?: (coach: string) => void
   locale?: string
   translatedCategories?: { [key: string]: string }
 }
@@ -24,6 +28,10 @@ export default function CoursesHero({
   categories,
   selectedCategory,
   onSelectCategory,
+  // coach filter props
+  coaches,
+  selectedCoach,
+  onSelectCoach,
   locale,
   translatedCategories
 }: CoursesHeroProps) {
@@ -48,32 +56,48 @@ export default function CoursesHero({
             {subtitle}
           </p>
 
-          {/* Search */}
-          <div className="mt-6 max-w-2xl mx-auto">
-            <form onSubmit={(e) => e.preventDefault()} className="relative">
-              <Input
-                value={query}
-                onChange={(e) => onQueryChange(e.target.value)}
-                placeholder={isArabic ? 'ابحثي عن الدورات أو التصنيفات' : 'Search courses or categories'}
-                className={`${isArabic ? 'pl-20 sm:pl-24' : 'pr-20 sm:pr-24'} bg-white/95 text-text-primary placeholder:text-text-secondary shadow-sm focus-visible:ring-pink-700 h-12`}
-              />
-              {/* Inline button on >=sm */}
-              <Button
-                type="submit"
-                className={`hidden sm:inline-flex absolute ${isArabic ? 'left-1' : 'right-1'} top-1/2 -translate-y-1/2 bg-purple-700 hover:bg-purple-800 text-white h-10 px-4 text-sm gap-2`}
+          {/* Search + Coach filter (inline) */}
+          <div className="mt-6 w-full max-w-2xl mx-auto min-w-0">
+            <form onSubmit={(e) => e.preventDefault()}>
+              {/* Single bar: coach dropdown + search input + search button */}
+              <div
+                className={`flex items-stretch rounded-xl bg-white text-text-primary shadow-sm overflow-hidden border border-white/80 focus-within:ring-2 focus-within:ring-pink-700 focus-within:border-pink-700/50 h-12 min-w-0 ${isArabic ? 'sm:flex-row-reverse' : ''}`}
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                {isArabic ? 'بحث' : 'Search'}
-              </Button>
-              {/* Stacked button on small screens */}
-              <div className="sm:hidden mt-3">
-                <Button type="submit" className="w-full bg-purple-700 hover:bg-purple-800 text-white h-10 gap-2">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                {onSelectCoach && (
+                  <>
+                    <select
+                      value={selectedCoach ?? 'All'}
+                      onChange={(e) => onSelectCoach(e.target.value)}
+                      aria-label={isArabic ? 'تصفية حسب المدربة' : 'Filter by coach'}
+                      className={`flex-shrink-0 border-0 py-0 pl-3 pr-8 sm:pl-4 sm:pr-8 text-sm font-medium text-text-primary bg-white cursor-pointer focus:outline-none focus:ring-0 appearance-none bg-no-repeat bg-[length:1rem_1rem] bg-[right_0.5rem_center] max-w-[9rem] sm:max-w-[10rem] ${isArabic ? 'bg-[left_0.5rem_center] pl-8 pr-3 sm:pl-8 sm:pr-4' : ''}`}
+                      style={{
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`
+                      }}
+                    >
+                      <option value="All">{isArabic ? 'كل المدربات' : 'All coaches'}</option>
+                      {(coaches ?? []).map((coach) => (
+                        <option key={coach} value={coach}>
+                          {coach}
+                        </option>
+                      ))}
+                    </select>
+                    <span className="flex-shrink-0 w-px self-stretch bg-gray-200 my-2" aria-hidden />
+                  </>
+                )}
+                <Input
+                  value={query}
+                  onChange={(e) => onQueryChange(e.target.value)}
+                  placeholder={isArabic ? 'ابحثي عن الدورات أو التصنيفات' : 'Search courses or categories'}
+                  className={`flex-1 min-w-[180px] sm:min-w-[220px] w-0 h-full border-0 rounded-none bg-white shadow-none placeholder:text-text-secondary focus-visible:ring-0 focus-visible:ring-offset-0 py-3 px-4 text-sm sm:text-base ${isArabic ? 'text-right' : ''}`}
+                />
+                <Button
+                  type="submit"
+                  className="flex-shrink-0 self-stretch rounded-none bg-purple-700 hover:bg-purple-800 text-white h-auto px-4 sm:px-5 text-sm gap-2 font-medium"
+                >
+                  <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
-                  {isArabic ? 'بحث' : 'Search'}
+                  <span className="hidden sm:inline">{isArabic ? 'بحث' : 'Search'}</span>
                 </Button>
               </div>
             </form>

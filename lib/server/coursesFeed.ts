@@ -37,6 +37,7 @@ interface ExternalCourseListItem {
   instructorNameAr?: string | null;
   categoryNameEn?: string | null;
   categoryNameAr?: string | null;
+  coachId?: string | null;
   additionalCategoryIds?: (string | null)[] | null;
   /** Per-course additional categories (alternative to additionalCategoryIds + global list) */
   additionalCategories?: ExternalPerCourseCategory[] | null;
@@ -63,6 +64,7 @@ export interface CourseFeedRecord {
   shortDescriptionAr?: string;
   instructorNameEn?: string;
   instructorNameAr?: string;
+  coachId?: string;
   categoryNameEn?: string;
   categoryNameAr?: string;
   additionalCategoryIds: string[];
@@ -191,6 +193,15 @@ function normalizeCourse(item: ExternalCourseListItem): CourseFeedRecord {
   const idsFromPerCourse = perCourse.map((c) => c.id);
   const additionalCategoryIds =
     idsFromArray.length > 0 ? idsFromArray : idsFromPerCourse;
+  // Backend will expose coach_id in snake_case; support both camelCase and snake_case
+  const rawCoachId =
+    item.coachId ??
+    ((
+      item as unknown as {
+        coach_id?: string | null;
+      }
+    ).coach_id ?? null);
+
   return {
     id,
     slug: sanitizeSlug(item.slug ?? undefined, id),
@@ -200,6 +211,7 @@ function normalizeCourse(item: ExternalCourseListItem): CourseFeedRecord {
     shortDescriptionAr: sanitizeString(item.shortDescriptionAr),
     instructorNameEn: sanitizeString(item.instructorNameEn),
     instructorNameAr: sanitizeString(item.instructorNameAr),
+    coachId: sanitizeString(rawCoachId ?? undefined),
     categoryNameEn: sanitizeString(item.categoryNameEn),
     categoryNameAr: sanitizeString(item.categoryNameAr),
     additionalCategoryIds,

@@ -159,21 +159,18 @@ export const VideoCard: React.FC<VideoCardProps> = ({
       <div className="p-5 flex-1 flex flex-col text-start">
         {/* Ensure text aligns with document direction (LTR/RTL) and not inherited center */}
         <div className="sr-only"></div>
-        {/* Category tags: main (purple) + additional (pink), matching course detail page */}
-        <div className="mb-3 flex flex-wrap gap-2">
+        {/* Category: main (purple) + extra count badge (+1, +2, …) */}
+        <div className="mb-3 flex flex-wrap items-center gap-2">
           {(displayTag || (tagKey ? t(`explore.categories.${tagKey}`) : '')) && (
             <span className="text-xs bg-purple-500 text-white px-3 py-1 rounded-full font-semibold">
               {displayTag || (tagKey ? t(`explore.categories.${tagKey}`) : '')}
             </span>
           )}
-          {additionalLabels.map((label) => (
-            <span
-              key={label}
-              className="text-xs bg-pink-100 px-3 py-1 rounded-full font-medium text-pink-800"
-            >
-              {label}
+          {additionalLabels.length > 0 && (
+            <span className="text-xs bg-pink-100 px-3 py-1 rounded-full font-medium text-pink-800">
+              +{additionalLabels.length}
             </span>
-          ))}
+          )}
         </div>
 
         {/* Title */}

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getCourseFeed, type CourseFeedRecord } from "@/lib/server/coursesFeed";
+import { getCoaches, type CoachRecord } from "@/lib/server/coaches";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -77,7 +78,8 @@ function toCategoryKey(value?: string): string {
 function mapToLocale(
   locale: SupportedLocale,
   courses: CourseFeedRecord[],
-  additionalCategoriesForLocale: AdditionalCategoryResponse[]
+  additionalCategoriesForLocale: AdditionalCategoryResponse[],
+  coaches: CoachRecord[]
 ): CoursesResponseItem[] {
   return courses.map((course) => {
     const durationMinutes = roundMinutesToNearestFive(course.durationMinutes);
@@ -104,6 +106,18 @@ function mapToLocale(
               return cat?.name ?? null;
             })
             .filter((name): name is string => Boolean(name));
+    const coach =
+      course.coachId != null
+        ? coaches.find((c) => c.id === course.coachId)
+        : undefined;
+    const instructorName = coach
+      ? locale === "ar"
+        ? coach.nameAr || coach.nameEn
+        : coach.nameEn || coach.nameAr
+      : locale === "ar" && course.instructorNameAr
+      ? course.instructorNameAr
+      : course.instructorNameEn || "";
+
     return {
       id: course.slug || course.id,
       slug: course.slug || course.id,
@@ -113,10 +127,7 @@ function mapToLocale(
         locale === "ar" && course.shortDescriptionAr
           ? course.shortDescriptionAr
           : course.shortDescriptionEn || "",
-      instructor:
-        locale === "ar" && course.instructorNameAr
-          ? course.instructorNameAr
-          : course.instructorNameEn || "",
+      instructor: instructorName,
       thumbnailUrl:
         course.coverImageUrl ??
         course.thumbnailImageUrl ??
@@ -153,11 +164,37 @@ export async function GET(request: Request) {
 
   try {
     const { courses, additionalCategories } = await getCourseFeed();
+    const coaches = await getCoaches();
     const additionalCategoriesForLocale = mapAdditionalCategoriesToLocale(
       locale,
       additionalCategories
     );
-    const items = mapToLocale(locale, courses, additionalCategoriesForLocale);
+    const items = mapToLocale(
+      locale,
+      courses,
+      additionalCategoriesForLocale,
+      coaches
+    );
+
+    // Debug logging: verify coaches + instructors wiring
+    console.log("[courses API] coaches count:", coaches.length);
+    console.log(
+      "[courses API] sample course coachIds:",
+      courses.slice(0, 5).map((c) => ({
+        id: c.id,
+        coachId: c.coachId,
+        instructorNameEn: c.instructorNameEn,
+        instructorNameAr: c.instructorNameAr,
+      }))
+    );
+    console.log(
+      "[courses API] sample instructors sent to client:",
+      items.slice(0, 5).map((c) => ({
+        id: c.id,
+        instructor: c.instructor,
+      }))
+    );
+
     return NextResponse.json({
       locale,
       items,
