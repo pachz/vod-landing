@@ -167,6 +167,7 @@
   },
   "faq": {
     "title": "Frequently Asked Questions",
+    "showAll": "Show all FAQ",
     "items": [
       {
         "id": "1",
@@ -217,6 +218,116 @@
         "id": "10",
         "question": "How can I keep the materials for life?",
         "answer": "You can keep the materials for life through the download feature that appears to you after one month from the subscription date in the curriculum"
+      }
+    ]
+  },
+  "faqPage": {
+    "title": "Frequently Asked Questions",
+    "items": [
+      {
+        "id": "1",
+        "question": "What distinguishes Reham Diva platform courses from Reham Al-Rashidi's free content on YouTube?",
+        "answer": "The Reham platform gives you full access to all femininity and self-love programs and courses offered by Ms. Reham Al-Rashidi. They differ from YouTube in that YouTube offers general awareness programs for those who want to learn from a distance, while the Reham Diva platform is a set of programs with a practical and training methodology for those who want to create real and deep change in their lives."
+      },
+      {
+        "id": "2",
+        "question": "What distinguishes Reham Al-Rashidi's courses from other femininity courses?",
+        "answer": "Ms. Reham Al-Rashidi is considered the first femininity coach in the Arab world, and has received recognition from the Kuwait Ministry of State for Youth Affairs that the Reham Diva curriculum is one of the top 10 youth educational projects in Kuwait. When you subscribe to Reham Diva courses you get original, exclusive materials by Ms. Reham Al-Rashidi, with Reham House retaining intellectual property rights for the courses and programs. These courses have been tried for more than 10 years with real success stories from subscribers."
+      },
+      {
+        "id": "3",
+        "question": "I feel I have lost my femininity. Will these programs help me regain it?",
+        "answer": "Yes, absolutely. Ms. Reham's courses help you reconnect with your femininity whether you are\n• single or married\n• a mother\n• a businesswoman or leader\n• focused on the home\n• employed or a student"
+      },
+      {
+        "id": "4",
+        "question": "Do I need any prior background to start these courses?",
+        "answer": "You do not need any prior background. All you need is a genuine desire and passion for knowledge and change. The training programs are very deep but simple in Reham Al-Rashidi's style (the easy-yet-profound)."
+      },
+      {
+        "id": "5",
+        "question": "From what age can women or girls benefit from Reham Diva programs?",
+        "answer": "From age 16 to 60. All that is required is your passion and desire to learn and change."
+      },
+      {
+        "id": "6",
+        "question": "Who is Reham Al-Rashidi and what are her qualifications?",
+        "answer": "Ms. Reham Al-Rashidi is the first femininity coach in the Arab world\nOver 10 years of experience in courses\nOver 15,000 beneficiaries of paid programs and over 360,000 beneficiaries of free programs; over 1 million followers on social media\nMechanical Engineering graduate from Kuwait University\nCertified coach from the World Council for Training, Teaching and Coaching\nCertified coach from the International Academy for Training and Consulting\nCertified coach from Franchaiz Al-Rashed in Personal Life Planning\nCertified coach in marital relationships\nCertified coach in childhood education"
+      },
+      {
+        "id": "7",
+        "question": "Is the content updated regularly?",
+        "answer": "Yes. When you subscribe to the platform you get all programs and additional and new training materials, with a new video uploaded weekly and live sessions with Ms. Reham to answer your questions about the programs and courses. You can attend live sessions via live stream and get full recordings of the sessions."
+      },
+      {
+        "id": "8",
+        "question": "Can I access the courses from my mobile phone?",
+        "answer": "Yes, and through smart devices such as laptop and iPad."
+      },
+      {
+        "id": "9",
+        "question": "Are the lessons live or pre-recorded?",
+        "answer": "All programs are recorded. You can follow them at your convenience from your country. When there is any live broadcast in Reham Diva club, the session video is uploaded within a few days so you can watch the recordings."
+      },
+      {
+        "id": "10",
+        "question": "Can I download lessons to watch offline?",
+        "answer": "Download is not available, but you can access all materials when you subscribe via the website www.RehamDiva.com"
+      },
+      {
+        "id": "11",
+        "question": "How long does the content remain available to me after purchase?",
+        "answer": "All platform materials are available to you according to your subscription type, whether monthly or annual."
+      },
+      {
+        "id": "12",
+        "question": "What is the difference between buying a single course and an annual subscription?",
+        "answer": "No need to hesitate. When you subscribe to the Reham Diva platform you get all programs and courses displayed on the website."
+      },
+      {
+        "id": "13",
+        "question": "Is there a money-back guarantee?",
+        "answer": "Yes, and it is your right. For monthly subscription you have 14 days from the subscription date to request a refund. For annual subscription you have 30 days from the subscription date to request a refund. The guarantee is 100% of the amount with no fees deducted. We trust our content and want you to feel confident in your decision."
+      },
+      {
+        "id": "14",
+        "question": "Does my subscription renew automatically? How can I cancel it?",
+        "answer": "Yes. Like all platforms and apps with monthly subscriptions, the subscription renews periodically whether monthly or annually. Cancellation is easy through your account page after subscribing."
+      },
+      {
+        "id": "15",
+        "question": "Do you offer certified completion certificates?",
+        "answer": "We do not offer certified completion certificates, as the aim is educational for personal change."
+      },
+      {
+        "id": "16",
+        "question": "How can I become a certified femininity coach?",
+        "answer": "Ms. Reham and the Reham House team are looking into offering certified femininity coaching certificates according to the Reham Diva curriculum, and an announcement will be made in due time. Until then you can prepare by reviewing and applying the training materials and choosing your preferred topic for future certification, noting that this will require you to obtain a certified coach certificate from bodies that offer training certification."
+      },
+      {
+        "id": "17",
+        "question": "Can I republish the training materials and programs on my accounts or offer them as training programs?",
+        "answer": "All programs on the Reham Diva platform are protected by intellectual property rights owned by Reham Al-Rashidi and Reham House. They are for personal use only and may not be published for any commercial purpose. Legal action will be taken if this is violated. Republishing content in your own style with proper attribution is allowed and appreciated."
+      },
+      {
+        "id": "18",
+        "question": "Will I be able to communicate with the coach directly?",
+        "answer": "Yes. You can communicate directly with Ms. Reham by attending Reham Diva club sessions, where Ms. Reham receives your questions about Reham Diva programs."
+      },
+      {
+        "id": "19",
+        "question": "Are there discussion groups or a community for subscribers?",
+        "answer": "Yes. We want to help you join a positive, aware and enlightened community interested in femininity and self-love. We are working on announcing the opening of the Reham Diva community soon."
+      },
+      {
+        "id": "20",
+        "question": "Does Ms. Reham offer individual coaching sessions?",
+        "answer": "Yes. You can contact customer service for more details."
+      },
+      {
+        "id": "21",
+        "question": "Does Ms. Reham offer awareness trips on femininity and self-love?",
+        "answer": "Yes. For more information please contact customer service."
       }
     ]
   },

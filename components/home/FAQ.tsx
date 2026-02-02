@@ -7,10 +7,21 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/useTranslation";
 
+const LANDING_FAQ_COUNT = 7;
+
 export default function FAQ() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
+  const allItems = (t("faqPage.items") as Array<{ id: string; question: string; answer: string }>) ?? [];
+  const items = allItems.slice(0, LANDING_FAQ_COUNT);
+
+  const handleShowAll = () => {
+    if (typeof window === "undefined") return;
+    const base = locale === "ar" ? "/ar" : locale === "en" ? "/en" : "";
+    window.location.href = `${base}/faq`;
+  };
 
   return (
     <section id="faq" className="py-12 sm:py-16 lg:py-20 px-4 bg-white">
@@ -38,7 +49,7 @@ export default function FAQ() {
             collapsible
             className="space-y-3 sm:space-y-4"
           >
-            {t("faq.items").map((faq: any, index: number) => (
+            {items.map((faq: { id: string; question: string; answer: string }, index: number) => (
               <motion.div
                 key={faq.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -55,7 +66,7 @@ export default function FAQ() {
                       {faq.question}
                     </span>
                   </AccordionTrigger>
-                  <AccordionContent className="px-4 sm:px-6 pb-3 sm:pb-4 text-text-secondary leading-relaxed text-sm sm:text-base">
+                  <AccordionContent className="px-4 sm:px-6 pb-3 sm:pb-4 text-text-secondary leading-relaxed text-sm sm:text-base whitespace-pre-line">
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
@@ -68,6 +79,24 @@ export default function FAQ() {
               </motion.div>
             ))}
           </Accordion>
+
+        {allItems.length > LANDING_FAQ_COUNT && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="flex justify-center mt-8 sm:mt-10"
+          >
+            <Button
+              onClick={handleShowAll}
+              variant="outline"
+              className="border-purple-800 text-purple-800 hover:bg-purple-50 hover:text-purple-900 font-semibold px-6 py-3"
+            >
+              {t("faq.showAll")}
+            </Button>
+          </motion.div>
+        )}
         </motion.div>
       </div>
     </section>
