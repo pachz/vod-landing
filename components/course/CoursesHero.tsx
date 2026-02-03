@@ -1,8 +1,11 @@
 'use client'
 
+import { useRef, useState, useEffect, useLayoutEffect } from 'react'
+import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { ChevronDown } from 'lucide-react'
 
 export interface CoursesHeroProps {
   title: string
@@ -36,6 +39,42 @@ export default function CoursesHero({
   translatedCategories
 }: CoursesHeroProps) {
   const isArabic = locale === 'ar'
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [dropdownPosition, setDropdownPosition] = useState<{ top: number; left?: number; right?: number } | null>(null)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLButtonElement>(null)
+  const menuRef = useRef<HTMLUListElement>(null)
+
+  useLayoutEffect(() => {
+    if (dropdownOpen && triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect()
+      setDropdownPosition({
+        top: rect.bottom + 4,
+        left: isArabic ? undefined : rect.left,
+        right: isArabic ? window.innerWidth - rect.right : undefined,
+      })
+    } else {
+      setDropdownPosition(null)
+    }
+  }, [dropdownOpen, isArabic])
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      const target = e.target as Node
+      if (dropdownRef.current?.contains(target) || triggerRef.current?.contains(target) || menuRef.current?.contains(target)) return
+      setDropdownOpen(false)
+    }
+    if (dropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [dropdownOpen])
+
+  const displayCoach = selectedCoach ?? 'All'
+  const displayCoachLabel = displayCoach === 'All'
+    ? (isArabic ? 'كل المدربات' : 'All coaches')
+    : displayCoach
+
   return (
     <section className="relative overflow-hidden bg-pink-500 py-12">
       {/* Decorative single pattern */}
@@ -65,22 +104,71 @@ export default function CoursesHero({
               >
                 {onSelectCoach && (
                   <>
-                    <select
-                      value={selectedCoach ?? 'All'}
-                      onChange={(e) => onSelectCoach(e.target.value)}
-                      aria-label={isArabic ? 'تصفية حسب المدربة' : 'Filter by coach'}
-                      className={`flex-shrink-0 border-0 py-0 pl-3 pr-8 sm:pl-4 sm:pr-8 text-sm font-medium text-text-primary bg-white cursor-pointer focus:outline-none focus:ring-0 appearance-none bg-no-repeat bg-[length:1rem_1rem] bg-[right_0.5rem_center] max-w-[9rem] sm:max-w-[10rem] ${isArabic ? 'bg-[left_0.5rem_center] pl-8 pr-3 sm:pl-8 sm:pr-4' : ''}`}
-                      style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`
-                      }}
-                    >
-                      <option value="All">{isArabic ? 'كل المدربات' : 'All coaches'}</option>
-                      {(coaches ?? []).map((coach) => (
-                        <option key={coach} value={coach}>
-                          {coach}
-                        </option>
-                      ))}
-                    </select>
+                    <div ref={dropdownRef} className="relative flex-shrink-0 flex items-stretch">
+                      <button
+                        ref={triggerRef}
+                        type="button"
+                        onClick={() => setDropdownOpen((o) => !o)}
+                        aria-haspopup="listbox"
+                        aria-expanded={dropdownOpen}
+                        aria-label={isArabic ? 'تصفية حسب المدربة' : 'Filter by coach'}
+                        className={`flex items-center gap-1.5 border-0 py-0 pl-3 pr-8 sm:pl-4 sm:pr-8 text-sm font-medium text-text-primary bg-white cursor-pointer focus:outline-none focus:ring-0 max-w-[9rem] sm:max-w-[10rem] min-h-full ${isArabic ? 'flex-row-reverse pl-8 pr-3 sm:pl-8 sm:pr-4' : ''}`}
+                      >
+                        <span className="truncate">{displayCoachLabel}</span>
+                        <ChevronDown
+                          className={`flex-shrink-0 w-4 h-4 text-gray-500 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}
+                          aria-hidden
+                        />
+                      </button>
+                      {dropdownOpen && dropdownPosition && typeof document !== 'undefined' && createPortal(
+                        <ul
+                          ref={menuRef}
+                          role="listbox"
+                          className={`fixed z-[100] min-w-[10rem] max-h-[16rem] overflow-y-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg ring-1 ring-black/5 ${isArabic ? 'right-0' : 'left-0'}`}
+                          style={{
+                            top: dropdownPosition.top,
+                            left: dropdownPosition.left,
+                            right: dropdownPosition.right,
+                          }}
+                        >
+                          <li role="option" aria-selected={displayCoach === 'All'}>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                onSelectCoach('All')
+                                setDropdownOpen(false)
+                              }}
+                              className={`w-full text-left px-3 py-2 text-sm font-medium transition-colors ${isArabic ? 'text-right' : 'text-left'} ${
+                                displayCoach === 'All'
+                                  ? 'bg-pink-100 text-pink-800'
+                                  : 'text-text-primary hover:bg-gray-100'
+                              }`}
+                            >
+                              {isArabic ? 'كل المدربات' : 'All coaches'}
+                            </button>
+                          </li>
+                          {(coaches ?? []).map((coach) => (
+                            <li key={coach} role="option" aria-selected={displayCoach === coach}>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  onSelectCoach(coach)
+                                  setDropdownOpen(false)
+                                }}
+                                className={`w-full text-left px-3 py-2 text-sm font-medium transition-colors ${isArabic ? 'text-right' : 'text-left'} ${
+                                  displayCoach === coach
+                                    ? 'bg-pink-100 text-pink-800'
+                                    : 'text-text-primary hover:bg-gray-100'
+                                }`}
+                              >
+                                {coach}
+                              </button>
+                            </li>
+                          ))}
+                        </ul>,
+                        document.body
+                      )}
+                    </div>
                     <span className="flex-shrink-0 w-px self-stretch bg-gray-200 my-2" aria-hidden />
                   </>
                 )}
