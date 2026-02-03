@@ -30,7 +30,7 @@ const footerNavigationItems = [
 ]
 
 const footerSupportItems = [
-  { labelKey: 'footer.support.faq', href: '#faq' },
+  { labelKey: 'footer.support.faq', href: '/faq', isPage: true },
   { labelKey: 'footer.support.terms', href: '/terms', isPage: true },
   { labelKey: 'footer.support.privacy', href: '/privacy', isPage: true }
 ]
