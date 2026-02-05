@@ -204,7 +204,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({
         <div className="flex flex-col gap-3 mt-auto">
           <div className="flex-1 min-w-0">
             <div className="text-sm text-purple-600 font-medium">
-              {locale === 'ar' ? 'ضمن الاشتراك' : 'Included in subscription'}
+              {t('courses.includedInSubscription')}
             </div>
             <div className="text-sm text-purple-700 font-semibold">
               {subscriptionPriceDisplay} • {subscriptionNameDisplay}

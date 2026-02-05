@@ -398,6 +398,9 @@
     "logoText": "رهام دیفا"
   },
   "courses": {
+    "allCoaches": "كل المدربين",
+    "filterByCoach": "تصفية حسب المدرب",
+    "includedInSubscription": "وصول كامل لجميع المواد عند الاشتراك",
     "allCoursesTitle": "جميع الدورات",
     "allCoursesSubtitle": "اكتشفي مجموعتنا الشاملة من الدورات المصممة لمساعدتك على النمو والتعلم وتحقيق أهدافك.",
     "viewCourse": "عرض الدورة",

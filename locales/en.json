@@ -398,6 +398,9 @@
     "logoText": "Reham Diva"
   },
   "courses": {
+    "allCoaches": "All coaches",
+    "filterByCoach": "Filter by coach",
+    "includedInSubscription": "Included in subscription",
     "allCoursesTitle": "All Courses",
     "allCoursesSubtitle": "Discover our comprehensive collection of courses designed to help you grow, learn, and achieve your goals.",
     "viewCourse": "View Course",

@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { ChevronDown } from 'lucide-react'
+import { useTranslation } from '@/lib/useTranslation'
 
 export interface CoursesHeroProps {
   title: string
@@ -38,6 +39,7 @@ export default function CoursesHero({
   locale,
   translatedCategories
 }: CoursesHeroProps) {
+  const { t } = useTranslation()
   const isArabic = locale === 'ar'
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [dropdownPosition, setDropdownPosition] = useState<{ top: number; left?: number; right?: number } | null>(null)
@@ -72,7 +74,7 @@ export default function CoursesHero({
 
   const displayCoach = selectedCoach ?? 'All'
   const displayCoachLabel = displayCoach === 'All'
-    ? (isArabic ? 'كل المدربات' : 'All coaches')
+    ? t('courses.allCoaches')
     : displayCoach
 
   return (
@@ -111,7 +113,7 @@ export default function CoursesHero({
                         onClick={() => setDropdownOpen((o) => !o)}
                         aria-haspopup="listbox"
                         aria-expanded={dropdownOpen}
-                        aria-label={isArabic ? 'تصفية حسب المدربة' : 'Filter by coach'}
+                        aria-label={t('courses.filterByCoach')}
                         className={`flex items-center gap-1.5 border-0 py-0 pl-3 pr-8 sm:pl-4 sm:pr-8 text-sm font-medium text-text-primary bg-white cursor-pointer focus:outline-none focus:ring-0 max-w-[9rem] sm:max-w-[10rem] min-h-full ${isArabic ? 'flex-row-reverse pl-8 pr-3 sm:pl-8 sm:pr-4' : ''}`}
                       >
                         <span className="truncate">{displayCoachLabel}</span>
@@ -144,7 +146,7 @@ export default function CoursesHero({
                                   : 'text-text-primary hover:bg-gray-100'
                               }`}
                             >
-                              {isArabic ? 'كل المدربات' : 'All coaches'}
+                              {t('courses.allCoaches')}
                             </button>
                           </li>
                           {(coaches ?? []).map((coach) => (
