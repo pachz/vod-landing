@@ -86,6 +86,7 @@ export default function Hero() {
           alt="Decorative pattern"
           width={600}
           height={600}
+          fetchPriority="low"
           className={`absolute w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] lg:w-[600px] lg:h-[600px] opacity-30 sm:opacity-60 pointer-events-none object-contain hidden sm:block ${
             locale === "ar"
               ? "bottom-0 left-0 object-bottom object-left rotate-90"
@@ -163,8 +164,8 @@ export default function Hero() {
                   autoPlay
                   loop
                   poster="/images/hero.png"
+                  preload="auto"
                 >
-                  {/* Provide both formats if available */}
                   <source src="/images/hero/hero.mp4" type="video/mp4" />
                 </video>
 

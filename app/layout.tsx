@@ -6,11 +6,12 @@ import { AnalyticsProvider } from '@/providers/PostHogProvider'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' })
 const almarai = Almarai({ 
   subsets: ['arabic'], 
   weight: ['300', '400', '700', '800'],
-  variable: '--font-almarai' 
+  variable: '--font-almarai',
+  display: 'swap'
 })
 
 export const metadata: Metadata = {
@@ -29,6 +30,10 @@ export default function RootLayout({
   const dir = locale === 'ar' ? 'rtl' : 'ltr'
   return (
     <html lang={locale} dir={dir}>
+      <head>
+        <link rel="preload" as="image" href="/images/hero.png" />
+        <link rel="preload" as="video" href="/images/hero/hero.mp4" />
+      </head>
       <body className={`${inter.variable} ${almarai.variable} font-sans antialiased`}>
         <AnalyticsProvider>
           {children}
