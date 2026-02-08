@@ -4,6 +4,7 @@ import './globals.css'
 import { cookies } from 'next/headers'
 import { AnalyticsProvider } from '@/providers/PostHogProvider'
 import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const almarai = Almarai({ 
@@ -33,6 +34,7 @@ export default function RootLayout({
           {children}
         </AnalyticsProvider>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
