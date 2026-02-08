@@ -399,7 +399,11 @@
   },
   "courses": {
     "allCoaches": "كل المدربين",
+    "coachShort": "المدرب",
     "filterByCoach": "تصفية حسب المدرب",
+    "searchPlaceholder": "ابحثي عن الدورات أو التصنيفات",
+    "searchPlaceholderShort": "خانة البحث",
+    "searchButton": "بحث",
     "includedInSubscription": "وصول كامل لجميع المواد عند الاشتراك",
     "allCoursesTitle": "جميع الدورات",
     "allCoursesSubtitle": "اكتشفي مجموعتنا الشاملة من الدورات المصممة لمساعدتك على النمو والتعلم وتحقيق أهدافك.",

@@ -399,7 +399,11 @@
   },
   "courses": {
     "allCoaches": "All coaches",
+    "coachShort": "Coach",
     "filterByCoach": "Filter by coach",
+    "searchPlaceholder": "Search courses or categories",
+    "searchPlaceholderShort": "Search",
+    "searchButton": "Search",
     "includedInSubscription": "Included in subscription",
     "allCoursesTitle": "All Courses",
     "allCoursesSubtitle": "Discover our comprehensive collection of courses designed to help you grow, learn, and achieve your goals.",

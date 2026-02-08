@@ -46,6 +46,14 @@ export default function CoursesHero({
   const dropdownRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const menuRef = useRef<HTMLUListElement>(null)
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 639px)')
+    const update = () => setIsMobile(mq.matches)
+    update()
+    mq.addEventListener('change', update)
+    return () => mq.removeEventListener('change', update)
+  }, [])
 
   useLayoutEffect(() => {
     if (dropdownOpen && triggerRef.current) {
@@ -74,7 +82,7 @@ export default function CoursesHero({
 
   const displayCoach = selectedCoach ?? 'All'
   const displayCoachLabel = displayCoach === 'All'
-    ? t('courses.allCoaches')
+    ? (isMobile ? t('courses.coachShort') : t('courses.allCoaches'))
     : displayCoach
 
   return (
@@ -100,13 +108,13 @@ export default function CoursesHero({
           {/* Search + Coach filter (inline) */}
           <div className="mt-6 w-full max-w-2xl mx-auto min-w-0">
             <form onSubmit={(e) => e.preventDefault()}>
-              {/* Single bar: coach dropdown + search input + search button */}
+              {/* Single bar: coach dropdown + search input + search button — alignment and short labels on mobile */}
               <div
-                className={`flex items-stretch rounded-xl bg-white text-text-primary shadow-sm overflow-hidden border border-white/80 focus-within:ring-2 focus-within:ring-pink-700 focus-within:border-pink-700/50 h-12 min-w-0 ${isArabic ? 'sm:flex-row-reverse' : ''}`}
+                className={`flex items-center sm:items-stretch rounded-xl bg-white text-text-primary shadow-sm overflow-hidden border border-white/80 focus-within:ring-2 focus-within:ring-pink-700 focus-within:border-pink-700/50 h-12 min-h-12 min-w-0 ${isArabic ? 'sm:flex-row-reverse' : ''}`}
               >
                 {onSelectCoach && (
                   <>
-                    <div ref={dropdownRef} className="relative flex-shrink-0 flex items-stretch">
+                    <div ref={dropdownRef} className="relative flex-shrink-0 flex items-center sm:items-stretch">
                       <button
                         ref={triggerRef}
                         type="button"
@@ -114,9 +122,9 @@ export default function CoursesHero({
                         aria-haspopup="listbox"
                         aria-expanded={dropdownOpen}
                         aria-label={t('courses.filterByCoach')}
-                        className={`flex items-center gap-1.5 border-0 py-0 pl-3 pr-8 sm:pl-4 sm:pr-8 text-sm font-medium text-text-primary bg-white cursor-pointer focus:outline-none focus:ring-0 max-w-[9rem] sm:max-w-[10rem] min-h-full ${isArabic ? 'flex-row-reverse pl-8 pr-3 sm:pl-8 sm:pr-4' : ''}`}
+                        className={`flex items-center justify-center sm:justify-start gap-1.5 border-0 py-0 pl-2 pr-7 sm:pl-4 sm:pr-8 text-sm font-medium text-text-primary bg-white cursor-pointer focus:outline-none focus:ring-0 min-h-[2.75rem] sm:min-h-full shrink-0 ${isArabic ? 'flex-row-reverse pl-7 pr-2 sm:pl-8 sm:pr-4' : ''} min-w-[5.5rem] sm:min-w-0 max-w-[8rem] sm:max-w-[10rem]`}
                       >
-                        <span className="truncate">{displayCoachLabel}</span>
+                        <span className="truncate min-w-0">{displayCoachLabel}</span>
                         <ChevronDown
                           className={`flex-shrink-0 w-4 h-4 text-gray-500 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}
                           aria-hidden
@@ -171,23 +179,23 @@ export default function CoursesHero({
                         document.body
                       )}
                     </div>
-                    <span className="flex-shrink-0 w-px self-stretch bg-gray-200 my-2" aria-hidden />
+                    <span className="flex-shrink-0 w-px self-center sm:self-stretch h-6 sm:h-auto sm:my-2 bg-gray-200" aria-hidden />
                   </>
                 )}
                 <Input
                   value={query}
                   onChange={(e) => onQueryChange(e.target.value)}
-                  placeholder={isArabic ? 'ابحثي عن الدورات أو التصنيفات' : 'Search courses or categories'}
-                  className={`flex-1 min-w-[180px] sm:min-w-[220px] w-0 h-full border-0 rounded-none bg-white shadow-none placeholder:text-text-secondary focus-visible:ring-0 focus-visible:ring-offset-0 py-3 px-4 text-sm sm:text-base ${isArabic ? 'text-right' : ''}`}
+                  placeholder={isMobile ? t('courses.searchPlaceholderShort') : t('courses.searchPlaceholder')}
+                  className={`flex-1 min-w-0 sm:min-w-[220px] w-0 h-full min-h-[2.75rem] sm:min-h-0 border-0 rounded-none bg-white shadow-none placeholder:text-text-secondary focus-visible:ring-0 focus-visible:ring-offset-0 py-3 px-3 sm:px-4 text-sm sm:text-base ${isArabic ? 'text-right' : ''}`}
                 />
                 <Button
                   type="submit"
-                  className="flex-shrink-0 self-stretch rounded-none bg-purple-700 hover:bg-purple-800 text-white h-auto px-4 sm:px-5 text-sm gap-2 font-medium"
+                  className="flex-shrink-0 self-center sm:self-stretch justify-center sm:justify-start rounded-none bg-purple-700 hover:bg-purple-800 text-white h-[2.75rem] sm:h-auto min-h-[2.75rem] w-12 sm:w-auto sm:min-w-0 px-0 sm:px-5 text-sm gap-2 font-medium"
                 >
                   <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
-                  <span className="hidden sm:inline">{isArabic ? 'بحث' : 'Search'}</span>
+                  <span className="hidden sm:inline">{t('courses.searchButton')}</span>
                 </Button>
               </div>
             </form>
