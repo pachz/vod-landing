@@ -3,6 +3,7 @@ import { Inter, Almarai } from 'next/font/google'
 import './globals.css'
 import { cookies } from 'next/headers'
 import { AnalyticsProvider } from '@/providers/PostHogProvider'
+import { Analytics } from '@vercel/analytics/next'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const almarai = Almarai({ 
@@ -31,6 +32,7 @@ export default function RootLayout({
         <AnalyticsProvider>
           {children}
         </AnalyticsProvider>
+        <Analytics />
       </body>
     </html>
   )
