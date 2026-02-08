@@ -2,14 +2,15 @@ import { DirectionProvider } from '@/providers/DirectionProvider'
 import { Navbar } from '@/components/layout'
 import HtmlAttributes from '@/components/common/HtmlAttributes'
 
-export default function LangLayout({
+export default async function LangLayout({
   children,
   params,
 }: {
   children: React.ReactNode
-  params: { lang: 'en' | 'ar' }
+  params: Promise<{ lang: string }>
 }) {
-  const initialLocale = params.lang === 'en' ? 'en' : 'ar'
+  const { lang } = await params
+  const initialLocale = lang === 'en' ? 'en' : 'ar'
   return (
     <DirectionProvider initialLocale={initialLocale}>
       <HtmlAttributes />

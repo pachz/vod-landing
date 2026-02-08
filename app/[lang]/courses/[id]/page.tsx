@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { use, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import { SiteFooter } from "@/components/layout";
 import { useDirection } from "@/providers/DirectionProvider";
 
 interface CourseDetailPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 const getCourseDetails = (id: string) => {
@@ -112,13 +112,14 @@ const getCourseDetails = (id: string) => {
 export default function LangCourseDetailPage({
   params,
 }: CourseDetailPageProps) {
+  const resolvedParams = use(params);
   const { locale } = useDirection();
   const isAr = locale === "ar";
   const [activeTab, setActiveTab] = useState<"overview" | "curriculum">(
     "overview"
   );
-  const course = getCourseDetails(params.id);
-  const base = courseCatalog.find((c) => c.id === params.id);
+  const course = getCourseDetails(resolvedParams.id);
+  const base = courseCatalog.find((c) => c.id === resolvedParams.id);
 
   if (!course) {
     return (

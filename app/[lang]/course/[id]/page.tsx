@@ -3,11 +3,12 @@ import { getCourseBySlug } from '@/lib/server/course'
 import { notFound } from 'next/navigation'
 
 interface CourseDetailPageProps {
-  params: { lang: 'en' | 'ar'; id: string }
+  params: Promise<{ lang: 'en' | 'ar'; id: string }>
 }
 
 export default async function LangCourseDetailPage({ params }: CourseDetailPageProps) {
-  const course = await getCourseBySlug(params.id)
+  const { id, lang } = await params
+  const course = await getCourseBySlug(id)
 
   if (!course) {
     notFound()
@@ -18,7 +19,7 @@ export default async function LangCourseDetailPage({ params }: CourseDetailPageP
   return (
     <CourseDetailClient
       course={course}
-      backHref={`/${params.lang}/courses`}
+      backHref={`/${lang}/courses`}
       panelUrl={panelUrl}
     />
   )
