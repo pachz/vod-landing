@@ -387,7 +387,7 @@
     "branding": {
       "tagline": "Reham Diva"
     },
-    "copyright": "© 2025 Reham Diva. All rights reserved."
+    "copyright": "© {{year}} Reham Diva. All rights reserved."
   },
   "navbar": {
     "home": "Home",

@@ -387,7 +387,7 @@
     "branding": {
       "tagline": "رهام دیفا"
     },
-    "copyright": "© 2025 Reham Diva. جميع الحقوق محفوظة."
+    "copyright": "© {{year}} Reham Diva. جميع الحقوق محفوظة."
   },
   "navbar": {
     "home": "الرئيسية",

@@ -170,7 +170,7 @@ export default function SiteFooter() {
           viewport={{ once: true }}
           className="border-t border-white/20 mt-8 sm:mt-12 pt-6 sm:pt-8 text-center text-white/80"
         >
-          <p className="text-xs sm:text-sm">{t('footer.copyright')}</p>
+          <p className="text-xs sm:text-sm">{t('footer.copyright').replace('{{year}}', String(new Date().getFullYear()))}</p>
         </motion.div>
       </div>
     </footer>

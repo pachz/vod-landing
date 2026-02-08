@@ -151,4 +151,4 @@ The project builds to static files and can be deployed to:
 
 ## 📝 License
 
-© 2025 Reham Diva. All rights reserved.
+© 2026 Reham Diva. All rights reserved.
