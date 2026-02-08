@@ -237,11 +237,6 @@ export default function LangCoursesPage() {
     }
   }, [categoryKeys, selectedCategory])
 
-  const primaryCategoryKeys = useMemo(
-    () => Array.from(new Set(courses.map((c) => (c.categoryKey || 'general').toLowerCase()))),
-    [courses]
-  )
-
   const filteredCourses = useMemo(() => {
     const q = query.trim().toLowerCase()
     const base = courses.filter((course) => {
@@ -268,20 +263,19 @@ export default function LangCoursesPage() {
     const selectedNorm = normalizeCategoryKey(selectedLabel)
     const selectedIdNorm = normalizeCategoryId(selectedCategory)
     return coachFiltered.filter((course) => {
-      if (primaryCategoryKeys.includes(selectedCategory)) {
-        return (course.categoryKey || 'general').toLowerCase() === selectedCategory
+      // Match main category (by key or label)
+      const mainKeyNorm = (course.categoryKey || 'general').toLowerCase()
+      if (mainKeyNorm === selectedCategory || normalizeCategoryKey(course.categoryLabel ?? '') === selectedNorm) {
+        return true
       }
-      // Match by additional category id (normalized so backend/client casing/trim don't break)
+      // Match additional categories (by id or label)
       const courseAdditionalIdNorms = (course.additionalCategoryIds || []).map(normalizeCategoryId)
       if (courseAdditionalIdNorms.includes(selectedIdNorm)) {
         return true
       }
-      if (normalizeCategoryKey(course.categoryLabel ?? '') === selectedNorm) {
-        return true
-      }
       return (course.additionalCategoryLabels ?? []).some((l) => normalizeCategoryKey(l) === selectedNorm)
     })
-  }, [courses, query, selectedCategory, selectedCoach, primaryCategoryKeys, additionalCategories, categoryEntries])
+  }, [courses, query, selectedCategory, selectedCoach, additionalCategories, categoryEntries])
 
   const visibleCourses = useMemo(
     () => filteredCourses.slice(0, visibleCount),
