@@ -15,15 +15,14 @@ export interface AdditionalCategoryRecord {
 
 interface ExternalCoursesApiResponse {
   courses?: ExternalCourseListItem[];
-  additionalCategoryIds?: string[];
-  additionalCategories?: { id: string; nameEn: string; nameAr: string }[];
 }
 
-/** Per-course additional category (when backend sends full objects on list items) */
-interface ExternalPerCourseCategory {
+/** New API shape: per-course categories array. main: true = primary, main: false = additional. */
+interface ExternalCategory {
   id: string;
   nameEn?: string | null;
   nameAr?: string | null;
+  main?: boolean;
 }
 
 interface ExternalCourseListItem {
@@ -35,12 +34,9 @@ interface ExternalCourseListItem {
   shortDescriptionAr?: string | null;
   instructorNameEn?: string | null;
   instructorNameAr?: string | null;
-  categoryNameEn?: string | null;
-  categoryNameAr?: string | null;
   coachId?: string | null;
-  additionalCategoryIds?: (string | null)[] | null;
-  /** Per-course additional categories (alternative to additionalCategoryIds + global list) */
-  additionalCategories?: ExternalPerCourseCategory[] | null;
+  /** New shape: categories array. main: true = primary, main: false = additional. Main first when present. */
+  categories?: ExternalCategory[] | null;
   durationMinutes?: number | null;
   studentsCount?: number | null;
   rating?: number | null;
@@ -138,61 +134,53 @@ function sanitizeCategoryIds(value?: (string | null)[] | null): string[] {
     .map((v) => v.trim());
 }
 
-function normalizePerCourseCategories(
-  raw?: ExternalPerCourseCategory[] | null
-): PerCourseCategoryRecord[] {
-  if (!Array.isArray(raw)) return [];
-  return raw
-    .filter(
-      (c) =>
-        typeof c?.id === "string" &&
-        (typeof c?.nameEn === "string" || typeof c?.nameAr === "string")
-    )
-    .map((c) => ({
-      id: String(c.id).trim(),
-      nameEn: typeof c.nameEn === "string" ? c.nameEn.trim() : "",
-      nameAr: typeof c.nameAr === "string" ? c.nameAr.trim() : "",
-    }))
-    .filter((c) => c.id.length > 0);
-}
+/** Parse new categories array: [{ id, nameEn, nameAr, main }]. main: true = primary, main: false = additional. */
+function parseCategoriesArray(
+  raw?: ExternalCategory[] | null
+): {
+  categoryNameEn?: string;
+  categoryNameAr?: string;
+  additionalCategoryIds: string[];
+  additionalCategories: PerCourseCategoryRecord[];
+} {
+  if (!Array.isArray(raw) || raw.length === 0) {
+    return { additionalCategoryIds: [], additionalCategories: [] };
+  }
+  let categoryNameEn: string | undefined;
+  let categoryNameAr: string | undefined;
+  const additionalCategoryIds: string[] = [];
+  const additionalCategories: PerCourseCategoryRecord[] = [];
 
-/** Try multiple possible keys from backend for additional category ids */
-function getAdditionalCategoryIds(
-  item: ExternalCourseListItem
-): string[] {
-  const fromIds = sanitizeCategoryIds(item.additionalCategoryIds);
-  if (fromIds.length > 0) return fromIds;
-  if (Array.isArray(item.additionalCategories)) {
-    const fromObjs = item.additionalCategories
-      .filter((c) => c && typeof c.id === "string")
-      .map((c) => String(c.id).trim())
-      .filter(Boolean);
-    if (fromObjs.length > 0) return fromObjs;
+  for (const c of raw) {
+    if (!c || typeof c.id !== "string" || !c.id.trim()) continue;
+    const id = String(c.id).trim();
+    const nameEn = typeof c.nameEn === "string" ? c.nameEn.trim() : "";
+    const nameAr = typeof c.nameAr === "string" ? c.nameAr.trim() : "";
+    const isMain = c.main === true;
+
+    if (isMain) {
+      categoryNameEn = nameEn || categoryNameEn;
+      categoryNameAr = nameAr || categoryNameAr;
+    } else {
+      additionalCategoryIds.push(id);
+      if (nameEn || nameAr) {
+        additionalCategories.push({ id, nameEn, nameAr });
+      }
+    }
   }
-  const raw = (item as unknown as Record<string, unknown>).categoryIds;
-  const fromCategoryIds = Array.isArray(raw)
-    ? (raw as (string | null)[])
-        .filter((v): v is string => typeof v === "string" && v.trim().length > 0)
-        .map((v) => v.trim())
-    : [];
-  if (fromCategoryIds.length > 0) return fromCategoryIds;
-  const categoriesRaw = (item as unknown as Record<string, unknown>).categories;
-  if (Array.isArray(categoriesRaw)) {
-    const fromCategories = categoriesRaw
-      .filter((v): v is string => typeof v === "string" && v.trim().length > 0)
-      .map((v) => v.trim());
-    if (fromCategories.length > 0) return fromCategories;
-  }
-  return [];
+
+  return {
+    categoryNameEn,
+    categoryNameAr,
+    additionalCategoryIds,
+    additionalCategories,
+  };
 }
 
 function normalizeCourse(item: ExternalCourseListItem): CourseFeedRecord {
   const id = sanitizeString(item.id) ?? randomUUID();
-  const perCourse = normalizePerCourseCategories(item.additionalCategories);
-  const idsFromArray = getAdditionalCategoryIds(item);
-  const idsFromPerCourse = perCourse.map((c) => c.id);
-  const additionalCategoryIds =
-    idsFromArray.length > 0 ? idsFromArray : idsFromPerCourse;
+  const parsed = parseCategoriesArray(item.categories);
+
   // Backend will expose coach_id in snake_case; support both camelCase and snake_case
   const rawCoachId =
     item.coachId ??
@@ -212,10 +200,12 @@ function normalizeCourse(item: ExternalCourseListItem): CourseFeedRecord {
     instructorNameEn: sanitizeString(item.instructorNameEn),
     instructorNameAr: sanitizeString(item.instructorNameAr),
     coachId: sanitizeString(rawCoachId ?? undefined),
-    categoryNameEn: sanitizeString(item.categoryNameEn),
-    categoryNameAr: sanitizeString(item.categoryNameAr),
-    additionalCategoryIds,
-    ...(perCourse.length > 0 ? { additionalCategories: perCourse } : {}),
+    categoryNameEn: parsed.categoryNameEn,
+    categoryNameAr: parsed.categoryNameAr,
+    additionalCategoryIds: parsed.additionalCategoryIds,
+    ...(parsed.additionalCategories.length > 0
+      ? { additionalCategories: parsed.additionalCategories }
+      : {}),
     durationMinutes: sanitizePositiveInteger(item.durationMinutes),
     studentsCount: sanitizePositiveInteger(item.studentsCount),
     rating: sanitizeRating(item.rating),
@@ -225,24 +215,6 @@ function normalizeCourse(item: ExternalCourseListItem): CourseFeedRecord {
       "/images/placeholder.svg",
     thumbnailImageUrl: sanitizeUrl(item.thumbnailImageUrl),
   };
-}
-
-function normalizeAdditionalCategories(
-  raw?: { id: string; nameEn: string; nameAr: string }[] | null
-): AdditionalCategoryRecord[] {
-  if (!Array.isArray(raw)) return [];
-  return raw
-    .filter(
-      (c) =>
-        typeof c?.id === "string" &&
-        typeof c?.nameEn === "string" &&
-        typeof c?.nameAr === "string"
-    )
-    .map((c) => ({
-      id: String(c.id).trim(),
-      nameEn: String(c.nameEn).trim(),
-      nameAr: String(c.nameAr).trim(),
-    }));
 }
 
 function fallbackFromStatic(): {
@@ -278,6 +250,22 @@ export interface CourseFeedResult {
   additionalCategories: AdditionalCategoryRecord[];
 }
 
+/** Derive a unique list of all categories from courses (for filter dropdown / label resolution) */
+function deriveAdditionalCategoriesFromCourses(
+  courses: CourseFeedRecord[]
+): AdditionalCategoryRecord[] {
+  const byId = new Map<string, AdditionalCategoryRecord>();
+  for (const course of courses) {
+    const perCourse = course.additionalCategories ?? [];
+    for (const c of perCourse) {
+      if (c.id && !byId.has(c.id)) {
+        byId.set(c.id, { id: c.id, nameEn: c.nameEn, nameAr: c.nameAr });
+      }
+    }
+  }
+  return Array.from(byId.values());
+}
+
 async function fetchCoursesFromApi(): Promise<CourseFeedResult> {
   try {
     const payload = await fetchFromBackend<ExternalCoursesApiResponse>(
@@ -287,9 +275,7 @@ async function fetchCoursesFromApi(): Promise<CourseFeedResult> {
       throw new Error("[courses feed] Unexpected API response shape");
     }
     const courses = payload.courses.map(normalizeCourse);
-    const additionalCategories = normalizeAdditionalCategories(
-      payload.additionalCategories
-    );
+    const additionalCategories = deriveAdditionalCategoriesFromCourses(courses);
     return { courses, additionalCategories };
   } catch (error) {
     console.error("[courses feed] Failed to reach backend API", error);

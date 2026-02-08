@@ -13,6 +13,11 @@ function normalizeCategoryKey(s: string): string {
   return (s ?? '').trim().toLowerCase()
 }
 
+/** Normalize category id for comparison (trim + lowerCase) so backend and client match. */
+function normalizeCategoryId(id: string): string {
+  return (id ?? '').trim().toLowerCase()
+}
+
 type AdditionalCategoryResponse = {
   id: string
   name: string
@@ -232,11 +237,6 @@ export default function LangCoursesPage() {
     }
   }, [categoryKeys, selectedCategory])
 
-  const primaryCategoryKeys = useMemo(
-    () => Array.from(new Set(courses.map((c) => (c.categoryKey || 'general').toLowerCase()))),
-    [courses]
-  )
-
   const filteredCourses = useMemo(() => {
     const q = query.trim().toLowerCase()
     const base = courses.filter((course) => {
@@ -261,19 +261,21 @@ export default function LangCoursesPage() {
     }
     const selectedLabel = categoryEntries.find((e) => e.key === selectedCategory)?.label ?? selectedCategory
     const selectedNorm = normalizeCategoryKey(selectedLabel)
+    const selectedIdNorm = normalizeCategoryId(selectedCategory)
     return coachFiltered.filter((course) => {
-      if (primaryCategoryKeys.includes(selectedCategory)) {
-        return (course.categoryKey || 'general').toLowerCase() === selectedCategory
-      }
-      if ((course.additionalCategoryIds || []).includes(selectedCategory)) {
+      // Match main category (by key or label)
+      const mainKeyNorm = (course.categoryKey || 'general').toLowerCase()
+      if (mainKeyNorm === selectedCategory || normalizeCategoryKey(course.categoryLabel ?? '') === selectedNorm) {
         return true
       }
-      if (normalizeCategoryKey(course.categoryLabel ?? '') === selectedNorm) {
+      // Match additional categories (by id or label)
+      const courseAdditionalIdNorms = (course.additionalCategoryIds || []).map(normalizeCategoryId)
+      if (courseAdditionalIdNorms.includes(selectedIdNorm)) {
         return true
       }
       return (course.additionalCategoryLabels ?? []).some((l) => normalizeCategoryKey(l) === selectedNorm)
     })
-  }, [courses, query, selectedCategory, selectedCoach, primaryCategoryKeys, additionalCategories, categoryEntries])
+  }, [courses, query, selectedCategory, selectedCoach, additionalCategories, categoryEntries])
 
   const visibleCourses = useMemo(
     () => filteredCourses.slice(0, visibleCount),
