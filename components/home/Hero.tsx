@@ -165,7 +165,6 @@ export default function Hero() {
                   poster="/images/hero.png"
                 >
                   {/* Provide both formats if available */}
-                  <source src="/images/hero/hero.webm" type="video/webm" />
                   <source src="/images/hero/hero.mp4" type="video/mp4" />
                 </video>
 
