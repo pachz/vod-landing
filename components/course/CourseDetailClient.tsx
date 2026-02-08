@@ -63,7 +63,7 @@ type CourseViewModel = {
   metaData: {
     totalDuration: string;
     lessonsCount: number;
-    viewsCount: string;
+    watchedHoursDisplay: string;
     lastUpdated: string;
   };
   curriculum: LessonViewModel[];
@@ -79,7 +79,7 @@ type ArabicContent = {
   metaData: {
     totalDuration: string;
     lessonsCount: number;
-    viewsCount: string;
+    watchedHoursDisplay: string;
     lastUpdated: string;
   };
   curriculum: string[];
@@ -329,11 +329,11 @@ export default function CourseDetailClient({
                 <div className="text-center">
                   <div className="text-lg sm:text-2xl font-bold text-purple-900">
                     {isAr
-                      ? arabicContent.metaData.viewsCount
-                      : courseContent.metaData.viewsCount}
+                      ? arabicContent.metaData.watchedHoursDisplay
+                      : courseContent.metaData.watchedHoursDisplay}
                   </div>
                   <div className="text-xs sm:text-sm text-purple-600">
-                    {isAr ? "المشاهدات" : "Views"}
+                    {isAr ? "ساعات المشاهدة" : "Hours watched"}
                   </div>
                 </div>
               </div>
@@ -581,10 +581,10 @@ export default function CourseDetailClient({
                         value: courseContent.metaData.lessonsCount.toString(),
                       },
                       {
-                        label: isAr ? "المشاهدات" : "Views",
+                        label: isAr ? "ساعات المشاهدة" : "Hours watched",
                         value: isAr
-                          ? arabicContent.metaData.viewsCount
-                          : courseContent.metaData.viewsCount,
+                          ? arabicContent.metaData.watchedHoursDisplay
+                          : courseContent.metaData.watchedHoursDisplay,
                       },
                       {
                         label: isAr ? "آخر تحديث" : "Updated",
@@ -758,7 +758,7 @@ function buildCourseViewModel(course: CourseDetailRecord): CourseViewModel {
       : cloneLessons(MOCK_COURSE.curriculum);
 
   const lastUpdatedLabel = formatUpdatedAtLabel(course.updatedAt, "en") ?? "—";
-  const viewsLabel = getViewsLabel("en");
+  const watchedHoursDisplay = formatWatchedHours(course.watchedHours, "en");
   const pricing = buildPricingViewModel(course);
 
   const coachRecord = course.coach;
@@ -788,7 +788,7 @@ function buildCourseViewModel(course: CourseDetailRecord): CourseViewModel {
           ? formatTotalDuration(course.durationMinutes, "en")
           : MOCK_COURSE.metaData.totalDuration,
       lessonsCount: lessons.length,
-      viewsCount: viewsLabel,
+      watchedHoursDisplay,
       lastUpdated: lastUpdatedLabel,
     },
     curriculum: lessons,
@@ -819,7 +819,7 @@ function buildArabicOverrides(
       : [...ARABIC_STATIC.curriculum];
 
   const lastUpdatedLabel = formatUpdatedAtLabel(course.updatedAt, "ar") ?? "—";
-  const viewsLabel = getViewsLabel("ar");
+  const watchedHoursDisplay = formatWatchedHours(course.watchedHours, "ar");
 
   const coachRecord = course.coach;
   const coachLastUpdated = coachRecord?.lastUpdatedAt
@@ -841,7 +841,7 @@ function buildArabicOverrides(
           ? formatTotalDuration(course.durationMinutes, "ar")
           : ARABIC_STATIC.metaData.totalDuration,
       lessonsCount: english.metaData.lessonsCount,
-      viewsCount: viewsLabel,
+      watchedHoursDisplay,
       lastUpdated: lastUpdatedLabel,
     },
     curriculum: lessonNames,
@@ -930,8 +930,32 @@ function formatLessonDurationLabel(minutes?: number): string {
   return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours}h`;
 }
 
-function getViewsLabel(locale: "en" | "ar"): string {
-  return locale === "ar" ? "أقل من ١٠٠" : "<100";
+/** Format watched hours for display. Uses "< 1h" when 0 or not available. */
+function formatWatchedHours(
+  hours: number | undefined,
+  locale: "en" | "ar"
+): string {
+  const value =
+    typeof hours === "number" && Number.isFinite(hours) ? hours : 0;
+  if (value <= 0 || value < 0.1) {
+    return locale === "ar" ? "أقل من ١ ساعة" : "< 1h";
+  }
+  if (value < 1) {
+    const mins = Math.round(value * 60);
+    return locale === "ar" ? `أقل من ساعة (${mins} د)` : `< 1h (${mins}m)`;
+  }
+  const wholeHours = Math.floor(value);
+  const remainder = value - wholeHours;
+  if (remainder < 0.1) {
+    return locale === "ar"
+      ? `${wholeHours.toLocaleString(locale === "ar" ? "ar" : "en")} ساعة`
+      : `${wholeHours}h`;
+  }
+  const h = Math.floor(value);
+  const m = Math.round((value - h) * 60);
+  return locale === "ar"
+    ? `${h} س ${m} د`
+    : `${h}h ${m}m`;
 }
 
 type PricingDisplay = {
@@ -1075,7 +1099,7 @@ function createMockCourseDetails(): CourseViewModel {
     metaData: {
       totalDuration: "2 hours 30 minutes",
       lessonsCount: 12,
-      viewsCount: "<100",
+      watchedHoursDisplay: "< 1h",
       lastUpdated: "December 2024",
     },
     curriculum: [
@@ -1175,7 +1199,7 @@ function createArabicContent(): ArabicContent {
     metaData: {
       totalDuration: "ساعتان و 30 دقيقة",
       lessonsCount: 12,
-      viewsCount: "أقل من ١٠٠",
+      watchedHoursDisplay: "أقل من ١ ساعة",
       lastUpdated: "ديسمبر 2024",
     },
     curriculum: [

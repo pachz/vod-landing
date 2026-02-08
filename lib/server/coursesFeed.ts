@@ -40,6 +40,7 @@ interface ExternalCourseListItem {
   durationMinutes?: number | null;
   studentsCount?: number | null;
   rating?: number | null;
+  watchedHours?: number | null;
   coverImageUrl?: string | null;
   thumbnailImageUrl?: string | null;
 }
@@ -69,6 +70,7 @@ export interface CourseFeedRecord {
   durationMinutes: number;
   studentsCount: number;
   rating: number;
+  watchedHours: number;
   coverImageUrl?: string;
   thumbnailImageUrl?: string;
 }
@@ -209,6 +211,10 @@ function normalizeCourse(item: ExternalCourseListItem): CourseFeedRecord {
     durationMinutes: sanitizePositiveInteger(item.durationMinutes),
     studentsCount: sanitizePositiveInteger(item.studentsCount),
     rating: sanitizeRating(item.rating),
+    watchedHours: sanitizePositiveInteger(
+      item.watchedHours ??
+        (item as unknown as { watched_hours?: number | null }).watched_hours
+    ),
     coverImageUrl:
       sanitizeUrl(item.coverImageUrl) ??
       sanitizeUrl(item.thumbnailImageUrl) ??
@@ -238,6 +244,7 @@ function fallbackFromStatic(): {
       durationMinutes: duration,
       studentsCount: 0,
       rating: 4.5,
+      watchedHours: 0,
       coverImageUrl: course.image,
       thumbnailImageUrl: course.image,
     };

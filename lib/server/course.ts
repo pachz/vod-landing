@@ -41,6 +41,7 @@ export interface ExternalCourseResponse {
   categories?: ExternalCategory[] | null;
   instructor?: string;
   durationMinutes?: number;
+  watchedHours?: number | null;
   trialVideoUrl?: string;
   lessons?: ExternalLesson[];
   updatedAt?: string;
@@ -72,6 +73,7 @@ export interface CourseDetailRecord {
   additionalCategories: AdditionalCategoryDetail[];
   instructor?: string;
   durationMinutes: number;
+  watchedHours: number;
   trialVideoUrl?: string;
   lessons: CourseLessonRecord[];
   updatedAt?: string;
@@ -290,6 +292,12 @@ function normalizeCourseResponse(
     additionalCategories: parsed.additionalCategories,
     instructor: sanitizeString(payload.instructor),
     durationMinutes: sanitizePositiveInteger(payload.durationMinutes),
+    watchedHours:
+      sanitizeOptionalNumber(payload.watchedHours) ??
+      sanitizeOptionalNumber(
+        (payload as unknown as { watched_hours?: number | null }).watched_hours
+      ) ??
+      0,
     trialVideoUrl: sanitizeString(payload.trialVideoUrl),
     lessons: Array.isArray(payload.lessons)
       ? payload.lessons.map(normalizeLesson)
