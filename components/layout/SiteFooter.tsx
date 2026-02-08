@@ -35,8 +35,14 @@ const footerSupportItems = [
   { labelKey: 'footer.support.privacy', href: '/privacy', isPage: true }
 ]
 
-export default function SiteFooter() {
+interface SiteFooterProps {
+  /** Pass from server to avoid hydration mismatch. */
+  panelUrl?: string
+}
+
+export default function SiteFooter({ panelUrl: panelUrlProp }: SiteFooterProps = {}) {
   const { direction, locale } = useDirection()
+  const panelUrl = panelUrlProp ?? getPanelUrl(locale)
 
   const handleFooterNavigation = (item: { href: string; isPage?: boolean }) => {
     if (typeof window === 'undefined') return
@@ -128,7 +134,7 @@ export default function SiteFooter() {
               ))}
               <li>
                 <a
-                  href={getPanelUrl(locale)}
+                  href={panelUrl}
                   className="text-sm sm:text-base text-white/90 hover:text-white transition-colors"
                 >
                   {t('footer.navigation.signIn')}

@@ -1,27 +1,14 @@
-"use client";
+import { getPanelUrl } from "@/lib/panelUrl";
+import LangHomePageClient from "@/components/home/LangHomePageClient";
 
-import {
-  Hero,
-  Features,
-  ExploreMarquee,
-  InstructorsSlider,
-  Testimonials,
-  FAQ,
-} from "@/components/home";
-import { SiteFooter } from "@/components/layout";
-import { useDirection } from "@/providers/DirectionProvider";
+type Params = Promise<{ lang: string }>;
 
-export default function LangHomePage() {
-  const { locale } = useDirection();
-  return (
-    <main className="min-h-screen">
-      <Hero />
-      <ExploreMarquee viewAllRoute={`/${locale}/courses`} marqueeSpeed={30} />
-      <InstructorsSlider />
-      <Features />
-      <Testimonials />
-      <FAQ />
-      <SiteFooter />
-    </main>
-  );
+export default async function LangHomePage({
+  params,
+}: {
+  params: Params;
+}) {
+  const { lang } = await params;
+  const panelUrl = getPanelUrl(lang === "ar" ? "ar" : "en");
+  return <LangHomePageClient panelUrl={panelUrl} />;
 }

@@ -7,8 +7,14 @@ import { useTranslation } from "@/lib/useTranslation";
 import { getPanelUrl } from "@/lib/panelUrl";
 import { Play, Headphones, Download, Monitor, Star, Users } from "lucide-react";
 
-export default function Features() {
+interface FeaturesProps {
+  /** Pass from server to avoid hydration mismatch. */
+  panelUrl?: string;
+}
+
+export default function Features({ panelUrl: panelUrlProp }: FeaturesProps = {}) {
   const { t, locale } = useTranslation();
+  const panelUrl = panelUrlProp ?? getPanelUrl(locale);
 
   const features = [
     {
@@ -128,7 +134,7 @@ export default function Features() {
           >
             <Link
               className="flex w-full items-center justify-center"
-              href={getPanelUrl(locale)}
+              href={panelUrl}
             >
               {t("features.cta.secondary")}
             </Link>

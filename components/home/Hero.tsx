@@ -7,7 +7,12 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/useTranslation";
 import { getPanelUrl } from "@/lib/panelUrl";
 
-export default function Hero() {
+interface HeroProps {
+  /** Pass from server to avoid hydration mismatch (server has BACKEND_PANEL_URL, client does not). */
+  panelUrl?: string;
+}
+
+export default function Hero({ panelUrl: panelUrlProp }: HeroProps = {}) {
   const { t, locale } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -57,7 +62,7 @@ export default function Hero() {
     }
   };
 
-  const panelUrl = getPanelUrl(locale);
+  const panelUrl = panelUrlProp ?? getPanelUrl(locale);
 
   return (
     <section
