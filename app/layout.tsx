@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Almarai } from 'next/font/google'
 import './globals.css'
-import { cookies } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import { AnalyticsProvider } from '@/providers/PostHogProvider'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
@@ -19,14 +19,19 @@ export const metadata: Metadata = {
   description: 'Motivational micro-courses platform.',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const cookieStore = cookies()
-  const preferred = cookieStore.get('preferred-locale')?.value
-  const locale = preferred === 'en' ? 'en' : 'ar'
+  const [cookieStore, headersList] = await Promise.all([cookies(), headers()])
+  const fromHeader = headersList.get('x-next-locale')
+  const fromCookie = cookieStore.get('preferred-locale')?.value
+  const locale = fromHeader === 'en' || fromHeader === 'ar'
+    ? fromHeader
+    : fromCookie === 'en'
+      ? 'en'
+      : 'ar'
   const dir = locale === 'ar' ? 'rtl' : 'ltr'
   return (
     <html lang={locale} dir={dir}>

@@ -4,7 +4,6 @@ import { getOrSetCacheValue } from "@/lib/server/memoryCache";
 
 const CAROUSEL_CACHE_KEY = "carousel-feed";
 const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
-const TEN_SECONDS_IN_MS = 10 * 1000;
 const CAROUSEL_ENDPOINT = "/carousel";
 
 interface ExternalCarouselApiResponse {
@@ -95,7 +94,7 @@ export async function getCarouselFeed(): Promise<CarouselRecord[]> {
   try {
     return await getOrSetCacheValue(
       CAROUSEL_CACHE_KEY,
-      TEN_SECONDS_IN_MS,
+      FIVE_MINUTES_IN_MS,
       fetchCarouselFromApi
     );
   } catch (error) {

@@ -121,12 +121,18 @@ export async function GET(request: Request) {
     const rawItems = await getCarouselFeed();
     warmCourseDetailsInBackground(rawItems);
     const items = mapToLocale(locale, rawItems);
-    return NextResponse.json({
+    const response = NextResponse.json({
       locale,
       items,
       cachedAt: Date.now(),
       ttlMs: 5 * 60 * 1000,
     });
+    // Cache at CDN and browser for 1 min, serve stale up to 5 min while revalidating
+    response.headers.set(
+      "Cache-Control",
+      "public, s-maxage=60, stale-while-revalidate=300"
+    );
+    return response;
   } catch (error) {
     console.error("[carousel API] Unexpected failure", error);
     return NextResponse.json(
