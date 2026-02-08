@@ -13,6 +13,11 @@ function normalizeCategoryKey(s: string): string {
   return (s ?? '').trim().toLowerCase()
 }
 
+/** Normalize category id for comparison (trim + lowerCase) so backend and client match. */
+function normalizeCategoryId(id: string): string {
+  return (id ?? '').trim().toLowerCase()
+}
+
 type AdditionalCategoryResponse = {
   id: string
   name: string
@@ -261,11 +266,14 @@ export default function LangCoursesPage() {
     }
     const selectedLabel = categoryEntries.find((e) => e.key === selectedCategory)?.label ?? selectedCategory
     const selectedNorm = normalizeCategoryKey(selectedLabel)
+    const selectedIdNorm = normalizeCategoryId(selectedCategory)
     return coachFiltered.filter((course) => {
       if (primaryCategoryKeys.includes(selectedCategory)) {
         return (course.categoryKey || 'general').toLowerCase() === selectedCategory
       }
-      if ((course.additionalCategoryIds || []).includes(selectedCategory)) {
+      // Match by additional category id (normalized so backend/client casing/trim don't break)
+      const courseAdditionalIdNorms = (course.additionalCategoryIds || []).map(normalizeCategoryId)
+      if (courseAdditionalIdNorms.includes(selectedIdNorm)) {
         return true
       }
       if (normalizeCategoryKey(course.categoryLabel ?? '') === selectedNorm) {
