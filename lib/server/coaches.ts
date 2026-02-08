@@ -92,7 +92,7 @@ async function fetchCoachesFromApi(): Promise<CoachRecord[]> {
     const payload = await fetchFromBackend<CoachesApiResponse>(
       COACHES_ENDPOINT
     );
-    console.log("[coaches] raw response payload:", payload);
+    // console.log("[coaches] raw response payload:", payload);
 
     const list: ExternalCoach[] = Array.isArray(payload)
       ? payload

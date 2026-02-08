@@ -18,6 +18,14 @@ export interface AdditionalCategoryDetail {
   nameAr: string;
 }
 
+/** New API shape: per-course categories. main: true = primary, main: false = additional. */
+interface ExternalCategory {
+  id: string;
+  nameEn?: string | null;
+  nameAr?: string | null;
+  main?: boolean;
+}
+
 export interface ExternalCourseResponse {
   id: string;
   slug: string;
@@ -29,10 +37,8 @@ export interface ExternalCourseResponse {
   shortDescriptionAr?: string;
   coverImageUrl?: string;
   thumbnailImageUrl?: string;
-  categoryNameEn?: string;
-  categoryNameAr?: string;
-  additionalCategoryIds?: (string | null)[] | null;
-  additionalCategories?: { id: string; nameEn: string; nameAr: string }[] | null;
+  /** New shape: categories array. main: true = primary, main: false = additional. Main first when present. */
+  categories?: ExternalCategory[] | null;
   instructor?: string;
   durationMinutes?: number;
   trialVideoUrl?: string;
@@ -218,34 +224,55 @@ function normalizeLesson(lesson: ExternalLesson): CourseLessonRecord {
   };
 }
 
-function sanitizeCategoryIds(value?: (string | null)[] | null): string[] {
-  if (!Array.isArray(value)) return [];
-  return value
-    .filter((v): v is string => typeof v === "string" && v.trim().length > 0)
-    .map((v) => v.trim());
-}
+/** Parse new categories array for course detail. main: true = primary, main: false = additional. */
+function parseCategoriesForDetail(
+  raw?: ExternalCategory[] | null
+): {
+  categoryNameEn?: string;
+  categoryNameAr?: string;
+  additionalCategoryIds: string[];
+  additionalCategories: AdditionalCategoryDetail[];
+} {
+  if (!Array.isArray(raw) || raw.length === 0) {
+    return { additionalCategoryIds: [], additionalCategories: [] };
+  }
+  let categoryNameEn: string | undefined;
+  let categoryNameAr: string | undefined;
+  const additionalCategoryIds: string[] = [];
+  const additionalCategories: AdditionalCategoryDetail[] = [];
 
-function normalizeAdditionalCategories(
-  raw?: { id: string; nameEn: string; nameAr: string }[] | null
-): AdditionalCategoryDetail[] {
-  if (!Array.isArray(raw)) return [];
-  return raw
-    .filter(
-      (c) =>
-        typeof c?.id === "string" &&
-        typeof c?.nameEn === "string" &&
-        typeof c?.nameAr === "string"
-    )
-    .map((c) => ({
-      id: String(c.id).trim(),
-      nameEn: String(c.nameEn).trim(),
-      nameAr: String(c.nameAr).trim(),
-    }));
+  for (const c of raw) {
+    if (!c || typeof c.id !== "string" || !c.id.trim()) continue;
+    const id = String(c.id).trim();
+    const nameEn = typeof c.nameEn === "string" ? c.nameEn.trim() : "";
+    const nameAr = typeof c.nameAr === "string" ? c.nameAr.trim() : "";
+    const isMain = c.main === true;
+
+    if (isMain) {
+      categoryNameEn = nameEn || categoryNameEn;
+      categoryNameAr = nameAr || categoryNameAr;
+    } else {
+      additionalCategoryIds.push(id);
+      additionalCategories.push({
+        id,
+        nameEn,
+        nameAr,
+      });
+    }
+  }
+
+  return {
+    categoryNameEn,
+    categoryNameAr,
+    additionalCategoryIds,
+    additionalCategories,
+  };
 }
 
 function normalizeCourseResponse(
   payload: ExternalCourseResponse
 ): CourseDetailRecord {
+  const parsed = parseCategoriesForDetail(payload.categories);
   return {
     id: payload.id,
     slug: payload.slug,
@@ -257,12 +284,10 @@ function normalizeCourseResponse(
     shortDescriptionAr: sanitizeString(payload.shortDescriptionAr),
     coverImageUrl: sanitizeString(payload.coverImageUrl),
     thumbnailImageUrl: sanitizeString(payload.thumbnailImageUrl),
-    categoryNameEn: sanitizeString(payload.categoryNameEn),
-    categoryNameAr: sanitizeString(payload.categoryNameAr),
-    additionalCategoryIds: sanitizeCategoryIds(payload.additionalCategoryIds),
-    additionalCategories: normalizeAdditionalCategories(
-      payload.additionalCategories
-    ),
+    categoryNameEn: parsed.categoryNameEn,
+    categoryNameAr: parsed.categoryNameAr,
+    additionalCategoryIds: parsed.additionalCategoryIds,
+    additionalCategories: parsed.additionalCategories,
     instructor: sanitizeString(payload.instructor),
     durationMinutes: sanitizePositiveInteger(payload.durationMinutes),
     trialVideoUrl: sanitizeString(payload.trialVideoUrl),
