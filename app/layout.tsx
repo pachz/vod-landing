@@ -14,9 +14,24 @@ const almarai = Almarai({
   display: 'swap'
 })
 
-export const metadata: Metadata = {
-  title: 'Reham Diva',
-  description: 'Motivational micro-courses platform.',
+export async function generateMetadata(): Promise<Metadata> {
+  const [cookieStore, headersList] = await Promise.all([cookies(), headers()])
+  const fromHeader = headersList.get('x-next-locale')
+  const fromCookie = cookieStore.get('preferred-locale')?.value
+  const locale = fromHeader === 'en' || fromHeader === 'ar'
+    ? fromHeader
+    : fromCookie === 'en'
+      ? 'en'
+      : 'ar'
+
+  const description = locale === 'ar'
+    ? 'استردي توازن حياتك بأن باتصالك بطاقتك الأنثوية، وتعودي إلى عمق حبك لذاتك وترفعي من ثقتك في ذاتك'
+    : 'Restore balance in your life by connecting with your feminine energy, return to the depth of your self-love, and elevate your self-confidence'
+
+  return {
+    title: 'Reham Diva',
+    description,
+  }
 }
 
 export default async function RootLayout({
