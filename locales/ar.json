@@ -131,7 +131,7 @@
   },
   "testimonials": {
     "title": "ماذا يقول مستخدمونا",
-    "subtitle": "اكتشفي كيف غيرت Reham Diva حياة النساء حول العالم.",
+    "subtitle": "اكتشفي كيف غيرت رهام دیفا حياة النساء حول العالم.",
     "items": [
       {
         "name": "نسرين طافش",
@@ -399,14 +399,14 @@
   },
   "courses": {
     "allCoaches": "كل المدربين",
-    "coachShort": "المدرب",
+    "coachShort": "المدربين",
     "filterByCoach": "تصفية حسب المدرب",
     "searchPlaceholder": "ابحثي عن الدورات أو التصنيفات",
     "searchPlaceholderShort": "خانة البحث",
     "searchButton": "بحث",
     "includedInSubscription": "وصول كامل لجميع المواد عند الاشتراك",
     "allCoursesTitle": "جميع الدورات",
-    "allCoursesSubtitle": "اكتشفي مجموعتنا الشاملة من الدورات المصممة لمساعدتك على النمو والتعلم وتحقيق أهدافك.",
+    "allCoursesSubtitle": "اكتشفي مجموعة دورات رهام ديفا المصممة لمساعدتك على الاتصال بأنوثتك والعودة لعمق حبك لذاتك.",
     "viewCourse": "عرض الدورة",
     "noCoursesFound": "لا توجد نتائج.",
     "all": "الكل",
