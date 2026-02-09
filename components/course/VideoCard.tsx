@@ -83,8 +83,6 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 
   const subscriptionPriceDisplay =
     subscriptionPlan?.priceDisplay || (locale === 'ar' ? '٨٫٥ د.ك/شهريًا' : '8.5 KWD/month')
-  const subscriptionNameDisplay =
-    subscriptionPlan?.name || (locale === 'ar' ? 'جميع الدورات' : 'All courses')
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -207,7 +205,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({
               {t('courses.includedInSubscription')}
             </div>
             <div className="text-sm text-purple-700 font-semibold">
-              {subscriptionPriceDisplay} • {subscriptionNameDisplay}
+              {subscriptionPriceDisplay}
             </div>
           </div>
           <button
