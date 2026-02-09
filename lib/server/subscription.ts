@@ -3,7 +3,7 @@ import { getOrSetCacheValue } from "@/lib/server/memoryCache";
 
 const SUBSCRIPTION_ENDPOINT = "/subscription";
 const SUBSCRIPTION_CACHE_KEY = "subscription-plan";
-export const SUBSCRIPTION_CACHE_TTL_MS = 10 * 1000;
+export const SUBSCRIPTION_CACHE_TTL_MS = 60 * 1000;
 
 const ZERO_DECIMAL_CURRENCIES = new Set([
   "BIF",
@@ -53,17 +53,6 @@ export interface SubscriptionRecord {
   currency: string;
   interval: SubscriptionInterval;
 }
-
-const FALLBACK_SUBSCRIPTION: SubscriptionRecord = {
-  productId: "prod_TQx9TrKRUQUdz5",
-  priceId: "price_1SU5FaDWdoFAA1MHEHAmr1Ys",
-  nameEn: "Test Subscription",
-  nameAr: "اشتراك تجريبي",
-  amountCents: 1500,
-  amount: 15,
-  currency: "USD",
-  interval: "month",
-};
 
 function sanitizeString(value?: string | null): string | undefined {
   if (typeof value !== "string") {
@@ -122,26 +111,29 @@ function deriveAmount(amountCents: number, currency: string): number {
 function normalizeSubscriptionPlan(
   raw: ExternalSubscriptionPlan
 ): SubscriptionRecord {
-  const fallback = FALLBACK_SUBSCRIPTION;
-  const currency = sanitizeCurrency(raw.currency) ?? fallback.currency;
-  const interval = normalizeInterval(raw.interval) ?? fallback.interval;
-  const amountCents =
-    sanitizeAmountCents(
-      raw.amountCents ??
-        (typeof raw.amount === "number"
-          ? raw.amount *
-            (ZERO_DECIMAL_CURRENCIES.has(currency) ? 1 : 100)
-          : undefined)
-    ) ?? fallback.amountCents;
+  const currency = sanitizeCurrency(raw.currency);
+  const interval = normalizeInterval(raw.interval);
+  const amountCents = sanitizeAmountCents(
+    raw.amountCents ??
+      (typeof raw.amount === "number" && currency
+        ? raw.amount * (ZERO_DECIMAL_CURRENCIES.has(currency) ? 1 : 100)
+        : undefined)
+  );
+
+  const productId = sanitizeString(raw.productId);
+  const nameEn = sanitizeString(raw.nameEn) ?? sanitizeString(raw.name);
+
+  if (!productId || !nameEn || !amountCents || !currency || !interval) {
+    throw new Error(
+      "[subscription] Incomplete API response: missing productId, nameEn, amountCents, currency, or interval"
+    );
+  }
 
   return {
-    productId: sanitizeString(raw.productId) ?? fallback.productId,
-    priceId: sanitizeString(raw.priceId) ?? fallback.priceId,
-    nameEn:
-      sanitizeString(raw.nameEn) ??
-      sanitizeString(raw.name) ??
-      fallback.nameEn,
-    nameAr: sanitizeString(raw.nameAr) ?? fallback.nameAr,
+    productId,
+    priceId: sanitizeString(raw.priceId),
+    nameEn,
+    nameAr: sanitizeString(raw.nameAr),
     amountCents,
     amount: deriveAmount(amountCents, currency),
     currency,
@@ -163,7 +155,7 @@ async function fetchSubscriptionFromApi(): Promise<SubscriptionRecord> {
     return normalizeSubscriptionPlan(rawPlan);
   } catch (error) {
     console.error("[subscription] Failed to reach backend API", error);
-    return { ...FALLBACK_SUBSCRIPTION };
+    throw error;
   }
 }
 
@@ -176,7 +168,7 @@ export async function getSubscriptionPlan(): Promise<SubscriptionRecord> {
     );
   } catch (error) {
     console.error("[subscription] Unable to load plan data", error);
-    return { ...FALLBACK_SUBSCRIPTION };
+    throw error;
   }
 }
 
