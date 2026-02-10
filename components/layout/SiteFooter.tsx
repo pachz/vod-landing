@@ -92,8 +92,10 @@ export default function SiteFooter({ panelUrl: panelUrlProp }: SiteFooterProps =
               <div className={`flex flex-col text-center ${direction === 'rtl' ? 'sm:text-right' : 'sm:text-left'} px-4 sm:px-0`}>
                 <h4 className="text-base sm:text-lg font-semibold text-white mb-2 sm:mb-3">{t('footer.branding.tagline')}</h4>
                 <p className="text-xs sm:text-sm text-white/90 mb-4 sm:mb-6 leading-relaxed">{t('footer.mission')}</p>
-                <div className={`flex justify-center ${direction === 'rtl' ? 'sm:justify-end' : 'sm:justify-start'} gap-3 sm:gap-4`}>
-                  {(direction === 'rtl' ? [...socialLinks].reverse() : socialLinks).map((social, index) => (
+                <div
+                  className={`flex ${direction === 'rtl' ? 'flex-row-reverse' : 'flex-row'} justify-center ${direction === 'rtl' ? 'sm:justify-end' : 'sm:justify-start'} gap-3 sm:gap-4`}
+                >
+                  {socialLinks.map((social) => (
                     <motion.a
                       key={social.label}
                       href={social.href}
