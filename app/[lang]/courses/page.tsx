@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { VideoCard, type Video, CoursesHero } from '@/components/course'
+import { VideoCard, type Video, CoursesHero, CoursesVideoSale } from '@/components/course'
 import { SiteFooter } from '@/components/layout'
 import { useTranslation } from '@/lib/useTranslation'
 import { useDirection } from '@/providers/DirectionProvider'
@@ -308,7 +308,9 @@ export default function LangCoursesPage() {
           }}
         />
 
-        <section className="py-16">
+        <CoursesVideoSale />
+
+        <section className="py-10">
           <div className="max-w-7xl mx-auto px-4">
             {error && (
               <div className="text-center mb-10">
