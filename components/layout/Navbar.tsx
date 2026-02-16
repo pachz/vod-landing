@@ -202,7 +202,7 @@ export default function Navbar() {
       {/* Mobile menu */}
       {isOpen && (
         <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white/95 backdrop-blur-md border-t border-gray-200">
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white backdrop-blur-md border-t border-gray-200 border-b-2 border-b-purple-200 shadow-[0_8px_20px_-4px_rgba(147,51,234,0.15)]">
             {navigationItems.map((item) => (
               <button
                 key={item.nameKey}
