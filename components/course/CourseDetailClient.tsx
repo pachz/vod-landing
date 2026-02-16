@@ -387,7 +387,7 @@ export default function CourseDetailClient({
                   onClick={() => setShowShareOptions((prev) => !prev)}
                   aria-expanded={showShareOptions}
                   aria-controls={`share-options-${courseContent.id}`}
-                  className="w-full border-purple-300 text-purple-700 hover:bg-purple-50"
+                  className="w-full border-purple-300 text-purple-700 hover:bg-purple-50 hover:text-purple-800"
                 >
                   <svg
                     className={isAr ? "w-5 h-5 ml-2" : "w-5 h-5 mr-2"}
@@ -619,36 +619,26 @@ export default function CourseDetailClient({
                     {isAr ? "دروس" : "lessons"} • {durationLabel}
                   </div>
                 </div>
-                <div className="bg-white border border-purple-100 rounded-xl overflow-hidden shadow-sm">
+                <div className="space-y-3">
                   {courseContent.curriculum.map((lesson, index) => (
                     <div
                       key={index}
-                      className={`px-6 py-4 flex items-center justify-between transition-colors ${
-                        index !== courseContent.curriculum.length - 1
-                          ? "border-b border-purple-50"
-                          : ""
-                      } hover:bg-purple-25`}
+                      className="flex items-stretch bg-white border border-purple-100 rounded-xl overflow-hidden shadow-sm transition-colors hover:bg-purple-25"
                     >
-                      <div
-                        className={
-                          isAr
-                            ? "flex items-center space-x-reverse space-x-4"
-                            : "flex items-center space-x-4"
-                        }
-                      >
-                        <div className="flex-shrink-0">
-                          <div className="w-10 h-10 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center">
-                            <span className="text-sm font-semibold text-purple-700">
-                              {index + 1}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex-1">
+                      <div className={`flex-shrink-0 w-6 bg-purple-100 flex items-center justify-center ${
+                        isAr ? "rounded-r-xl" : "rounded-l-xl"
+                      }`}>
+                        <span className="text-xs font-bold text-purple-700">
+                          {index + 1}
+                        </span>
+                      </div>
+                      <div className="flex-1 min-w-0 flex items-center gap-3 sm:gap-4 px-3 sm:px-5 py-4">
+                        <div className="flex-1 min-w-0">
                           <div
                             className={
                               isAr
-                                ? "flex items-center space-x-reverse space-x-3"
-                                : "flex items-center space-x-3"
+                                ? "flex items-center flex-wrap space-x-reverse space-x-3"
+                                : "flex items-center flex-wrap space-x-3"
                             }
                           >
                             <h5 className="font-medium text-purple-900">
@@ -682,55 +672,55 @@ export default function CourseDetailClient({
                             </span>
                           </div>
                         </div>
-                      </div>
-                      <div
-                        className={
-                          isAr
-                            ? "flex items-center space-x-reverse space-x-3"
-                            : "flex items-center space-x-3"
-                        }
-                      >
-                        <span className="text-sm font-medium text-purple-600 bg-purple-50 px-3 py-1 rounded-full">
-                          {lesson.duration}
-                        </span>
-                        {lesson.id && lesson.id.trim() !== "" ? (
-                          <a
-                            href={getLessonPreviewUrl(lesson.id)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center hover:bg-purple-200 transition-colors cursor-pointer"
-                            aria-label={
-                              isAr
-                                ? `تشغيل ${
-                                    arabicContent.curriculum[index] ??
-                                    lesson.title ??
-                                    `الدرس ${index + 1}`
-                                  }`
-                                : `Play ${
-                                    lesson.title ?? `Lesson ${index + 1}`
-                                  }`
-                            }
-                            data-lesson-id={lesson.id}
-                          >
-                            <svg
-                              className="w-4 h-4 text-purple-600"
-                              fill="currentColor"
-                              viewBox="0 0 24 24"
+                        <div
+                          className={
+                            isAr
+                              ? "flex items-center flex-shrink-0 space-x-reverse space-x-3"
+                              : "flex items-center flex-shrink-0 space-x-3"
+                          }
+                        >
+                          <span className="text-sm font-medium text-purple-600 bg-purple-50 px-3 py-1 rounded-full whitespace-nowrap">
+                            {lesson.duration}
+                          </span>
+                          {lesson.id && lesson.id.trim() !== "" ? (
+                            <a
+                              href={getLessonPreviewUrl(lesson.id)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center hover:bg-purple-200 transition-colors cursor-pointer"
+                              aria-label={
+                                isAr
+                                  ? `تشغيل ${
+                                      arabicContent.curriculum[index] ??
+                                      lesson.title ??
+                                      `الدرس ${index + 1}`
+                                    }`
+                                  : `Play ${
+                                      lesson.title ?? `Lesson ${index + 1}`
+                                    }`
+                              }
+                              data-lesson-id={lesson.id}
                             >
-                              <path d="M8 5v14l11-7z" />
-                            </svg>
-                          </a>
-                        ) : (
-                          <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center opacity-50 cursor-not-allowed">
-                            <svg
-                              className="w-4 h-4 text-purple-600"
-                              fill="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path d="M8 5v14l11-7z" />
-                            </svg>
-                          </div>
-                        )}
+                              <svg
+                                className="w-4 h-4 text-purple-600"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path d="M8 5v14l11-7z" />
+                              </svg>
+                            </a>
+                          ) : (
+                            <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center opacity-50 cursor-not-allowed">
+                              <svg
+                                className="w-4 h-4 text-purple-600"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path d="M8 5v14l11-7z" />
+                              </svg>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}
