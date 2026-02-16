@@ -107,7 +107,10 @@ export default function CourseDetailClient({
   const [shareUrl, setShareUrl] = useState("");
   const [showShareOptions, setShowShareOptions] = useState(false);
 
-  const courseContent = useMemo(() => buildCourseViewModel(course), [course]);
+  const courseContent = useMemo(
+    () => buildCourseViewModel(course, isAr ? "ar" : "en"),
+    [course, isAr]
+  );
   const arabicContent = useMemo(
     () => buildArabicOverrides(course, courseContent),
     [course, courseContent]
@@ -661,7 +664,7 @@ export default function CourseDetailClient({
                             }
                           >
                             <svg
-                              className="w-4 h-4 text-purple-400"
+                              className={`w-4 h-4 text-purple-400 ${isAr ? "scale-x-[-1]" : ""}`}
                               fill="currentColor"
                               viewBox="0 0 24 24"
                             >
@@ -702,7 +705,7 @@ export default function CourseDetailClient({
                               data-lesson-id={lesson.id}
                             >
                               <svg
-                                className="w-4 h-4 text-purple-600"
+                                className={`w-4 h-4 text-purple-600 ${isAr ? "scale-x-[-1]" : ""}`}
                                 fill="currentColor"
                                 viewBox="0 0 24 24"
                               >
@@ -712,7 +715,7 @@ export default function CourseDetailClient({
                           ) : (
                             <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center opacity-50 cursor-not-allowed">
                               <svg
-                                className="w-4 h-4 text-purple-600"
+                                className={`w-4 h-4 text-purple-600 ${isAr ? "scale-x-[-1]" : ""}`}
                                 fill="currentColor"
                                 viewBox="0 0 24 24"
                               >
@@ -736,13 +739,16 @@ export default function CourseDetailClient({
   );
 }
 
-function buildCourseViewModel(course: CourseDetailRecord): CourseViewModel {
+function buildCourseViewModel(
+  course: CourseDetailRecord,
+  locale: "en" | "ar" = "en"
+): CourseViewModel {
   const lessons =
     course.lessons && course.lessons.length > 0
       ? course.lessons.map((lesson, index) => ({
           id: lesson.id,
           title: lesson.titleEn || `Lesson ${index + 1}`,
-          duration: formatLessonDurationLabel(lesson.durationMinutes),
+          duration: formatLessonDurationLabel(lesson.durationMinutes, locale),
           isPreview: false,
         }))
       : cloneLessons(MOCK_COURSE.curriculum);
@@ -912,11 +918,20 @@ function formatTotalDuration(minutes: number, locale: "en" | "ar"): string {
     : `${hours}h`;
 }
 
-function formatLessonDurationLabel(minutes?: number): string {
+function formatLessonDurationLabel(
+  minutes?: number,
+  locale: "en" | "ar" = "en"
+): string {
   if (!minutes || minutes <= 0) return "—";
-  if (minutes < 60) return `${minutes} min`;
+  if (minutes < 60) {
+    return locale === "ar" ? `${minutes} دقيقة` : `${minutes} min`;
+  }
   const hours = Math.floor(minutes / 60);
   const remainingMinutes = minutes % 60;
+  if (locale === "ar") {
+    if (remainingMinutes === 0) return `${hours} ساعة`;
+    return `${hours} س ${remainingMinutes} د`;
+  }
   return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours}h`;
 }
 
