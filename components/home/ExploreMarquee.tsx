@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect, useCallback } from "react";
 import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,9 @@ import { cn } from "@/lib/utils";
 import { useTranslation } from "@/lib/useTranslation";
 import { Video } from "@/components/course";
 import { motion } from "framer-motion";
+
+/** Number of full copies of the list to render for seamless loop (works for 2, 3, or more items) */
+const MARQUEE_COPIES = 3;
 
 // Component props interface
 export interface ExploreMarqueeProps {
@@ -42,6 +45,8 @@ interface CourseCardProps {
   byLabel: string;
   className?: string;
   onClick?: (course: CarouselItem) => void;
+  /** Preload image to reduce pop-in in marquee (use for first few cards) */
+  priority?: boolean;
 }
 
 const CourseCard: React.FC<CourseCardProps> = ({
@@ -49,11 +54,12 @@ const CourseCard: React.FC<CourseCardProps> = ({
   byLabel,
   className,
   onClick,
+  priority = false,
 }) => {
   return (
     <Card
       className={cn(
-        "relative w-[280px] sm:w-[360px] lg:w-[420px] h-[160px] sm:h-[190px] lg:h-[220px] overflow-hidden cursor-pointer transition-transform duration-300 ease-out group rounded-3xl",
+        "relative w-[280px] sm:w-[360px] lg:w-[420px] h-[160px] sm:h-[190px] lg:h-[220px] overflow-hidden cursor-pointer transition-transform duration-300 ease-out group rounded-3xl flex-shrink-0",
         className
       )}
       role="button"
@@ -66,13 +72,15 @@ const CourseCard: React.FC<CourseCardProps> = ({
         }
       }}
     >
-      <div className="relative h-full">
+      <div className="relative h-full w-full">
         <Image
           src={course.image}
           alt={course.title}
           fill
           className="object-cover"
           sizes="(max-width: 640px) 280px, (max-width: 1024px) 360px, 420px"
+          loading={priority ? "eager" : "lazy"}
+          decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
@@ -97,10 +105,13 @@ const CourseCard: React.FC<CourseCardProps> = ({
   );
 };
 
+const CARD_GAP = 24; // gap-6 in px, matches Tailwind gap-6
+
 interface MarqueeRowProps {
   courses: CarouselItem[];
   byLabel: string;
   direction: "left" | "right";
+  /** Duration in seconds for one full loop (one set width) */
   speed: number;
   reduceMotion: boolean;
   onCourseClick?: (course: CarouselItem) => void;
@@ -114,28 +125,77 @@ const MarqueeRow: React.FC<MarqueeRowProps> = ({
   reduceMotion,
   onCourseClick,
 }) => {
-  const rowRef = useRef<HTMLDivElement | null>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const setWidthRef = useRef<HTMLDivElement>(null);
+  const oneSetWidthRef = useRef<number>(0);
+  const [oneSetWidth, setOneSetWidth] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const offsetRef = useRef(0);
+  const rafRef = useRef<number>(0);
+  const lastTimeRef = useRef<number>(0);
+  const directionMultiplier = direction === "left" ? -1 : 1;
 
+  // Measure width of one set of items plus gap to next set (for seamless loop)
+  useLayoutEffect(() => {
+    if (reduceMotion || courses.length === 0) return;
+    const el = setWidthRef.current;
+    if (!el) return;
+    const w = el.offsetWidth + CARD_GAP;
+    if (w > 0) {
+      oneSetWidthRef.current = w;
+      setOneSetWidth(w);
+    }
+  }, [courses.length, reduceMotion]);
+
+  // Pause on hover/touch
+  const setPaused = useCallback((paused: boolean) => setIsPaused(paused), []);
   useEffect(() => {
-    const row = rowRef.current;
+    const row = trackRef.current?.parentElement;
     if (!row || reduceMotion) return;
-
-    const handleEnter = () => setIsPaused(true);
-    const handleLeave = () => setIsPaused(false);
-
+    const handleEnter = () => setPaused(true);
+    const handleLeave = () => setPaused(false);
     row.addEventListener("mouseenter", handleEnter);
     row.addEventListener("mouseleave", handleLeave);
     row.addEventListener("touchstart", handleEnter, { passive: true });
     row.addEventListener("touchend", handleLeave, { passive: true });
-
     return () => {
       row.removeEventListener("mouseenter", handleEnter);
       row.removeEventListener("mouseleave", handleLeave);
       row.removeEventListener("touchstart", handleEnter);
       row.removeEventListener("touchend", handleLeave);
     };
-  }, [reduceMotion]);
+  }, [reduceMotion, setPaused]);
+
+  // requestAnimationFrame marquee loop (avoids Safari CSS animation bugs)
+  useEffect(() => {
+    if (reduceMotion || courses.length === 0 || oneSetWidth <= 0) return;
+
+    const loop = (time: number) => {
+      const last = lastTimeRef.current;
+      lastTimeRef.current = time;
+      const delta = last > 0 ? Math.min(time - last, 100) : 0;
+
+      if (!isPaused && delta > 0) {
+        const pixelsPerSecond = oneSetWidthRef.current / Math.max(15, speed);
+        offsetRef.current += directionMultiplier * pixelsPerSecond * (delta / 1000);
+        const w = oneSetWidthRef.current;
+        if (direction === "left") {
+          if (offsetRef.current <= -w) offsetRef.current = offsetRef.current % (-w);
+        } else {
+          if (offsetRef.current >= w) offsetRef.current = offsetRef.current % w;
+        }
+        const track = trackRef.current;
+        if (track) {
+          track.style.transform = `translate3d(${offsetRef.current}px, 0, 0)`;
+        }
+      }
+
+      rafRef.current = requestAnimationFrame(loop);
+    };
+
+    rafRef.current = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [reduceMotion, courses.length, direction, directionMultiplier, speed, isPaused, oneSetWidth]);
 
   if (reduceMotion) {
     return (
@@ -146,10 +206,7 @@ const MarqueeRow: React.FC<MarqueeRowProps> = ({
         )}
       >
         {courses.map((course) => (
-          <div
-            key={course.id}
-            className="w-[260px] sm:w-[300px] lg:w-[360px] flex-shrink-0 mx-4"
-          >
+          <div key={course.id} className="flex-shrink-0">
             <CourseCard
               course={course}
               byLabel={byLabel}
@@ -161,31 +218,36 @@ const MarqueeRow: React.FC<MarqueeRowProps> = ({
     );
   }
 
+  if (courses.length === 0) {
+    return null;
+  }
+
   return (
-    <div className="overflow-hidden">
+    <div className="overflow-hidden w-full" aria-hidden="true">
       <div
-        ref={rowRef}
-        className={cn(
-          "flex gap-4 sm:gap-6 w-max px-4 will-change-transform",
-          direction === "left"
-            ? "animate-marquee-left"
-            : "animate-marquee-right"
-        )}
+        ref={trackRef}
+        className="flex gap-6 w-max px-4"
         style={{
-          animationDuration: `${Math.max(10, speed)}s`,
-          animationPlayState: isPaused ? "paused" : "running",
+          willChange: "transform",
+          transform: "translate3d(0, 0, 0)",
         }}
       >
-        {[...courses, ...courses].map((course, index) => (
+        {Array.from({ length: MARQUEE_COPIES }).map((_, copyIndex) => (
           <div
-            key={`${course.id}-${index}`}
-            className="w-[260px] sm:w-[300px] lg:w-[360px] flex-shrink-0 mx-6"
+            key={`set-${copyIndex}`}
+            ref={copyIndex === 0 ? setWidthRef : undefined}
+            className="flex gap-6 flex-shrink-0"
           >
-            <CourseCard
-              course={course}
-              byLabel={byLabel}
-              onClick={onCourseClick}
-            />
+            {courses.map((course, index) => (
+              <div key={`${course.id}-${copyIndex}-${index}`} className="flex-shrink-0">
+                <CourseCard
+                  course={course}
+                  byLabel={byLabel}
+                  onClick={onCourseClick}
+                  priority={copyIndex === 0 && index < 4}
+                />
+              </div>
+            ))}
           </div>
         ))}
       </div>

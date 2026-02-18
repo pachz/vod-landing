@@ -113,33 +113,6 @@ img {
   transform: scaleX(-1);
 }
 
-/* Marquee animations */
-@keyframes marquee-left {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-@keyframes marquee-right {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(50%);
-  }
-}
-
-.animate-marquee-left {
-  animation: marquee-left linear infinite;
-}
-
-.animate-marquee-right {
-  animation: marquee-right linear infinite;
-}
-
 /* Line clamp utilities */
 .line-clamp-1 {
   overflow: hidden;
@@ -167,19 +140,6 @@ img {
 /* Performance optimizations */
 * {
   will-change: auto;
-}
-
-/* Optimize animations for mobile */
-@media (max-width: 768px) {
-  * {
-    will-change: auto;
-  }
-  
-  /* Reduce motion on mobile for better performance */
-  .animate-marquee-left,
-  .animate-marquee-right {
-    animation-duration: 60s !important;
-  }
 }
 
 /* Prevent layout shifts */
