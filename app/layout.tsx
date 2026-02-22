@@ -59,7 +59,7 @@ export default async function RootLayout({
           {children}
         </AnalyticsProvider>
         <Analytics />
-        <SpeedInsights />
+        <SpeedInsights sampleRate={0.1} />
       </body>
     </html>
   )
