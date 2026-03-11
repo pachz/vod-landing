@@ -75,6 +75,7 @@ BACKEND_API_URL=https://api.example.com
 LANDING_SECRET=super-secret-key
 NEXT_PUBLIC_POSTHOG_KEY=phc_xxxxx        # optional, required for analytics
 NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com # optional override
+NEXT_PUBLIC_GTM_ID=GTM-XXXXXXX           # optional, Google Tag Manager container ID
 NEXT_PUBLIC_USE_COURSES_AS_HOME=true     # optional, when true hides homepage and uses /ar/courses as main landing
 ```
 

@@ -5,6 +5,7 @@ import { cookies, headers } from 'next/headers'
 import { AnalyticsProvider } from '@/providers/PostHogProvider'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
+import { GoogleTagManager } from '@/components/analytics/GoogleTagManager'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' })
 const almarai = Almarai({ 
@@ -55,6 +56,7 @@ export default async function RootLayout({
         <link rel="preload" as="video" href="/images/hero/hero.mp4" />
       </head>
       <body className={`${inter.variable} ${almarai.variable} font-sans antialiased`}>
+        <GoogleTagManager />
         <AnalyticsProvider>
           {children}
         </AnalyticsProvider>
