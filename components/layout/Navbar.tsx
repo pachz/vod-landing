@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
@@ -8,8 +8,9 @@ import { useDirection } from "@/providers/DirectionProvider";
 import { useTranslation } from "@/lib/useTranslation";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { getPanelUrl } from "@/lib/panelUrl";
+import { USE_COURSES_AS_HOME } from "@/lib/featureFlags";
 
-const navigationItems = [
+const allNavigationItems = [
   { nameKey: "navbar.home", href: "#home" },
   { nameKey: "navbar.courses", href: "/courses", isPage: true },
   { nameKey: "navbar.testimonials", href: "#testimonials" },
@@ -21,6 +22,14 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const { direction, locale } = useDirection();
   const { t } = useTranslation();
+
+  const navigationItems = useMemo(
+    () =>
+      USE_COURSES_AS_HOME
+        ? allNavigationItems.filter((item) => item.isPage)
+        : allNavigationItems,
+    []
+  );
 
   // Get translations based on current locale
   const getNavbarText = (key: string) => {
@@ -139,7 +148,13 @@ export default function Navbar() {
             {/* Logo */}
             <div className="flex-shrink-0">
               <button
-                onClick={() => handleNavigation({ href: "#home" })}
+                onClick={() =>
+                  handleNavigation(
+                    USE_COURSES_AS_HOME
+                      ? { href: "/courses", isPage: true }
+                      : { href: "#home" }
+                  )
+                }
                 className="flex items-center transition-opacity duration-200 hover:opacity-80"
               >
                 <Image

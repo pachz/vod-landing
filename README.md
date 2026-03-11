@@ -75,6 +75,7 @@ BACKEND_API_URL=https://api.example.com
 LANDING_SECRET=super-secret-key
 NEXT_PUBLIC_POSTHOG_KEY=phc_xxxxx        # optional, required for analytics
 NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com # optional override
+NEXT_PUBLIC_USE_COURSES_AS_HOME=true     # optional, when true hides homepage and uses /ar/courses as main landing
 ```
 
 Carousel responses must include `id`, `slug`, `titleEn`, `titleAr`, `descriptionEn`, `descriptionAr`, `categoryNameEn`, `categoryNameAr`, `durationMinutes`, and `coverImageUrl`. Results are cached in memory for five minutes per server instance, and every request from the landing page sends the `LANDING_SECRET` header for authentication.

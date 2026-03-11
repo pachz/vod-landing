@@ -1,11 +1,11 @@
 'use client'
 
 import Image from 'next/image'
-import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { t } from '@/lib/i18n'
 import { useDirection } from '@/providers/DirectionProvider'
 import { getPanelUrl } from '@/lib/panelUrl'
+import { USE_COURSES_AS_HOME } from '@/lib/featureFlags'
 import { 
   Facebook,
   Instagram, 
@@ -24,7 +24,7 @@ const socialLinks = [
   { icon: MessageCircle, href: 'https://wa.me/+96550406406', label: 'WhatsApp' },
 ]
 
-const footerNavigationItems = [
+const allFooterNavigationItems = [
   { labelKey: 'footer.navigation.home', href: '#home' },
   { labelKey: 'footer.navigation.courses', href: '/courses', isPage: true }
 ]
@@ -43,6 +43,9 @@ interface SiteFooterProps {
 export default function SiteFooter({ panelUrl: panelUrlProp }: SiteFooterProps = {}) {
   const { direction, locale } = useDirection()
   const panelUrl = panelUrlProp ?? getPanelUrl(locale)
+  const footerNavigationItems = USE_COURSES_AS_HOME
+    ? allFooterNavigationItems.filter((item) => item.isPage)
+    : allFooterNavigationItems
 
   const handleFooterNavigation = (item: { href: string; isPage?: boolean }) => {
     if (typeof window === 'undefined') return
