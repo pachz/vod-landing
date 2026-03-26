@@ -9,6 +9,7 @@ import remarkGfm from "remark-gfm";
 import { Button } from "@/components/ui/button";
 import { SiteFooter } from "@/components/layout";
 import { useDirection } from "@/providers/DirectionProvider";
+import { pushGtmViewContent } from "@/lib/analytics/gtm";
 import type { CourseDetailRecord } from "@/lib/server/course";
 import {
   FacebookIcon,
@@ -115,6 +116,32 @@ export default function CourseDetailClient({
     () => buildArabicOverrides(course, courseContent),
     [course, courseContent]
   );
+
+  useEffect(() => {
+    const contentCategory =
+      course.categoryNameEn?.trim() || "course";
+    const priceAmount = courseContent.pricing.priceAmount;
+    const priceCurrency = courseContent.pricing.priceCurrency?.trim();
+
+    pushGtmViewContent({
+      content_id: courseContent.id,
+      content_name: courseContent.title,
+      content_category: contentCategory,
+      value: typeof priceAmount === "number" && Number.isFinite(priceAmount)
+        ? priceAmount
+        : 0,
+      currency: priceCurrency || "",
+      language: locale,
+    });
+  }, [
+    course.categoryNameEn,
+    courseContent.id,
+    courseContent.pricing.priceAmount,
+    courseContent.pricing.priceCurrency,
+    courseContent.title,
+    locale,
+  ]);
+
   const shortDescriptionContent = isAr
     ? arabicContent.shortDescription
     : courseContent.shortDescription;
