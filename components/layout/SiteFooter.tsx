@@ -17,7 +17,7 @@ import {
 
 const socialLinks = [
   { icon: Facebook, href: 'https://www.facebook.com/rehamalrashidipage', label: 'Facebook' },
-  { icon: Instagram, href: 'https://www.instagram.com/rehamhouse', label: 'Instagram' },
+  { icon: Instagram, href: 'https://www.instagram.com/rehamalrashidi', label: 'Instagram' },
   { icon: Twitter, href: 'https://x.com/rehamalrashidi', label: 'X (Twitter)' },
   { icon: Youtube, href: 'https://www.youtube.com/user/rehamalrashidi', label: 'YouTube' },
   { icon: Send, href: 'https://t.me/rehamalrashidi', label: 'Telegram' },
