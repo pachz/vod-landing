@@ -1,3 +1,9 @@
+import type { CoursePackageSummary } from "@/lib/types/packages";
+import {
+  normalizeBillingInterval,
+  type BillingInterval,
+  type PlanTheme,
+} from "@/lib/plan-constants";
 import { fetchFromBackend } from "@/lib/server/apiClient";
 import { getOrSetCacheValue } from "@/lib/server/memoryCache";
 
@@ -47,6 +53,26 @@ export interface ExternalCourseResponse {
   updatedAt?: string;
   coach?: ExternalCoach;
   pricing?: ExternalCoursePricing;
+  packages?: ExternalCoursePackage[] | null;
+}
+
+interface ExternalCoursePackage {
+  id?: string | null;
+  slug?: string | null;
+  nameEn?: string | null;
+  nameAr?: string | null;
+  color?: string | null;
+  theme?: Partial<PlanTheme> | null;
+  billingInterval?: string | null;
+  priceAmountCents?: number | null;
+  priceAmount?: number | null;
+  priceCurrency?: string | null;
+  compareAtPriceAmountCents?: number | null;
+  intervalLabel?: string | null;
+  priceDisplay?: string | null;
+  priceSubtitleEn?: string | null;
+  priceSubtitleAr?: string | null;
+  stripePriceId?: string | null;
 }
 
 export interface CourseLessonRecord {
@@ -79,6 +105,7 @@ export interface CourseDetailRecord {
   updatedAt?: string;
   coach?: CourseCoachRecord;
   pricing?: CoursePricingRecord;
+  packages: CoursePackageSummary[];
 }
 
 /** Backend coach shape: _id, _creationTime, nameEn, nameAr, expertiseEn, expertiseAr, descriptionEn, descriptionAr, rating, profileImageUrl, profileThumbnailUrl, courseCount, lastUpdatedAt */
@@ -305,6 +332,7 @@ function normalizeCourseResponse(
     updatedAt: sanitizeIsoDate(payload.updatedAt),
     coach: payload.coach ? normalizeCoach(payload.coach) : undefined,
     pricing: payload.pricing ? normalizePricing(payload.pricing) : undefined,
+    packages: normalizeCoursePackages(payload.packages),
   };
 }
 
@@ -329,6 +357,71 @@ function normalizeCoach(coach: ExternalCoach): CourseCoachRecord {
     courseCount: sanitizeOptionalNumber(coach.courseCount) ?? undefined,
     lastUpdatedAt: sanitizeIsoDate(coach.lastUpdatedAt ?? undefined),
   };
+}
+
+function normalizeCoursePackage(
+  raw: ExternalCoursePackage
+): CoursePackageSummary | undefined {
+  const id = sanitizeString(raw.id);
+  const slug = sanitizeString(raw.slug);
+  const nameEn = sanitizeString(raw.nameEn);
+  const priceAmountCents = sanitizePositiveInteger(raw.priceAmountCents);
+  const priceCurrency = sanitizeString(raw.priceCurrency)?.toUpperCase();
+  const stripePriceId = sanitizeString(raw.stripePriceId);
+
+  if (!id || !slug || !nameEn || !priceAmountCents || !priceCurrency || !stripePriceId) {
+    return undefined;
+  }
+
+  const priceAmount =
+    typeof raw.priceAmount === "number" && Number.isFinite(raw.priceAmount)
+      ? raw.priceAmount
+      : priceAmountCents / 100;
+
+  const billingInterval: BillingInterval = normalizeBillingInterval(
+    raw.billingInterval
+  );
+  const primary =
+    sanitizeString(raw.theme?.primary) ?? sanitizeString(raw.color) ?? "#E91E8C";
+
+  return {
+    id,
+    slug,
+    nameEn,
+    nameAr: sanitizeString(raw.nameAr) ?? nameEn,
+    color: primary,
+    theme: {
+      primary,
+      secondary: sanitizeString(raw.theme?.secondary) ?? "#9C27B0",
+      border: sanitizeString(raw.theme?.border) ?? "#E0E0E0",
+      headerBg: sanitizeString(raw.theme?.headerBg) ?? "#FFFFFF",
+      buttonBg: sanitizeString(raw.theme?.buttonBg) ?? primary,
+    },
+    billingInterval,
+    priceAmountCents,
+    priceAmount,
+    priceCurrency,
+    compareAtPriceAmountCents:
+      sanitizePositiveInteger(raw.compareAtPriceAmountCents) ?? null,
+    intervalLabel:
+      sanitizeString(raw.intervalLabel) ??
+      (billingInterval === "year" ? "Yearly" : "Monthly"),
+    priceDisplay:
+      sanitizeString(raw.priceDisplay) ??
+      `${priceCurrency} ${priceAmount} / ${billingInterval}`,
+    priceSubtitleEn: sanitizeString(raw.priceSubtitleEn) ?? null,
+    priceSubtitleAr: sanitizeString(raw.priceSubtitleAr) ?? null,
+    stripePriceId,
+  };
+}
+
+function normalizeCoursePackages(
+  raw?: ExternalCoursePackage[] | null
+): CoursePackageSummary[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map(normalizeCoursePackage)
+    .filter((pkg): pkg is CoursePackageSummary => pkg !== undefined);
 }
 
 function normalizePricing(pricing: ExternalCoursePricing): CoursePricingRecord | undefined {

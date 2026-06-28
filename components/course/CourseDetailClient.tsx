@@ -8,6 +8,9 @@ import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 import { Button } from "@/components/ui/button";
 import { SiteFooter } from "@/components/layout";
+import SubscriptionPackagesSection from "@/components/course/SubscriptionPackagesSection";
+import { getPanelUrl } from "@/lib/panelUrl";
+import { findCheapestPackage } from "@/lib/packages/formatting";
 import { useDirection } from "@/providers/DirectionProvider";
 import { pushGtmViewContent } from "@/lib/analytics/gtm";
 import type { CourseDetailRecord } from "@/lib/server/course";
@@ -120,8 +123,13 @@ export default function CourseDetailClient({
   useEffect(() => {
     const contentCategory =
       course.categoryNameEn?.trim() || "course";
-    const priceAmount = courseContent.pricing.priceAmount;
-    const priceCurrency = courseContent.pricing.priceCurrency?.trim();
+    const cheapestPackage = findCheapestPackage(course.packages ?? []);
+    const priceAmount =
+      cheapestPackage?.priceAmount ??
+      courseContent.pricing.priceAmount;
+    const priceCurrency =
+      cheapestPackage?.priceCurrency?.trim() ??
+      courseContent.pricing.priceCurrency?.trim();
 
     pushGtmViewContent({
       content_id: courseContent.id,
@@ -135,6 +143,7 @@ export default function CourseDetailClient({
     });
   }, [
     course.categoryNameEn,
+    course.packages,
     courseContent.id,
     courseContent.pricing.priceAmount,
     courseContent.pricing.priceCurrency,
@@ -175,6 +184,12 @@ export default function CourseDetailClient({
   const previewEmbedUrl = useMemo(
     () => buildVimeoEmbedUrl(course.trialVideoUrl),
     [course.trialVideoUrl]
+  );
+  const hasSubscriptionPackages =
+    Array.isArray(course.packages) && course.packages.length > 0;
+  const subscribeUrl = useMemo(
+    () => getPanelUrl(isAr ? "ar" : "en"),
+    [isAr]
   );
   const enrollUrl = useMemo(() => {
     // Try prop first, then NEXT_PUBLIC_ env var (for client-side), then fallback
@@ -368,6 +383,13 @@ export default function CourseDetailClient({
                 </div>
               </div>
 
+              {hasSubscriptionPackages ? (
+                <SubscriptionPackagesSection
+                  packages={course.packages}
+                  locale={isAr ? "ar" : "en"}
+                  subscribeUrl={subscribeUrl}
+                />
+              ) : (
               <div className="bg-white border border-purple-200 rounded-xl p-4 sm:p-6 shadow-sm">
                 <div className="mb-0">
                   <div className="flex items-center justify-between mb-3 sm:mb-4">
@@ -409,6 +431,7 @@ export default function CourseDetailClient({
                   </div>
                 </div>
               </div>
+              )}
 
               <div className="mt-4">
                 <Button
