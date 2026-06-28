@@ -31,6 +31,7 @@ const allFooterNavigationItems = [
 
 const footerSupportItems = [
   { labelKey: 'footer.support.faq', href: '/faq', isPage: true },
+  { labelKey: 'footer.support.subscription', href: '/subscription', isPage: true },
   { labelKey: 'footer.support.terms', href: '/terms', isPage: true },
   { labelKey: 'footer.support.privacy', href: '/privacy', isPage: true }
 ]

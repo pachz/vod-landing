@@ -370,6 +370,7 @@
     },
     "support": {
       "faq": "الأسئلة الشائعة",
+      "subscription": "العضوية",
       "terms": "شروط الخدمة",
       "privacy": "سياسة الخصوصية"
     },
@@ -392,10 +393,128 @@
   "navbar": {
     "home": "الرئيسية",
     "courses": "الدورات",
+    "subscription": "العضوية",
     "testimonials": "الشهادات",
     "faq": "الأسئلة الشائعة",
     "getStarted": "اشتراك في جميع الدورات",
     "logoText": "رهام دیفا"
+  },
+  "subscriptionPage": {
+    "eyebrow": "خطط الاشتراك",
+    "title": "اختاري عضويتك",
+    "subtitle": "انضمي إلى مجتمع رهام ديفا وابدئي رحلتك نحو الأنوثة والحب والجمال",
+    "securePayment": "دفع آمن",
+    "save": "وفّري",
+    "badges": {
+      "startHere": "ابدئي من هنا",
+      "recommended": "موصى بها",
+      "bestValue": "أفضل قيمة",
+      "limitedMembers": "محدودة",
+      "membershipFull": "عضوية VIP ممتلئة"
+    },
+    "locked": {
+      "message": "جميع مقاعد VIP محجوزة حالياً. انضمي لقائمة الانتظار ليتم إشعارك عند توفر مقعد.",
+      "joinWaitlist": "انضمي لقائمة الانتظار"
+    },
+    "ribbon": {
+      "recommended": "الأكثر طلباً"
+    },
+    "plans": {
+      "monthly": {
+        "name": "شهري",
+        "intervalLabel": "في الشهر",
+        "cta": "اختاري الخطة",
+        "featuresHeading": "تشمل",
+        "features": {
+          "access": {
+            "title": "وصول إلى جميع دورات وبرامج الخطة الشهرية",
+            "description": "20 ساعة · 25 دورة · 60 درس"
+          },
+          "club": {
+            "title": "نادي رهام ديفا — 9 جلسات سنوياً",
+            "description": "قيمة 225 دينار كويتي"
+          },
+          "whatsapp": {
+            "title": "مجتمع رهام ديفا على واتساب"
+          }
+        }
+      },
+      "annual": {
+        "name": "سنوي",
+        "intervalLabel": "في السنة",
+        "billingNote": "12 + 2 شهر مجاناً",
+        "cta": "ابدئي الاشتراك",
+        "featuresHeadingPrefix": "كل ما في",
+        "featuresHeadingHighlight": "الخطة الشهرية",
+        "featuresHeadingSuffix": "، بالإضافة إلى",
+        "features": {
+          "access": {
+            "title": "وصول إلى دورات الخطة الشهرية والسنوية",
+            "description": "40 ساعة · 57 دورة · 140 درس"
+          },
+          "bonus": {
+            "title": "شهرين إضافيين مجاناً",
+            "description": "قيمة 32 دينار كويتي"
+          },
+          "clubQuestions": {
+            "title": "طرح أسئلتك في لقاءات النادي"
+          },
+          "program": {
+            "title": "برنامج الحب الروحي",
+            "description": "قيمة 270 دينار كويتي"
+          },
+          "followUp": {
+            "title": "جلسة متابعة شخصية — 30 دقيقة",
+            "description": "خصم 20% — وفّري 20 دينار كويتي"
+          },
+          "renewal": {
+            "title": "خصم 30% على اشتراك السنة القادمة",
+            "description": "خصم 30% — وفّري 48 دينار كويتي"
+          },
+          "certification": {
+            "title": "شهادة مُيسّرة رهام ديفا"
+          }
+        }
+      },
+      "vip": {
+        "name": "VIP",
+        "intervalLabel": "في السنة",
+        "billingNote": "12 + 2 شهر مجاناً",
+        "cta": "انضمي لـ VIP",
+        "featuresHeadingPrefix": "كل ما في",
+        "featuresHeadingHighlight": "الخطة السنوية",
+        "featuresHeadingSuffix": "، بالإضافة إلى",
+        "features": {
+          "access": {
+            "title": "وصول إلى جميع دورات الموقع — شهري وسنوي و VIP",
+            "description": "55 ساعة · 80 دورة · 200 درس"
+          },
+          "clubPriority": {
+            "title": "أولوية طرح الأسئلة في لقاءات النادي"
+          },
+          "followUp": {
+            "title": "جلسة متابعة شخصية — 30 دقيقة",
+            "description": "خصم 40% — وفّري 40 دينار كويتي"
+          },
+          "renewal": {
+            "title": "خصم 30% على اشتراك السنة القادمة",
+            "description": "خصم 30% — وفّري 66 دينار كويتي"
+          },
+          "healing1hr": {
+            "title": "جلسة تشافي فردية — ساعة واحدة",
+            "description": "خصم 40% — وفّري 64 دينار كويتي"
+          },
+          "healing3hr": {
+            "title": "جلسة تشافي فردية — 3 ساعات",
+            "description": "خصم 20% — وفّري 100 دينار كويتي"
+          },
+          "goldenGroup": {
+            "title": "لقاء المجموعة الذهبية مع رهام",
+            "description": "قيمة 120 دينار كويتي"
+          }
+        }
+      }
+    }
   },
   "courses": {
     "allCoaches": "كل المدربين",

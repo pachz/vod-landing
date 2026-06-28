@@ -11,6 +11,16 @@ import { SiteFooter } from "@/components/layout";
 import { useDirection } from "@/providers/DirectionProvider";
 import { pushGtmViewContent } from "@/lib/analytics/gtm";
 import type { CourseDetailRecord } from "@/lib/server/course";
+import { Sparkles, ArrowUpRight } from "lucide-react";
+import { useTranslation } from "@/lib/useTranslation";
+import CoursePlanBadge from "@/components/course/CourseTierBadge";
+import { PlanDetailsModal } from "@/components/subscription";
+import {
+  getCourseIncludedPlans,
+  getPrimarySubscribePlan,
+  getSubscriptionPlan,
+  formatPlanList,
+} from "@/lib/subscription/courseTier";
 import {
   FacebookIcon,
   FacebookShareButton,
@@ -101,12 +111,14 @@ export default function CourseDetailClient({
   panelUrl: panelUrlProp,
 }: CourseDetailClientProps) {
   const { locale } = useDirection();
+  const { t } = useTranslation();
   const isAr = locale === "ar";
   const [activeTab, setActiveTab] = useState<"overview" | "curriculum">(
     "overview"
   );
   const [shareUrl, setShareUrl] = useState("");
   const [showShareOptions, setShowShareOptions] = useState(false);
+  const [showPlanModal, setShowPlanModal] = useState(false);
 
   const courseContent = useMemo(
     () => buildCourseViewModel(course, isAr ? "ar" : "en"),
@@ -116,6 +128,37 @@ export default function CourseDetailClient({
     () => buildArabicOverrides(course, courseContent),
     [course, courseContent]
   );
+
+  // TEMPORARY: every course is included in Annual + VIP until the backend provides plan access.
+  const includedPlans = getCourseIncludedPlans();
+  const subscribePlan = getPrimarySubscribePlan(includedPlans);
+  const includedPlanLabels = includedPlans.map((id) =>
+    t(`subscriptionPage.plans.${id}.name`)
+  );
+  const includedPlansText = formatPlanList(
+    includedPlanLabels,
+    isAr ? "ar" : "en"
+  );
+  const includedPlanDetails = includedPlans.map(getSubscriptionPlan);
+  const hasMultiplePlans = includedPlans.length > 1;
+  const startingFromLabel = isAr ? "يبدأ من" : "Starting from";
+  const tierPriceLabel = `$${subscribePlan.price}`;
+  const tierIntervalLabel =
+    subscribePlan.interval === "month"
+      ? isAr
+        ? "شهرياً"
+        : "per month"
+      : isAr
+      ? "سنوياً"
+      : "per year";
+  const tierSubscribeLabel = isAr ? "اشتركي الآن" : "Subscribe now";
+  const tierAccessText = isAr
+    ? `هذه الدورة مضمّنة ضمن خطط ${includedPlansText}`
+    : `This course is included in the ${includedPlansText} plans`;
+  const membershipHref = `/${locale}/subscription`;
+  const planDetailsLabel = isAr ? "تفاصيل الباقة" : "Plan details";
+  const comparePlansLabel = isAr ? "قارني الباقات" : "Compare plans";
+  const viewMembershipLabel = isAr ? "عرض خطط العضوية" : "View membership plans";
 
   useEffect(() => {
     const contentCategory =
@@ -372,29 +415,67 @@ export default function CourseDetailClient({
                 <div className="mb-0">
                   <div className="flex items-center justify-between mb-3 sm:mb-4">
                     <div>
+                      <div className="mb-2 flex flex-wrap gap-2">
+                        {includedPlans.map((planId) => (
+                          <CoursePlanBadge key={planId} planId={planId} />
+                        ))}
+                      </div>
                       <h3 className="text-lg sm:text-xl font-semibold text-purple-900">
-                        {pricingDisplay.title}
+                        {isAr
+                          ? `خطط ${includedPlansText}`
+                          : `${includedPlansText} Plans`}
                       </h3>
                       <p className="text-xs sm:text-sm text-purple-600">
-                        {pricingDisplay.description}
+                        {isAr
+                          ? "هذه الدورة مضمّنة ضمن هذه الخطط"
+                          : "This course is included in these plans"}
                       </p>
                     </div>
                     <div className="text-right">
+                      {hasMultiplePlans && (
+                        <div className="text-[11px] sm:text-xs font-medium text-purple-500 mb-0.5">
+                          {startingFromLabel}
+                        </div>
+                      )}
                       <div className="text-2xl sm:text-3xl font-bold text-purple-900">
-                        {pricingDisplay.amountLabel}
+                        {tierPriceLabel}
                       </div>
                       <div className="text-xs sm:text-sm text-purple-600">
-                        {pricingDisplay.intervalLabel}
+                        {tierIntervalLabel}
                       </div>
                     </div>
                   </div>
                   <Button
                     size="lg"
-                    onClick={() => (window.location.href = enrollUrl)}
+                    onClick={() => (window.location.href = membershipHref)}
                     className="w-full bg-[rgb(236,72,153)] hover:bg-[rgb(219,39,119)] text-white font-semibold py-2.5 text-base sm:text-lg"
                   >
-                    {pricingDisplay.buttonLabel}
+                    {tierSubscribeLabel}
                   </Button>
+                  <div className="mt-2.5 flex items-center justify-center gap-2 text-xs sm:text-sm">
+                    <button
+                      type="button"
+                      onClick={() => setShowPlanModal(true)}
+                      className="inline-flex items-center gap-1 font-medium text-purple-700 hover:text-pink-600 transition-colors"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" aria-hidden />
+                      {planDetailsLabel}
+                    </button>
+                    <span className="text-purple-200" aria-hidden>
+                      |
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => (window.location.href = membershipHref)}
+                      className="inline-flex items-center gap-1 font-medium text-purple-700 hover:text-pink-600 transition-colors"
+                    >
+                      {comparePlansLabel}
+                      <ArrowUpRight className="w-3.5 h-3.5" aria-hidden />
+                    </button>
+                  </div>
+                  <p className="mt-3 text-xs sm:text-sm text-purple-600 text-center leading-relaxed">
+                    {tierAccessText}
+                  </p>
                   <div className="flex flex-col items-center mt-3 text-xs sm:text-sm text-purple-600">
                     <span style={{ color: "#665BFF" }}>
                       {isAr ? "دفع آمن" : "Secure payment"}
@@ -762,6 +843,15 @@ export default function CourseDetailClient({
       </section>
 
       <SiteFooter />
+
+      <PlanDetailsModal
+        plans={includedPlanDetails}
+        isOpen={showPlanModal}
+        onClose={() => setShowPlanModal(false)}
+        title={planDetailsLabel}
+        ctaLabel={viewMembershipLabel}
+        onCta={() => (window.location.href = membershipHref)}
+      />
     </div>
   );
 }

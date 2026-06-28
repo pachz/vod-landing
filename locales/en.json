@@ -370,6 +370,7 @@
     },
     "support": {
       "faq": "FAQ",
+      "subscription": "Membership",
       "terms": "Terms of Service",
       "privacy": "Privacy Policy"
     },
@@ -392,10 +393,128 @@
   "navbar": {
     "home": "Home",
     "courses": "Courses",
+    "subscription": "Membership",
     "testimonials": "Testimonials",
     "faq": "FAQ",
     "getStarted": "Subscribe to All Courses",
     "logoText": "Reham Diva"
+  },
+  "subscriptionPage": {
+    "eyebrow": "Membership Plans",
+    "title": "Choose Your Membership",
+    "subtitle": "Join the Reham Diva community and begin your journey toward femininity, love, and beauty.",
+    "securePayment": "Secure payment",
+    "save": "Save",
+    "badges": {
+      "startHere": "Start Here",
+      "recommended": "Recommended",
+      "bestValue": "Best Value",
+      "limitedMembers": "Limited",
+      "membershipFull": "VIP Membership Full"
+    },
+    "locked": {
+      "message": "All VIP seats are currently taken. Join the waitlist to be notified when a spot opens.",
+      "joinWaitlist": "Join Waitlist"
+    },
+    "ribbon": {
+      "recommended": "Most Popular"
+    },
+    "plans": {
+      "monthly": {
+        "name": "Monthly",
+        "intervalLabel": "per month",
+        "cta": "Select Plan",
+        "featuresHeading": "Includes",
+        "features": {
+          "access": {
+            "title": "Access to all Monthly plan courses & programs",
+            "description": "20 hours · 25 courses · 60 lessons"
+          },
+          "club": {
+            "title": "Reham Diva Club — 9 sessions/year",
+            "description": "225 KWD value"
+          },
+          "whatsapp": {
+            "title": "Reham Diva WhatsApp community"
+          }
+        }
+      },
+      "annual": {
+        "name": "Annual",
+        "intervalLabel": "per year",
+        "billingNote": "12 + 2 months free",
+        "cta": "Start Subscription",
+        "featuresHeadingPrefix": "Everything in",
+        "featuresHeadingHighlight": "Monthly",
+        "featuresHeadingSuffix": ", plus",
+        "features": {
+          "access": {
+            "title": "Access to Monthly & Annual courses",
+            "description": "40 hours · 57 courses · 140 lessons"
+          },
+          "bonus": {
+            "title": "2 extra months free",
+            "description": "32 KWD value"
+          },
+          "clubQuestions": {
+            "title": "Ask questions at Club sessions"
+          },
+          "program": {
+            "title": "Spiritual Love program",
+            "description": "270 KWD value"
+          },
+          "followUp": {
+            "title": "Personal follow-up session — 30 min",
+            "description": "20% off — save 20 KWD"
+          },
+          "renewal": {
+            "title": "30% off next year's subscription",
+            "description": "30% off — save 48 KWD"
+          },
+          "certification": {
+            "title": "Reham Diva facilitator certification"
+          }
+        }
+      },
+      "vip": {
+        "name": "VIP",
+        "intervalLabel": "per year",
+        "billingNote": "12 + 2 months free",
+        "cta": "Join VIP",
+        "featuresHeadingPrefix": "Everything in",
+        "featuresHeadingHighlight": "Annual",
+        "featuresHeadingSuffix": ", plus",
+        "features": {
+          "access": {
+            "title": "Access to all courses — Monthly, Annual & VIP",
+            "description": "55 hours · 80 courses · 200 lessons"
+          },
+          "clubPriority": {
+            "title": "Priority to ask questions at Club sessions"
+          },
+          "followUp": {
+            "title": "Personal follow-up session — 30 min",
+            "description": "40% off — save 40 KWD"
+          },
+          "renewal": {
+            "title": "30% off next year's subscription",
+            "description": "30% off — save 66 KWD"
+          },
+          "healing1hr": {
+            "title": "Individual healing session — 1 hr",
+            "description": "40% off — save 64 KWD"
+          },
+          "healing3hr": {
+            "title": "Individual healing session — 3 hrs",
+            "description": "20% off — save 100 KWD"
+          },
+          "goldenGroup": {
+            "title": "Golden Group session with Reham",
+            "description": "120 KWD value"
+          }
+        }
+      }
+    }
   },
   "courses": {
     "allCoaches": "All coaches",
