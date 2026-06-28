@@ -97,6 +97,7 @@ export default function SubscriptionPackagesSection({
   );
 
   const openModal = () => setModalOpen(true);
+  const pricingPageUrl = `/${locale}/subscription`;
 
   return (
     <>
@@ -152,7 +153,9 @@ export default function SubscriptionPackagesSection({
           <span className="h-4 w-px bg-purple-200" aria-hidden />
           <button
             type="button"
-            onClick={openModal}
+            onClick={() => {
+              window.location.href = pricingPageUrl;
+            }}
             className="inline-flex items-center gap-1.5 font-medium text-purple-700 hover:text-purple-900 transition-colors"
           >
             {isAr ? "قارني الخطط" : "Compare plans"}
