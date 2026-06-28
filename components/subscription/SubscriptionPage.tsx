@@ -27,6 +27,17 @@ export default function SubscriptionPage() {
     [locale]
   );
 
+  const plansGridClassName = useMemo(() => {
+    const base = "grid gap-6 lg:gap-8 items-stretch";
+    if (plans.length === 1) {
+      return `${base} grid-cols-1 max-w-md mx-auto`;
+    }
+    if (plans.length === 2) {
+      return `${base} grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto`;
+    }
+    return `${base} grid-cols-1 md:grid-cols-2 lg:grid-cols-3`;
+  }, [plans.length]);
+
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
@@ -125,7 +136,7 @@ export default function SubscriptionPage() {
             )}
 
             {!loading && !error && plans.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch">
+              <div className={plansGridClassName}>
                 {plans.map((plan, index) => (
                   <SubscriptionCard
                     key={plan.id}
