@@ -370,6 +370,7 @@
     },
     "support": {
       "faq": "الأسئلة الشائعة",
+      "subscription": "العضوية",
       "terms": "شروط الخدمة",
       "privacy": "سياسة الخصوصية"
     },
@@ -392,10 +393,32 @@
   "navbar": {
     "home": "الرئيسية",
     "courses": "الدورات",
+    "subscription": "العضوية",
     "testimonials": "الشهادات",
     "faq": "الأسئلة الشائعة",
     "getStarted": "اشتراك في جميع الدورات",
     "logoText": "رهام دیفا"
+  },
+  "subscriptionPage": {
+    "eyebrow": "خطط الاشتراك",
+    "title": "اختاري عضويتك",
+    "subtitle": "انضمي إلى مجتمع رهام ديفا وابدئي رحلتك نحو الأنوثة والحب والجمال",
+    "securePayment": "دفع آمن",
+    "save": "وفّري",
+    "loadError": "تعذّر تحميل خطط العضوية الآن.",
+    "empty": "لا توجد خطط عضوية متاحة حالياً.",
+    "defaultFeaturesHeading": "تشمل",
+    "badges": {
+      "membershipFull": "عضوية VIP ممتلئة",
+      "limitedMembers": "محدودة"
+    },
+    "locked": {
+      "message": "جميع مقاعد VIP محجوزة حالياً. انضمي لقائمة الانتظار ليتم إشعارك عند توفر مقعد.",
+      "joinWaitlist": "انضمي لقائمة الانتظار"
+    },
+    "ribbon": {
+      "recommended": "الأكثر طلباً"
+    }
   },
   "courses": {
     "allCoaches": "كل المدربين",

@@ -1,26 +1,33 @@
-export const getPanelUrl = (locale?: string) => {
+function getPanelBaseUrl(): string {
   const panelUrl =
     process.env.NEXT_PUBLIC_BACKEND_PANEL_URL || process.env.BACKEND_PANEL_URL
 
-  let baseUrl: string
   if (!panelUrl || panelUrl.trim() === "") {
     console.warn("BACKEND_PANEL_URL environment variable is not set")
-    baseUrl = "https://panel.vod.borj.dev"
-  } else {
-    try {
-      const { href } = new URL(panelUrl)
-      baseUrl = href.replace(/\/$/, "")
-    } catch {
-      const cleanUrl = panelUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")
-      baseUrl = `https://${cleanUrl}`
-    }
+    return "https://panel.vod.borj.dev"
   }
 
-  // Append ?lang=ar if locale is Arabic
-  if (locale === 'ar') {
-    return `${baseUrl}?lang=ar`
+  try {
+    const { protocol, host } = new URL(panelUrl)
+    return `${protocol}//${host}`
+  } catch {
+    const cleanUrl = panelUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")
+    return `https://${cleanUrl}`
   }
+}
 
-  return baseUrl
+function withLocaleQuery(url: string, locale?: string): string {
+  if (locale === "ar") {
+    return `${url}?lang=ar`
+  }
+  return url
+}
+
+export const getPanelUrl = (locale?: string) => {
+  return withLocaleQuery(getPanelBaseUrl(), locale)
+}
+
+export const getPanelPaymentsUrl = (locale?: string) => {
+  return withLocaleQuery(`${getPanelBaseUrl()}/payments`, locale)
 }
 

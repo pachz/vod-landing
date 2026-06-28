@@ -47,6 +47,8 @@ export interface PackageResponseItem {
   badge: string;
   ribbonText?: string;
   inheritsDescription?: string;
+  inheritsDescriptionEn?: string | null;
+  inheritsDescriptionAr?: string | null;
   includesPlanName?: string;
   courseStats: SubscriptionPackageRecord["courseStats"];
   features: PackageFeatureResponse[];
@@ -96,6 +98,8 @@ function mapPackageToLocale(
       pkg.inheritsDescriptionEn,
       pkg.inheritsDescriptionAr
     ),
+    inheritsDescriptionEn: pkg.inheritsDescriptionEn,
+    inheritsDescriptionAr: pkg.inheritsDescriptionAr,
     includesPlanName: localizedField(
       locale,
       pkg.includesPlanNameEn,

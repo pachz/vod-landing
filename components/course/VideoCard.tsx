@@ -25,24 +25,26 @@ export interface Video {
   additionalCategoryLabels?: string[]
 }
 
-type SubscriptionPlanSummary = {
+type CheapestPlanSummary = {
   name: string
-  intervalLabel: string
   priceDisplay: string
+  intervalLabel: string
+  formattedPrice: string
+  billingLabel: string
 }
 
 export interface VideoCardProps {
   video: Video
   className?: string
   onCourseClick?: (videoId: string) => void
-  subscriptionPlan?: SubscriptionPlanSummary
+  cheapestPlan?: CheapestPlanSummary
 }
 
 export const VideoCard: React.FC<VideoCardProps> = ({
   video,
   className,
   onCourseClick,
-  subscriptionPlan,
+  cheapestPlan,
 }) => {
   const [isHovered, setIsHovered] = useState(false)
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
@@ -81,8 +83,9 @@ export const VideoCard: React.FC<VideoCardProps> = ({
     }
   }
 
-  const subscriptionPriceDisplay =
-    subscriptionPlan?.priceDisplay || (locale === 'ar' ? '٨٫٥ د.ك/شهريًا' : '8.5 KWD/month')
+  const subscriptionPriceDisplay = cheapestPlan
+    ? `${cheapestPlan.formattedPrice} · ${cheapestPlan.billingLabel}`
+    : null
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -200,14 +203,17 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 
         {/* Subscription and CTA */}
         <div className="flex flex-col gap-3 mt-auto">
-          <div className="flex-1 min-w-0">
-            <div className="text-sm text-purple-600 font-medium">
-              {t('courses.includedInSubscription')}
+          {cheapestPlan && subscriptionPriceDisplay && (
+            <div className="flex-1 min-w-0">
+              <div className="text-sm text-purple-600 font-medium">
+                {t('courses.includedInSubscription')}
+              </div>
+              <div className="text-sm text-purple-700 font-semibold">
+                {subscriptionPriceDisplay}
+              </div>
+              <div className="text-xs text-purple-500 mt-0.5">{cheapestPlan.name}</div>
             </div>
-            <div className="text-sm text-purple-700 font-semibold">
-              {subscriptionPriceDisplay}
-            </div>
-          </div>
+          )}
           <button
             onClick={handleCourseClick}
             onKeyDown={handleKeyDown}

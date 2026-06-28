@@ -1,7 +1,12 @@
 import { randomUUID } from "crypto";
 import { courses as staticCourses } from "@/lib/data";
+import {
+  normalizeCoursePackagePill,
+  type ExternalCoursePackageInput,
+} from "@/lib/packages/normalizeCoursePackagePill";
 import { fetchFromBackend } from "@/lib/server/apiClient";
 import { getOrSetCacheValue } from "@/lib/server/memoryCache";
+import type { CoursePackageSummary } from "@/lib/types/packages";
 
 const COURSES_ENDPOINT = "/courses";
 const COURSES_CACHE_KEY = "courses-feed";
@@ -43,6 +48,7 @@ interface ExternalCourseListItem {
   watchedHours?: number | null;
   coverImageUrl?: string | null;
   thumbnailImageUrl?: string | null;
+  cheapestPlan?: ExternalCoursePackageInput | null;
 }
 
 /** Sanitized per-course category for label resolution in API */
@@ -73,6 +79,7 @@ export interface CourseFeedRecord {
   watchedHours: number;
   coverImageUrl?: string;
   thumbnailImageUrl?: string;
+  cheapestPlan?: CoursePackageSummary;
 }
 
 function sanitizeString(value?: string | null): string | undefined {
@@ -179,9 +186,21 @@ function parseCategoriesArray(
   };
 }
 
+function readCheapestPlanRaw(
+  item: ExternalCourseListItem
+): ExternalCoursePackageInput | null | undefined {
+  if (item.cheapestPlan != null) {
+    return item.cheapestPlan;
+  }
+  return (
+    item as unknown as { cheapest_plan?: ExternalCoursePackageInput | null }
+  ).cheapest_plan;
+}
+
 function normalizeCourse(item: ExternalCourseListItem): CourseFeedRecord {
   const id = sanitizeString(item.id) ?? randomUUID();
   const parsed = parseCategoriesArray(item.categories);
+  const cheapestPlan = normalizeCoursePackagePill(readCheapestPlanRaw(item));
 
   // Backend will expose coach_id in snake_case; support both camelCase and snake_case
   const rawCoachId =
@@ -220,6 +239,7 @@ function normalizeCourse(item: ExternalCourseListItem): CourseFeedRecord {
       sanitizeUrl(item.thumbnailImageUrl) ??
       "/images/placeholder.svg",
     thumbnailImageUrl: sanitizeUrl(item.thumbnailImageUrl),
+    ...(cheapestPlan ? { cheapestPlan } : {}),
   };
 }
 

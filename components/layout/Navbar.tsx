@@ -13,6 +13,7 @@ import { USE_COURSES_AS_HOME } from "@/lib/featureFlags";
 const allNavigationItems = [
   { nameKey: "navbar.home", href: "#home" },
   { nameKey: "navbar.courses", href: "/courses", isPage: true },
+  { nameKey: "navbar.subscription", href: "/subscription", isPage: true },
   { nameKey: "navbar.testimonials", href: "#testimonials" },
   { nameKey: "navbar.faq", href: "#faq" },
 ];
@@ -42,6 +43,7 @@ export default function Navbar() {
       const arTranslations: Record<string, string> = {
         "navbar.home": "الرئيسية",
         "navbar.courses": "الدورات",
+        "navbar.subscription": "العضوية",
         "navbar.testimonials": "الشهادات",
         "navbar.faq": "الأسئلة الشائعة",
         "navbar.getStarted": "ابدئي الآن",

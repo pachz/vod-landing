@@ -98,9 +98,6 @@ export function getPackagePillLabel(
   pkg: PackageLike,
   locale: PlanLocale
 ): string {
-  if (pkg.intervalLabel?.trim()) {
-    return pkg.intervalLabel.trim();
-  }
   return getPackageDisplayName(pkg, locale);
 }
 
@@ -117,7 +114,7 @@ export function buildPlansTitle(
   packages: PackageLike[],
   locale: PlanLocale
 ): string {
-  const labels = packages.map((pkg) => getPackagePillLabel(pkg, locale));
+  const labels = packages.map((pkg) => getPackageDisplayName(pkg, locale));
   if (labels.length === 0) {
     return locale === "ar" ? "خطط الاشتراك" : "Subscription Plans";
   }
@@ -140,7 +137,7 @@ export function buildIncludedPlansText(
   packages: PackageLike[],
   locale: PlanLocale
 ): string {
-  const labels = packages.map((pkg) => getPackagePillLabel(pkg, locale));
+  const labels = packages.map((pkg) => getPackageDisplayName(pkg, locale));
   if (labels.length === 0) {
     return locale === "ar"
       ? "هذه الدورة متاحة ضمن خطط الاشتراك"

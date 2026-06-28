@@ -370,6 +370,7 @@
     },
     "support": {
       "faq": "FAQ",
+      "subscription": "Membership",
       "terms": "Terms of Service",
       "privacy": "Privacy Policy"
     },
@@ -392,10 +393,32 @@
   "navbar": {
     "home": "Home",
     "courses": "Courses",
+    "subscription": "Membership",
     "testimonials": "Testimonials",
     "faq": "FAQ",
     "getStarted": "Subscribe to All Courses",
     "logoText": "Reham Diva"
+  },
+  "subscriptionPage": {
+    "eyebrow": "Membership Plans",
+    "title": "Choose Your Membership",
+    "subtitle": "Join the Reham Diva community and begin your journey toward femininity, love, and beauty.",
+    "securePayment": "Secure payment",
+    "save": "Save",
+    "loadError": "Unable to load membership plans right now.",
+    "empty": "No membership plans are available at the moment.",
+    "defaultFeaturesHeading": "Includes",
+    "badges": {
+      "membershipFull": "VIP Membership Full",
+      "limitedMembers": "Limited"
+    },
+    "locked": {
+      "message": "All VIP seats are currently taken. Join the waitlist to be notified when a spot opens.",
+      "joinWaitlist": "Join Waitlist"
+    },
+    "ribbon": {
+      "recommended": "Most Popular"
+    }
   },
   "courses": {
     "allCoaches": "All coaches",

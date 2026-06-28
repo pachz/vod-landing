@@ -9,7 +9,7 @@ import remarkGfm from "remark-gfm";
 import { Button } from "@/components/ui/button";
 import { SiteFooter } from "@/components/layout";
 import SubscriptionPackagesSection from "@/components/course/SubscriptionPackagesSection";
-import { getPanelUrl } from "@/lib/panelUrl";
+import { getPanelPaymentsUrl } from "@/lib/panelUrl";
 import { findCheapestPackage } from "@/lib/packages/formatting";
 import { useDirection } from "@/providers/DirectionProvider";
 import { pushGtmViewContent } from "@/lib/analytics/gtm";
@@ -188,7 +188,7 @@ export default function CourseDetailClient({
   const hasSubscriptionPackages =
     Array.isArray(course.packages) && course.packages.length > 0;
   const subscribeUrl = useMemo(
-    () => getPanelUrl(isAr ? "ar" : "en"),
+    () => getPanelPaymentsUrl(isAr ? "ar" : "en"),
     [isAr]
   );
   const enrollUrl = useMemo(() => {

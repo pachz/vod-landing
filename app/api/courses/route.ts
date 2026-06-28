@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
+import { getBillingIntervalLabel, formatPackageAmount } from "@/lib/packages/formatting";
 import { getCourseFeed, type CourseFeedRecord } from "@/lib/server/coursesFeed";
 import { getCoaches, type CoachRecord } from "@/lib/server/coaches";
+import type { PlanTheme } from "@/lib/plan-constants";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -10,6 +12,17 @@ type SupportedLocale = "en" | "ar";
 interface AdditionalCategoryResponse {
   id: string;
   name: string;
+}
+
+interface CourseCheapestPlanResponse {
+  id: string;
+  slug: string;
+  name: string;
+  priceDisplay: string;
+  intervalLabel: string;
+  formattedPrice: string;
+  billingLabel: string;
+  theme: PlanTheme;
 }
 
 interface CoursesResponseItem {
@@ -29,6 +42,7 @@ interface CoursesResponseItem {
   additionalCategoryIds: string[];
   /** Resolved display names for additional categories (for listing cards) */
   additionalCategoryLabels: string[];
+  cheapestPlan?: CourseCheapestPlanResponse;
 }
 
 function normalizeIdForMatch(id: string): string {
@@ -73,6 +87,26 @@ function toCategoryKey(value?: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "") || "general";
+}
+
+function mapCheapestPlanToLocale(
+  locale: SupportedLocale,
+  plan: NonNullable<CourseFeedRecord["cheapestPlan"]>
+): CourseCheapestPlanResponse {
+  return {
+    id: plan.id,
+    slug: plan.slug,
+    name: locale === "ar" ? plan.nameAr : plan.nameEn,
+    priceDisplay: plan.priceDisplay,
+    intervalLabel: plan.intervalLabel,
+    formattedPrice: formatPackageAmount(
+      plan.priceAmount,
+      plan.priceCurrency,
+      locale
+    ),
+    billingLabel: getBillingIntervalLabel(plan.billingInterval, locale),
+    theme: plan.theme,
+  };
 }
 
 function mapToLocale(
@@ -141,6 +175,9 @@ function mapToLocale(
       tags: [categoryKey],
       additionalCategoryIds: ids,
       additionalCategoryLabels,
+      ...(course.cheapestPlan
+        ? { cheapestPlan: mapCheapestPlanToLocale(locale, course.cheapestPlan) }
+        : {}),
     };
   });
 }

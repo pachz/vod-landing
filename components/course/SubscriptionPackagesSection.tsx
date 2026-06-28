@@ -181,7 +181,6 @@ export default function SubscriptionPackagesSection({
         onClose={() => setModalOpen(false)}
         coursePackages={sortedPackages}
         locale={locale}
-        subscribeUrl={subscribeUrl}
       />
     </>
   );
