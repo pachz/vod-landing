@@ -10,12 +10,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/useTranslation";
 
-const LANDING_FAQ_COUNT = 7;
-
 export default function FAQ() {
   const { t, locale } = useTranslation();
-  const allItems = (t("faqPage.items") as Array<{ id: string; question: string; answer: string }>) ?? [];
-  const items = allItems.slice(0, LANDING_FAQ_COUNT);
+  const items = (t("faq.items") as Array<{ id: string; question: string; answer: string }>) ?? [];
+  const allFaqPageItems = (t("faqPage.items") as Array<{ id: string; question: string; answer: string }>) ?? [];
 
   const handleShowAll = () => {
     if (typeof window === "undefined") return;
@@ -80,7 +78,7 @@ export default function FAQ() {
             ))}
           </Accordion>
 
-        {allItems.length > LANDING_FAQ_COUNT && (
+        {allFaqPageItems.length > items.length && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
