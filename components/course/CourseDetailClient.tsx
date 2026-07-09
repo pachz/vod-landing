@@ -9,7 +9,11 @@ import remarkGfm from "remark-gfm";
 import { Button } from "@/components/ui/button";
 import { SiteFooter } from "@/components/layout";
 import SubscriptionPackagesSection from "@/components/course/SubscriptionPackagesSection";
-import { getPanelPaymentsUrl } from "@/lib/panelUrl";
+import {
+  getPanelCourseLessonPreviewUrl,
+  getPanelCoursePreviewUrl,
+  getPanelPaymentsUrl,
+} from "@/lib/panelUrl";
 import { findCheapestPackage } from "@/lib/packages/formatting";
 import { useDirection } from "@/providers/DirectionProvider";
 import { pushGtmViewContent } from "@/lib/analytics/gtm";
@@ -187,68 +191,43 @@ export default function CourseDetailClient({
   );
   const hasSubscriptionPackages =
     Array.isArray(course.packages) && course.packages.length > 0;
+  const panelLocale = isAr ? "ar" : "en";
+  const panelBaseUrl =
+    panelUrlProp || process.env.NEXT_PUBLIC_BACKEND_PANEL_URL;
+
   const subscribeUrl = useMemo(
-    () => getPanelPaymentsUrl(isAr ? "ar" : "en"),
-    [isAr]
+    () => getPanelPaymentsUrl(panelLocale),
+    [panelLocale]
   );
-  const enrollUrl = useMemo(() => {
-    // Try prop first, then NEXT_PUBLIC_ env var (for client-side), then fallback
-    const panelUrl = panelUrlProp || process.env.NEXT_PUBLIC_BACKEND_PANEL_URL;
-    let baseUrl: string;
+  const enrollUrl = useMemo(
+    () =>
+      getPanelCoursePreviewUrl(
+        courseContent.id,
+        panelLocale,
+        panelBaseUrl
+      ),
+    [courseContent.id, panelBaseUrl, panelLocale]
+  );
 
-    if (!panelUrl) {
-      console.warn("BACKEND_PANEL_URL environment variable is not set");
-      baseUrl = "https://panel.vod.borj.dev";
-    } else {
-      try {
-        const url = new URL(panelUrl);
-        baseUrl = `${url.protocol}//${url.host}`;
-      } catch {
-        // If BACKEND_PANEL_URL is just a hostname without protocol, add https://
-        const cleanUrl = panelUrl
-          .replace(/^https?:\/\//, "")
-          .replace(/\/$/, "");
-        baseUrl = `https://${cleanUrl}`;
+  const getLessonPreviewUrl = useMemo(
+    () => (lessonId?: string) => {
+      if (!lessonId?.trim()) {
+        return getPanelCoursePreviewUrl(
+          courseContent.id,
+          panelLocale,
+          panelBaseUrl
+        );
       }
-    }
 
-    const url = `${baseUrl}/courses/preview/${courseContent.id}`;
-    // Append ?lang=ar if Arabic
-    return isAr ? `${url}?lang=ar` : url;
-  }, [courseContent.id, panelUrlProp, isAr]);
-
-  const getLessonPreviewUrl = useMemo(() => {
-    // Try prop first, then NEXT_PUBLIC_ env var (for client-side), then fallback
-    const panelUrl = panelUrlProp || process.env.NEXT_PUBLIC_BACKEND_PANEL_URL;
-    let baseUrl: string;
-
-    if (!panelUrl) {
-      console.warn("BACKEND_PANEL_URL environment variable is not set");
-      baseUrl = "https://panel.vod.borj.dev";
-    } else {
-      try {
-        const url = new URL(panelUrl);
-        baseUrl = `${url.protocol}//${url.host}`;
-      } catch {
-        // If BACKEND_PANEL_URL is just a hostname without protocol, add https://
-        const cleanUrl = panelUrl
-          .replace(/^https?:\/\//, "")
-          .replace(/\/$/, "");
-        baseUrl = `https://${cleanUrl}`;
-      }
-    }
-
-    return (lessonId?: string) => {
-      const langParam = isAr ? '?lang=ar' : ''
-      if (!lessonId || lessonId.trim() === '') {
-        const url = `${baseUrl}/courses/preview/${courseContent.id}`
-        return isAr ? `${url}?lang=ar` : url
-      }
-      const encodedLessonId = encodeURIComponent(lessonId.trim())
-      const url = `${baseUrl}/courses/preview/${courseContent.id}?lesson=${encodedLessonId}`
-      return isAr ? `${url}&lang=ar` : url
-    }
-  }, [courseContent.id, panelUrlProp, isAr])
+      return getPanelCourseLessonPreviewUrl(
+        courseContent.id,
+        lessonId,
+        panelLocale,
+        panelBaseUrl
+      );
+    },
+    [courseContent.id, panelBaseUrl, panelLocale]
+  );
 
   const previewSection = (
     <div className="relative aspect-video bg-black rounded-xl overflow-hidden border border-purple-100">
