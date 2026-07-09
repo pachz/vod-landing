@@ -46,23 +46,36 @@ export function isVipPackage(pkg: {
   return (pkg.slug ?? "").trim().toLowerCase() === "vip";
 }
 
+const CURRENCY_FORMAT_LOCALE = "en-US";
+
+export function sanitizeCurrencyDisplay(formatted: string): string {
+  return formatted
+    .replace(/[\u200e\u200f\u061c\u00a0]/g, (char) => (char === "\u00a0" ? " " : ""))
+    .replace(/(\d[\d,]*(?:\.\d+)?)\s*US\$/gi, (_, amount) => `$${amount}`)
+    .replace(/US\$\s*(\d)/gi, (_, digit) => `$${digit}`)
+    .replace(/\$\s*US\s+/g, "$")
+    .trim();
+}
+
 export function formatPackageAmount(
   amount: number,
   currency: string,
   locale: PlanLocale
 ): string {
   const normalizedCurrency = currency.toUpperCase();
+  const maxFractionDigits = ZERO_DECIMAL_CURRENCIES.has(normalizedCurrency)
+    ? 0
+    : 2;
   try {
-    return new Intl.NumberFormat(locale === "ar" ? "ar" : "en", {
+    const formatted = new Intl.NumberFormat(CURRENCY_FORMAT_LOCALE, {
       style: "currency",
       currency: normalizedCurrency,
-      minimumFractionDigits: ZERO_DECIMAL_CURRENCIES.has(normalizedCurrency)
-        ? 0
-        : 2,
-      maximumFractionDigits: ZERO_DECIMAL_CURRENCIES.has(normalizedCurrency)
-        ? 0
-        : 2,
+      currencyDisplay: "symbol",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: maxFractionDigits,
     }).format(amount);
+
+    return sanitizeCurrencyDisplay(formatted);
   } catch {
     return `${amount} ${normalizedCurrency}`;
   }

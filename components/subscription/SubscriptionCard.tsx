@@ -177,6 +177,7 @@ export default function SubscriptionCard({
             <div className="flex justify-end">
               {plan.formattedCompareAtPrice && !locked && (
                 <span
+                  dir="ltr"
                   className={cn(
                     "text-sm line-through",
                     isFeatured ? "text-white/55" : "text-purple-400"
@@ -188,6 +189,7 @@ export default function SubscriptionCard({
             </div>
 
             <span
+              dir="ltr"
               className={cn(
                 "text-3xl sm:text-4xl font-bold tracking-tight",
                 isFeatured && !locked ? "text-white" : "text-purple-900",
