@@ -14,6 +14,7 @@ import {
   getPanelCoursePreviewUrl,
   getPanelPaymentsUrl,
 } from "@/lib/panelUrl";
+import { findCheapestPackage, formatPackageAmount } from "@/lib/packages/formatting";
 import { useDirection } from "@/providers/DirectionProvider";
 import { pushGtmViewContent } from "@/lib/analytics/gtm";
 import type { CourseDetailRecord } from "@/lib/server/course";
