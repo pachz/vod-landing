@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { formatPackageAmount } from "@/lib/packages/formatting";
 import {
   SUBSCRIPTION_CACHE_TTL_MS,
   getSubscriptionPlan,
@@ -38,24 +39,6 @@ function getIntervalCopy(
   return { intervalLabel: match.label, displayLabel: match.display };
 }
 
-function formatCurrency(
-  amount: number,
-  currency: string,
-  locale: SupportedLocale
-): string {
-  try {
-    return new Intl.NumberFormat(locale === "ar" ? "ar" : "en", {
-      style: "currency",
-      currency,
-    }).format(amount);
-  } catch {
-    const normalized = amount.toFixed(2);
-    return locale === "ar"
-      ? `${normalized} ${currency}`
-      : `${currency} ${normalized}`;
-  }
-}
-
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const localeParam = searchParams.get("locale");
@@ -70,7 +53,7 @@ export async function GET(request: Request) {
     );
     const localizedName =
       locale === "ar" && plan.nameAr ? plan.nameAr : plan.nameEn;
-    const amountLabel = formatCurrency(plan.amount, plan.currency, locale);
+    const amountLabel = formatPackageAmount(plan.amount, plan.currency, locale);
     const priceDisplay =
       plan.interval === "one_time"
         ? `${amountLabel} / ${displayLabel}`

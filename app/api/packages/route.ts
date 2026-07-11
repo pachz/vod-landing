@@ -12,6 +12,7 @@ import {
   getBillingIntervalLabel,
   getPackageDisplayName,
   isVipPackage,
+  sanitizeCurrencyDisplay,
 } from "@/lib/packages/formatting";
 import { getSubscriptionPackages } from "@/lib/server/packages";
 import type { SubscriptionPackageRecord } from "@/lib/types/packages";
@@ -117,17 +118,17 @@ function mapPackageToLocale(
       pkg.badgeTag === "best_value" || pkg.badgeTag === "most_popular",
     isAtCapacity: pkg.isAtCapacity,
     discountPercent: discount ?? undefined,
-    formattedPrice: formatPackageAmount(
-      pkg.priceAmount,
-      pkg.priceCurrency,
-      locale
+    formattedPrice: sanitizeCurrencyDisplay(
+      formatPackageAmount(pkg.priceAmount, pkg.priceCurrency, locale)
     ),
     formattedCompareAtPrice:
       pkg.compareAtPriceAmountCents != null
-        ? formatPackageAmount(
-            pkg.compareAtPriceAmountCents / 100,
-            pkg.priceCurrency,
-            locale
+        ? sanitizeCurrencyDisplay(
+            formatPackageAmount(
+              pkg.compareAtPriceAmountCents / 100,
+              pkg.priceCurrency,
+              locale
+            )
           )
         : undefined,
     billingLabel: getBillingIntervalLabel(pkg.billingInterval, locale),

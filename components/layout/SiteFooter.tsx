@@ -15,13 +15,15 @@ import {
   MessageCircle
 } from 'lucide-react'
 
+const WHATSAPP_URL = 'https://wa.me/+96550406406'
+
 const socialLinks = [
   { icon: Facebook, href: 'https://www.facebook.com/rehamalrashidipage', label: 'Facebook' },
   { icon: Instagram, href: 'https://www.instagram.com/rehamalrashidi', label: 'Instagram' },
   { icon: Twitter, href: 'https://x.com/rehamalrashidi', label: 'X (Twitter)' },
   { icon: Youtube, href: 'https://www.youtube.com/user/rehamalrashidi', label: 'YouTube' },
   { icon: Send, href: 'https://t.me/rehamalrashidi', label: 'Telegram' },
-  { icon: MessageCircle, href: 'https://wa.me/+96550406406', label: 'WhatsApp' },
+  { icon: MessageCircle, href: WHATSAPP_URL, label: 'WhatsApp' },
 ]
 
 const allFooterNavigationItems = [
@@ -157,7 +159,16 @@ export default function SiteFooter({ panelUrl: panelUrlProp }: SiteFooterProps =
             viewport={{ once: true }}
             className={`text-center ${direction === 'rtl' ? 'sm:text-right' : 'sm:text-left'}`}
           >
-            <h4 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">{t('footer.sections.support')}</h4>
+            <h4 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white/90 transition-colors"
+              >
+                {t('footer.sections.support')}
+              </a>
+            </h4>
             <ul className="space-y-2">
               {footerSupportItems.map((item) => (
                 <li key={item.labelKey}>

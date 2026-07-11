@@ -14,7 +14,7 @@ import {
   getPanelCoursePreviewUrl,
   getPanelPaymentsUrl,
 } from "@/lib/panelUrl";
-import { findCheapestPackage } from "@/lib/packages/formatting";
+import { findCheapestPackage, formatPackageAmount } from "@/lib/packages/formatting";
 import { useDirection } from "@/providers/DirectionProvider";
 import { pushGtmViewContent } from "@/lib/analytics/gtm";
 import type { CourseDetailRecord } from "@/lib/server/course";
@@ -1079,14 +1079,7 @@ function formatPricingAmount(
   const divisor = ZERO_DECIMAL_CURRENCIES.has(normalizedCurrency) ? 1 : 100;
   const normalizedAmount = amount / divisor;
 
-  try {
-    return new Intl.NumberFormat(locale === "ar" ? "ar" : "en", {
-      style: "currency",
-      currency: normalizedCurrency,
-    }).format(normalizedAmount);
-  } catch {
-    return `${normalizedAmount.toFixed(2)} ${normalizedCurrency}`;
-  }
+  return formatPackageAmount(normalizedAmount, normalizedCurrency, locale);
 }
 
 function formatUpdatedAtLabel(
