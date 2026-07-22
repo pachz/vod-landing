@@ -485,6 +485,7 @@
   "navbar": {
     "home": "Home",
     "courses": "Courses",
+    "tests": "Tests",
     "subscription": "Membership",
     "testimonials": "Testimonials",
     "faq": "FAQ",
@@ -540,5 +541,18 @@
       "lifestyle": "Lifestyle",
       "creativity": "Creativity"
     }
+  },
+  "tests": {
+    "title": "Discover the Right Programs for You",
+    "subtitle": "Take a short test and get personalized program recommendations based on your needs.",
+    "searchPlaceholder": "Search tests...",
+    "startTest": "Start Test",
+    "question": "Question",
+    "questions": "Questions",
+    "empty": "No tests are available right now. Check back soon.",
+    "noSearchResults": "No tests match your search.",
+    "loadError": "Unable to load tests right now.",
+    "retry": "Try again",
+    "loading": "Loading tests..."
   }
 }

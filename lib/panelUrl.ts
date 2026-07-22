@@ -70,3 +70,15 @@ export const getPanelCourseLessonPreviewUrl = (
   )
 }
 
+export const getPanelMyTestsUrl = (
+  testId: string,
+  locale?: string,
+  panelBaseUrl?: string
+) => {
+  const base = resolvePanelBaseUrl(panelBaseUrl)
+  return withLocaleQuery(
+    `${base}/my-tests/${encodeURIComponent(testId.trim())}`,
+    locale
+  )
+}
+

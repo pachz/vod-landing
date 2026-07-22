@@ -7,7 +7,7 @@ export const revalidate = 300;
 
 const LOCALES = ["en", "ar"] as const;
 
-const STATIC_SEGMENTS = ["", "courses", "subscription", "terms", "privacy", "faq"] as const;
+const STATIC_SEGMENTS = ["", "courses", "subscription", "tests", "terms", "privacy", "faq"] as const;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = getSiteUrl();
