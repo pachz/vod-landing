@@ -4,6 +4,7 @@ import { useEffect, useMemo } from "react";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkBreaks from "remark-breaks";
+import remarkDirective from "remark-directive";
 import remarkGfm from "remark-gfm";
 import {
   FacebookIcon,
@@ -23,6 +24,7 @@ import {
   preprocessBlogMarkdown,
   type BlogDetailData,
 } from "@/lib/blogs";
+import { remarkBlogAlignments } from "@/lib/remarkBlogAlignments";
 import { useTranslation } from "@/lib/useTranslation";
 import { useDirection } from "@/providers/DirectionProvider";
 import { cn } from "@/lib/utils";
@@ -215,8 +217,18 @@ export default function BlogDetailClient({
                   )}
                 >
                   <ReactMarkdown
-                    remarkPlugins={[remarkGfm, remarkBreaks]}
+                    remarkPlugins={[
+                      remarkGfm,
+                      remarkBreaks,
+                      remarkDirective,
+                      remarkBlogAlignments,
+                    ]}
                     components={{
+                      div: ({ className, children }) => (
+                        <div className={cn("space-y-4", className)}>
+                          {children}
+                        </div>
+                      ),
                       h1: ({ children }) => (
                         <h2 className="pt-2 text-2xl font-bold text-gray-900">
                           {children}

@@ -34,16 +34,12 @@ export type BlogDetailData = Omit<BlogCardItem, "author"> & {
   related: BlogCardItem[];
 };
 
-/** Strip custom `::: direction` containers from CMS markdown. */
+/** Normalize blog markdown without stripping alignment containers. */
 export function preprocessBlogMarkdown(content: string): string {
   if (!content) {
     return "";
   }
-  return content
-    .replace(/^::: *\w+[^\n]*$/gm, "")
-    .replace(/^:::\s*$/gm, "")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
+  return content.replace(/\n{3,}/g, "\n\n").trim();
 }
 
 export function formatBlogDate(
