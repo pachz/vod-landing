@@ -14,7 +14,7 @@ const allNavigationItems = [
   { nameKey: "navbar.home", href: "#home" },
   { nameKey: "navbar.courses", href: "/courses", isPage: true },
   { nameKey: "navbar.tests", href: "/tests", isPage: true },
-  { nameKey: "navbar.blogs", href: "/blogs", isPage: true },
+  // { nameKey: "navbar.blogs", href: "/blogs", isPage: true },
   { nameKey: "navbar.subscription", href: "/subscription", isPage: true },
   { nameKey: "navbar.testimonials", href: "#testimonials" },
   { nameKey: "navbar.faq", href: "#faq" },
