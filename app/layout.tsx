@@ -6,6 +6,7 @@ import { AnalyticsProvider } from '@/providers/PostHogProvider'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { GoogleTagManager } from '@/components/analytics/GoogleTagManager'
+import { getSiteUrl } from '@/lib/server/siteUrl'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' })
 const almarai = Almarai({ 
@@ -30,6 +31,7 @@ export async function generateMetadata(): Promise<Metadata> {
     : 'Restore balance in your life by connecting with your feminine energy, return to the depth of your self-love, and elevate your self-confidence'
 
   return {
+    metadataBase: new URL(getSiteUrl()),
     title: 'Reham Diva',
     description,
   }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkBreaks from "remark-breaks";
@@ -30,9 +30,14 @@ import { cn } from "@/lib/utils";
 export type BlogDetailClientProps = {
   blog: BlogDetailData;
   lang: "en" | "ar";
+  shareUrl: string;
 };
 
-export default function BlogDetailClient({ blog, lang }: BlogDetailClientProps) {
+export default function BlogDetailClient({
+  blog,
+  lang,
+  shareUrl,
+}: BlogDetailClientProps) {
   const { t } = useTranslation();
   const { direction } = useDirection();
   const isRtl = direction === "rtl";
@@ -49,12 +54,6 @@ export default function BlogDetailClient({ blog, lang }: BlogDetailClientProps) 
     [blog.body]
   );
   const categoryColor = blog.category?.color || "#EA8BB8";
-
-  const [shareUrl, setShareUrl] = useState("");
-
-  useEffect(() => {
-    setShareUrl(window.location.href);
-  }, []);
 
   useEffect(() => {
     let cancelled = false;

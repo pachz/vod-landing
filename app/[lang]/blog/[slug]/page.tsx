@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BlogDetailClient } from "@/components/blogs";
 import type { BlogCardItem, BlogDetailData } from "@/lib/blogs";
+import { buildBlogPostMetadata, getBlogPostUrl } from "@/lib/blogsMetadata";
 import {
   getLandingBlogBySlug,
   type LandingBlogDetailRecord,
@@ -108,21 +109,7 @@ export async function generateMetadata({
     };
   }
 
-  const title = locale === "ar" ? blog.titleAr || blog.titleEn : blog.titleEn;
-  const description =
-    locale === "ar"
-      ? blog.excerptAr || blog.excerptEn || undefined
-      : blog.excerptEn || blog.excerptAr || undefined;
-
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      images: blog.imageUrl ? [{ url: blog.imageUrl }] : undefined,
-    },
-  };
+  return buildBlogPostMetadata(blog, locale);
 }
 
 export default async function LangBlogDetailPage({
@@ -136,5 +123,11 @@ export default async function LangBlogDetailPage({
     notFound();
   }
 
-  return <BlogDetailClient blog={mapDetail(blog, locale)} lang={locale} />;
+  return (
+    <BlogDetailClient
+      blog={mapDetail(blog, locale)}
+      lang={locale}
+      shareUrl={getBlogPostUrl(locale, blog.slug)}
+    />
+  );
 }
