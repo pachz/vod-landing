@@ -486,6 +486,7 @@
     "home": "Home",
     "courses": "Courses",
     "tests": "Tests",
+    "blogs": "Blogs",
     "subscription": "Membership",
     "testimonials": "Testimonials",
     "faq": "FAQ",
@@ -554,5 +555,23 @@
     "loadError": "Unable to load tests right now.",
     "retry": "Try again",
     "loading": "Loading tests..."
+  },
+  "blogs": {
+    "title": "Blogs",
+    "subtitle": "Inspiring articles and tips to help you become the best version of yourself.",
+    "searchPlaceholder": "Search articles...",
+    "allCategories": "All Categories",
+    "loadMore": "Load More Articles",
+    "empty": "No articles are available right now. Check back soon.",
+    "noSearchResults": "No articles match your search.",
+    "loadError": "Unable to load articles right now.",
+    "retry": "Try again",
+    "loading": "Loading articles...",
+    "minRead": "min read",
+    "minReadPlural": "min read",
+    "home": "Home",
+    "aboutAuthor": "About the Author",
+    "viewAllPosts": "View all posts →",
+    "relatedArticles": "Related Articles"
   }
 }
