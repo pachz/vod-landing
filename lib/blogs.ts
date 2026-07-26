@@ -34,12 +34,20 @@ export type BlogDetailData = Omit<BlogCardItem, "author"> & {
   related: BlogCardItem[];
 };
 
-/** Normalize blog markdown without stripping alignment containers. */
+/** Normalize blog markdown alignment containers for remark-directive. */
 export function preprocessBlogMarkdown(content: string): string {
   if (!content) {
     return "";
   }
-  return content.replace(/\n{3,}/g, "\n\n").trim();
+
+  return content
+    // remark-directive requires `:::name` with no space after the colons.
+    .replace(
+      /^::: +(left|right|center|justify)\s*$/gim,
+      (_match, name: string) => `:::${name.toLowerCase()}`
+    )
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
 }
 
 export function formatBlogDate(
