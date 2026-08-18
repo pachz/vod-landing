@@ -323,7 +323,13 @@ export default function SubscriptionCard({
 
   if (!animated) {
     return (
-      <div className={cn("flex flex-col h-full", getPlanOrderClasses(plan.slug))}>
+      <div
+        className={cn(
+          "flex flex-col",
+          embedded ? "h-auto" : "h-full",
+          getPlanOrderClasses(plan.slug)
+        )}
+      >
         {cardShell}
       </div>
     );
