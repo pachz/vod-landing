@@ -115,23 +115,13 @@ export default function BlogDetailClient({
 
               <div
                 className={cn(
-                  "flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between",
-                  isRtl && "sm:flex-row-reverse"
+                  "flex flex-col gap-4 sm:flex-row sm:items-center",
+                  isRtl ? "items-start sm:justify-start" : "sm:justify-between"
                 )}
               >
-                <div
-                  className={cn(
-                    "flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-gray-500",
-                    isRtl && "flex-row-reverse"
-                  )}
-                >
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-gray-500">
                   {blog.author ? (
-                    <div
-                      className={cn(
-                        "flex items-center gap-2",
-                        isRtl && "flex-row-reverse"
-                      )}
-                    >
+                    <div className="flex items-center gap-2">
                       {blog.author.avatarUrl || blog.author.profileImageUrl ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
@@ -162,24 +152,14 @@ export default function BlogDetailClient({
 
                   {dateLabel ? <span>{dateLabel}</span> : null}
 
-                  <span
-                    className={cn(
-                      "inline-flex items-center gap-1",
-                      isRtl && "flex-row-reverse"
-                    )}
-                  >
+                  <span className="inline-flex items-center gap-1">
                     <Clock className="h-3.5 w-3.5" />
                     {readingLabel}
                   </span>
                 </div>
 
                 {shareUrl ? (
-                  <div
-                    className={cn(
-                      "flex items-center gap-2",
-                      isRtl && "flex-row-reverse"
-                    )}
-                  >
+                  <div className="flex items-center gap-2">
                     <FacebookShareButton url={shareUrl}>
                       <FacebookIcon size={32} round />
                     </FacebookShareButton>
