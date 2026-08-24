@@ -7,17 +7,6 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { ChevronDown } from 'lucide-react'
 import { useTranslation } from '@/lib/useTranslation'
-import CoursesPromoVideo from './CoursesPromoVideo'
-
-/**
- * TEMPORARY (Aug 2026): Vimeo sits inside this pink hero to reduce page height.
- *
- * To restore the original centered hero (title/search/categories only, no video here):
- * 1. Set TEMP_INLINE_PROMO_VIDEO to `false` — the original layout is preserved below.
- * 2. Uncomment `<CoursesPromoVideo />` in `app/[lang]/courses/page.tsx`
- *    (and add `CoursesPromoVideo` back to that file's import).
- */
-const TEMP_INLINE_PROMO_VIDEO = true
 
 export interface CoursesHeroProps {
   title: string
@@ -57,11 +46,13 @@ export default function CoursesHero({
   const dropdownRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const menuRef = useRef<HTMLUListElement>(null)
+  const [hasMounted, setHasMounted] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 639px)')
     const update = () => setIsMobile(mq.matches)
     update()
+    setHasMounted(true)
     mq.addEventListener('change', update)
     return () => mq.removeEventListener('change', update)
   }, [])
@@ -93,7 +84,7 @@ export default function CoursesHero({
 
   const displayCoach = selectedCoach ?? 'All'
   const displayCoachLabel = displayCoach === 'All'
-    ? (isMobile ? t('courses.coachShort') : t('courses.allCoaches'))
+    ? (hasMounted && isMobile ? t('courses.coachShort') : t('courses.allCoaches'))
     : displayCoach
 
   const getCategoryDisplayName = (cat: string) => {
@@ -182,7 +173,7 @@ export default function CoursesHero({
         <Input
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
-          placeholder={isMobile ? t('courses.searchPlaceholderShort') : t('courses.searchPlaceholder')}
+          placeholder={hasMounted && isMobile ? t('courses.searchPlaceholderShort') : t('courses.searchPlaceholder')}
           className={`flex-1 min-w-0 sm:min-w-[220px] w-0 h-full min-h-[2.75rem] sm:min-h-0 border-0 rounded-none bg-white shadow-none placeholder:text-text-secondary focus-visible:ring-0 focus-visible:ring-offset-0 py-3 px-3 sm:px-4 text-sm sm:text-base ${isArabic ? 'text-right' : ''}`}
         />
         <Button
@@ -217,12 +208,7 @@ export default function CoursesHero({
     </div>
   )
 
-  // ---------------------------------------------------------------------------
-  // ORIGINAL centered hero layout.
-  // Kept intact so it can be restored by setting TEMP_INLINE_PROMO_VIDEO = false.
-  // ---------------------------------------------------------------------------
-  if (!TEMP_INLINE_PROMO_VIDEO) {
-    return (
+  return (
       <section className="relative overflow-hidden bg-pink-500 py-12">
         {/* Decorative single pattern */}
         <Image
@@ -255,43 +241,4 @@ export default function CoursesHero({
         </div>
       </section>
     )
-  }
-
-  // TEMPORARY split layout: copy/search/categories + Vimeo in one row.
-  // EN: content left, video right. AR (RTL): content right, video left.
-  return (
-    <section className="relative overflow-hidden bg-pink-500 py-8 sm:py-10">
-      {/* Decorative single pattern */}
-      <Image
-        src="/images/RehamDivaSinglePinkPattern.png"
-        alt="Decorative pattern"
-        width={600}
-        height={600}
-        className={`absolute w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] lg:w-[600px] lg:h-[600px] opacity-40 sm:opacity-60 pointer-events-none object-contain hidden sm:block bottom-0 ${isArabic ? 'left-0 object-bottom object-left rotate-90' : 'right-0 object-bottom object-right'}`}
-        sizes="(max-width: 640px) 300px, (max-width: 1024px) 400px, 600px"
-      />
-      <div className="relative mx-auto max-w-7xl px-4">
-        <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
-          <div className="min-w-0 text-start">
-            <h1 className="text-3xl font-bold text-white sm:text-4xl lg:text-[2.5rem] lg:leading-tight">
-              {title}
-            </h1>
-            <p className="mt-3 max-w-xl text-base text-white/90 sm:text-lg">
-              {subtitle}
-            </p>
-            <div className="mt-6 w-full min-w-0 max-w-xl">
-              {searchForm}
-            </div>
-            <div className="mt-6">
-              {categoryChips('justify-start')}
-            </div>
-          </div>
-
-          <div className="w-full min-w-0">
-            <CoursesPromoVideo />
-          </div>
-        </div>
-      </div>
-    </section>
-  )
 }

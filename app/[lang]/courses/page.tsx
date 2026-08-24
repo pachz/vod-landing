@@ -2,8 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { VideoCard, type Video, CoursesHero } from '@/components/course'
-// TEMPORARY: CoursesPromoVideo is inside CoursesHero (split layout).
-// To restore the standalone video section, add CoursesPromoVideo back to this import.
 import { SiteFooter } from '@/components/layout'
 import { useTranslation } from '@/lib/useTranslation'
 import { useDirection } from '@/providers/DirectionProvider'
@@ -284,15 +282,6 @@ export default function LangCoursesPage() {
             )
           }}
         />
-
-        {/*
-          TEMPORARY: promo Vimeo is inside CoursesHero to reduce page height.
-          To restore the original centered pink hero + this standalone video section:
-          1. In components/course/CoursesHero.tsx set TEMP_INLINE_PROMO_VIDEO to false
-          2. Add CoursesPromoVideo back to the import above
-          3. Uncomment the line below
-        */}
-        {/* <CoursesPromoVideo /> */}
 
         <section className="py-16">
           <div className="max-w-7xl mx-auto px-4">

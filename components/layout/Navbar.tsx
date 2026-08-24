@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useDirection } from "@/providers/DirectionProvider";
@@ -25,6 +26,8 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const { direction, locale } = useDirection();
   const { t } = useTranslation();
+  const pathname = usePathname();
+  const isCoursePage = pathname.includes("/courses");
 
   const navigationItems = useMemo(
     () =>
@@ -34,29 +37,7 @@ export default function Navbar() {
     []
   );
 
-  // Get translations based on current locale
-  const getNavbarText = (key: string) => {
-    // Check if we're on an Arabic route
-    const isArabicRoute =
-      typeof window !== "undefined" &&
-      window.location.pathname.startsWith("/ar");
-
-    if (locale === "ar" || isArabicRoute) {
-      const arTranslations: Record<string, string> = {
-        "navbar.home": "الرئيسية",
-        "navbar.courses": "الدورات",
-        "navbar.tests": "الاختبارات",
-        "navbar.blogs": "المدونة",
-        "navbar.subscription": "العضوية",
-        "navbar.testimonials": "الشهادات",
-        "navbar.faq": "الأسئلة الشائعة",
-        "navbar.getStarted": "ابدئي الآن",
-        "navbar.logoText": "رهام دیفا",
-      };
-      return arTranslations[key] || t(key);
-    }
-    return t(key);
-  };
+  const getNavbarText = (key: string) => t(key);
 
   // Handle scroll effect
   useEffect(() => {
@@ -109,11 +90,6 @@ export default function Navbar() {
     window.location.href = getPanelUrl(locale)
     setIsOpen(false)
   }
-
-  // Check if we're on a course page
-  const isCoursePage =
-    typeof window !== "undefined" &&
-    window.location.pathname.includes("/courses");
 
   return (
     <nav
