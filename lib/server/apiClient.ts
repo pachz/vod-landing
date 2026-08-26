@@ -31,7 +31,7 @@ export async function fetchFromBackend<T = unknown>(
       "[apiClient] Missing LANDING_SECRET environment variable. Request might fail."
     );
   } else {
-    headers.set("LANDING_SECRET", LANDING_SECRET);
+    headers.set("landing-secret", LANDING_SECRET);
   }
   headers.set("Content-Type", "application/json");
 
